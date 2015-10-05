@@ -13,6 +13,8 @@ import com.usm.jyd.usemista.R;
 
 public class ActBase extends AppCompatActivity {
 
+    //variables de estado aqui
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
