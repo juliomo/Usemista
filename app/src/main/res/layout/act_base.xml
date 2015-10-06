@@ -29,14 +29,14 @@
             android:id="@+id/collapsing_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:contentScrim="?attr/colorAccent"
+            app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="192dp"
             android:scaleType="centerCrop"
-            android:src="@mipmap/main_view_lg2"
+            android:src="@mipmap/main_view_lg3"
             app:layout_collapseMode="parallax" />
 
         <android.support.v7.widget.Toolbar
@@ -48,12 +48,13 @@
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
-        <!-- Contenedor Colapsador  Tabs para el Page Viewer-->
+        <!-- Contenedor Colapsador  Tabs para el Page Viewer
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways">
+        </android.support.design.widget.CollapsingToolbarLayout> -->
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tab_layout"
@@ -64,7 +65,7 @@
                 app:tabIndicatorColor="@color/colorPrimary"
                 app:tabSelectedTextColor="@android:color/white"
                 app:tabTextColor="#EEE" />
-        </android.support.design.widget.CollapsingToolbarLayout>
+
 
     </android.support.design.widget.AppBarLayout>
 
@@ -94,6 +95,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        app:headerLayout="@layout/act_base_nav_header"
         app:menu="@menu/menu_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -30,7 +32,8 @@ import com.usm.jyd.usemista.R;
 import java.util.ArrayList;
 import java.util.TooManyListenersException;
 
-public class ActBase extends AppCompatActivity {
+public class ActBase extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     // Need this to link with the Snackbar
     private CoordinatorLayout mCoordinator;
@@ -60,6 +63,9 @@ public class ActBase extends AppCompatActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_drawer);
+        navigationView.setNavigationItemSelectedListener(this);
+
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mAdapter = new YourPagerAdapter(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.view_pager);
@@ -87,6 +93,14 @@ public class ActBase extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if(mDrawerLayout.isDrawerOpen(GravityCompat.START)){
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        }else{
+        super.onBackPressed(); }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.act_base_menu, menu);
@@ -108,9 +122,24 @@ public class ActBase extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        int id= menuItem.getItemId();
+        if (id == R.id.navigation_item_1) {
+            // Handle the camera action
+        } else if (id == R.id.navigation_item_2) {
+// Handle the camera action
+        } else if (id == R.id.navigation_item_3) {
+// Handle the camera action
+        } else if (id == R.id.navigation_item_4) {
+// Handle the camera action
+        } else if (id == R.id.navigation_item_5) {
+// Handle the camera action
+        }
 
-
-
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
 
 
     public static class MyFragment extends Fragment {
