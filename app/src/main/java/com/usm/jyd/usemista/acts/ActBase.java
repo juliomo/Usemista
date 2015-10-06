@@ -108,6 +108,11 @@ public class ActBase extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+
+
+
+
     public static class MyFragment extends Fragment {
         public static final java.lang.String ARG_PAGE = "arg_page";
 
@@ -135,7 +140,8 @@ public class ActBase extends AppCompatActivity {
     }
 }
 
-    class YourPagerAdapter extends FragmentStatePagerAdapter {
+
+class YourPagerAdapter extends FragmentStatePagerAdapter {
 
         public YourPagerAdapter(FragmentManager fm) {
             super(fm);
