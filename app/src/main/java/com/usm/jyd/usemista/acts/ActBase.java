@@ -66,6 +66,7 @@ public class ActBase extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_drawer);
         navigationView.setNavigationItemSelectedListener(this);
 
+
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mAdapter = new YourPagerAdapter(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.view_pager);
