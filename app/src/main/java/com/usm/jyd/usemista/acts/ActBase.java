@@ -60,6 +60,12 @@ public class ActBase extends AppCompatActivity
         iniFab();
         //Notice how the title is set on the Collapsing Toolbar Layout instead of the Toolbar
         mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.app_name));
+
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.contenedor_base, FragmentBase.newInstance(0))
+                .commit();
     }
 
     public void iniToolBar(){
