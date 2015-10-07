@@ -28,6 +28,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.usm.jyd.usemista.R;
+import com.usm.jyd.usemista.fragments.FragmentBase;
 
 import java.util.ArrayList;
 import java.util.TooManyListenersException;
@@ -43,42 +44,39 @@ public class ActBase extends AppCompatActivity
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private ViewPager mPager;
-    private YourPagerAdapter mAdapter;
-    private TabLayout mTabLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_base);
+
+        //Grupo de Coordinacion para la actividad Base
         mCoordinator = (CoordinatorLayout) findViewById(R.id.root_coordinator);
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout);
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        iniToolBar();
+        iniNavDrawer();
+        iniFab();
+        //Notice how the title is set on the Collapsing Toolbar Layout instead of the Toolbar
+        mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.app_name));
+    }
+
+    public void iniToolBar(){
         mToolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(mToolbar);
-
-
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,  R.string.drawer_open, R.string.drawer_close);
+    }
+    public void iniNavDrawer(){
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_drawer);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        mAdapter = new YourPagerAdapter(getSupportFragmentManager());
-        mPager = (ViewPager) findViewById(R.id.view_pager);
-        mPager.setAdapter(mAdapter);
-        //link between  tabs an pager adapter
-        mTabLayout.setTabsFromPagerAdapter(mAdapter);
-
-        //link tab & viewpager object
-        mTabLayout.setupWithViewPager(mPager);
-        mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-
-
+    }
+    public void iniFab(){
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,19 +84,15 @@ public class ActBase extends AppCompatActivity
                 Snackbar.make(mCoordinator, "FAB Clicked", Snackbar.LENGTH_SHORT).setAction("DISMISS", null).show();
             }
         });
-
-        //Notice how the title is set on the Collapsing Toolbar Layout instead of the Toolbar
-        mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.app_name));
-
-
     }
 
     @Override
     public void onBackPressed() {
-        if(mDrawerLayout.isDrawerOpen(GravityCompat.START)){
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        }else{
-        super.onBackPressed(); }
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -125,152 +119,29 @@ public class ActBase extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
-        int id= menuItem.getItemId();
+        int id = menuItem.getItemId();
+        int poss = 0;
+
         if (id == R.id.navigation_item_1) {
-            // Handle the camera action
+            poss = 0;
         } else if (id == R.id.navigation_item_2) {
-// Handle the camera action
+            poss = 1;
         } else if (id == R.id.navigation_item_3) {
-// Handle the camera action
+            poss = 2;
         } else if (id == R.id.navigation_item_4) {
-// Handle the camera action
+            poss = 3;
         } else if (id == R.id.navigation_item_5) {
-// Handle the camera action
+            poss = 4;
         }
+
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.contenedor_base, FragmentBase.newInstance(poss))
+                .commit();
+
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
-    public static class MyFragment extends Fragment {
-        public static final java.lang.String ARG_PAGE = "arg_page";
-
-        public MyFragment() {
-
-        }
-
-        public static MyFragment newInstance(int pageNumber) {
-            MyFragment myFragment = new MyFragment();
-            Bundle arguments = new Bundle();
-            arguments.putInt(ARG_PAGE, pageNumber + 1);
-            myFragment.setArguments(arguments);
-            return myFragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            Bundle arguments = getArguments();
-            int pageNumber = arguments.getInt(ARG_PAGE);
-            RecyclerView recyclerView = new RecyclerView(getActivity());
-            recyclerView.setAdapter(new YourRecyclerAdapter(getActivity()));
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            return recyclerView;
-        }
-    }
 }
-
-
-class YourPagerAdapter extends FragmentStatePagerAdapter {
-
-        public YourPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            ActBase.MyFragment myFragment = ActBase.MyFragment.newInstance(position);
-            return myFragment;
-        }
-
-        @Override
-        public int getCount() {
-            return 4;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return "Tab " + (position + 1);
-        }
-    }
-
-    class YourRecyclerAdapter extends RecyclerView.Adapter<YourRecyclerAdapter.YourRecyclerViewHolder> {
-        private ArrayList<String> list = new ArrayList<>();
-        private LayoutInflater inflater;
-
-        public YourRecyclerAdapter(Context context) {
-            inflater = LayoutInflater.from(context);
-            list.add("A-Bomb (HAS)");
-            list.add("A.I.M.");
-            list.add("Abe");
-            list.add("Abin");
-            list.add("Abomination");
-            list.add("Abraxas");
-            list.add("Absorbing");
-            list.add("Adam");
-            list.add("Agent Bob");
-            list.add("Agent Zero");
-            list.add("Air Walker");
-            list.add("Ajax");
-            list.add("Alan Scott");
-            list.add("Alex Mercer");
-            list.add("Alex Woolsly");
-            list.add("Alfred Pennyworth");
-            list.add("Allan Quartermain");
-            list.add("Amazo");
-            list.add("Ammo Ando");
-            list.add("Masahashi Angel");
-            list.add("Angel Dust");
-            list.add("Angel Salvadore");
-            list.add("A-Bomb");
-            list.add("Abe");
-            list.add("Abin");
-            list.add("Abomination");
-            list.add("Abraxas");
-            list.add("Absorbing");
-            list.add("Adam");
-            list.add("Agent Bob");
-            list.add("Agent Zero");
-            list.add("Air Walker");
-            list.add("Ajax");
-            list.add("Alan Scott");
-            list.add("Alex Mercer");
-            list.add("Alex Woolsly");
-            list.add("Alfred Pennyworth");
-            list.add("Allan Quartermain");
-            list.add("Amazo");
-            list.add("Ammo Ando");
-            list.add("Masahashi Angel");
-            list.add("Angel Dust");
-            list.add("Angel Salvadore");
-
-        }
-
-        @Override
-        public YourRecyclerViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View root = inflater.inflate(R.layout.custom_row, viewGroup, false);
-            YourRecyclerViewHolder holder = new YourRecyclerViewHolder(root);
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(YourRecyclerViewHolder yourRecyclerViewHolder, int i) {
-            yourRecyclerViewHolder.textView.setText(list.get(i));
-        }
-
-        @Override
-        public int getItemCount() {
-            return list.size();
-        }
-
-        static class YourRecyclerViewHolder extends RecyclerView.ViewHolder {
-
-            TextView textView;
-
-            public YourRecyclerViewHolder(View itemView) {
-                super(itemView);
-                textView = (TextView) itemView.findViewById(R.id.text_superhero);
-            }
-        }
-    }
-

@@ -6,7 +6,8 @@
     <item
         android:id="@+id/navigation_item_1"
         android:icon="@mipmap/ic_number_0"
-        android:title="@string/navigation_item_1" />
+        android:title="@string/navigation_item_1"
+        android:checked="true" />
     <item
         android:id="@+id/navigation_item_2"
         android:icon="@mipmap/ic_number_1"
