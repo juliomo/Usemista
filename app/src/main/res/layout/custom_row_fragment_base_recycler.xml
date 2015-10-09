@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="8dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginTop="8dp">
+
+    <ImageView
+        android:id="@+id/pensumImagen"
+        android:layout_width="134dp"
+        android:layout_height="160dp"
+        android:layout_centerVertical="true"
+        android:src="@mipmap/rsz_bg_cover22" />
+
+    <TextView
+        android:id="@+id/penusmTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.87"
+        android:gravity="left"
+        android:padding="4dp"
+        android:text="Ingenieria Telecomunicacion"
+        android:textSize="22sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/pensumImagen"
+        android:layout_toRightOf="@+id/pensumImagen"
+        android:layout_toEndOf="@+id/pensumImagen" />
+
+    <TextView
+        android:id="@+id/pensumInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:alpha="0.87"
+        android:padding="4dp"
+        android:text="Parrafor de estructura generado a partir de android studio brindano una suave lectura en el desarrollo del mismo "
+        android:textSize="14sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/penusmTitulo"
+        android:layout_alignLeft="@+id/penusmTitulo"
+        android:layout_alignStart="@+id/penusmTitulo" />
+
+</RelativeLayout>

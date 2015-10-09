@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,9 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     private ViewPager viewPager;
     private AdapterViewPagerSeccionUno adapterViewPagerSeccionUno;
     private TabLayout tabLayout;
+
+    private RecyclerView listPensums;
+   YourRecyclerAdapter yourRecyclerAdapter;
 
 
     /**
@@ -74,6 +78,16 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         View rootView = inflater.inflate(R.layout.fragment_base, container, false);
 
         if(getArguments().getInt(ARG_NUMERO_SECCION)==0) {
+
+            rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
+
+
+        }
+
+        if(getArguments().getInt(ARG_NUMERO_SECCION)==1) {
+
+            rootView = inflater.inflate(R.layout.fragment_base, container, false);
+
             viewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
             tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
 

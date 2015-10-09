@@ -46,6 +46,7 @@ public class ActBase extends AppCompatActivity
     private ActionBarDrawerToggle mDrawerToggle;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
