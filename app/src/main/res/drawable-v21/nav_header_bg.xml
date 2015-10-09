@@ -2,7 +2,20 @@
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="@color/colorAccent">
 
+    <!-- android:drawable="@android:color/white" ></item>  -->
     <item android:id="@android:id/mask"
         android:drawable="@android:color/white" ></item>
 
-</ripple>
+    <!--
+     <shape  android:shape="oval">
+         <gradient
+             android:angle="135"
+             android:centerColor="#4CAF50"
+             android:endColor="#2E7D32"
+             android:startColor="#81C784"
+             android:type="linear" />
+     </shape>
+     </item>-->
+
+
+     </ripple>
