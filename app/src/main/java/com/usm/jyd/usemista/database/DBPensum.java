@@ -105,7 +105,7 @@ public class DBPensum {
                 COLUMN_SEMESTRE + " INTEGER," +
                 COLUMN_OBJETIVO + " TEXT," +
                 COLUMN_CONTENIDO + " TEXT," +
-                COLUMN_MODULO + " TEXT," +
+                COLUMN_MODULO + " TEXT" +
                 ");";
 
         private static final String DB_NAME = "pensum";

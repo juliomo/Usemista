@@ -7,12 +7,19 @@
     android:layout_marginRight="16dp"
     android:layout_marginTop="8dp">
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="176dp"
+        android:background="@drawable/shape_round_bg"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
     <ImageView
         android:id="@+id/pensumImagen"
         android:layout_width="134dp"
         android:layout_height="160dp"
         android:layout_centerVertical="true"
-        android:src="@mipmap/rsz_bg_cover22" />
+        android:src="@mipmap/escudo_usm_280" />
 
     <TextView
         android:id="@+id/penusmTitulo"
@@ -23,6 +30,7 @@
         android:padding="4dp"
         android:text="Ingenieria Telecomunicacion"
         android:textSize="22sp"
+        android:textColor="#000"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/pensumImagen"
@@ -38,10 +46,13 @@
         android:padding="4dp"
         android:text="Parrafor de estructura generado a partir de android studio brindano una suave lectura en el desarrollo del mismo "
         android:textSize="14sp"
+        android:textColor="#000"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/penusmTitulo"
         android:layout_alignLeft="@+id/penusmTitulo"
         android:layout_alignStart="@+id/penusmTitulo" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

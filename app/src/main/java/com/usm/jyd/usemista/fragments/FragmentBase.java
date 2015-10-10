@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 
 import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.acts.ActBase;
+
+import com.usm.jyd.usemista.adapters.AdapterRecyclerSeccionCero;
 import com.usm.jyd.usemista.adapters.AdapterViewPagerSeccionUno;
 
 /**
@@ -40,7 +43,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     private TabLayout tabLayout;
 
     private RecyclerView listPensums;
-   YourRecyclerAdapter yourRecyclerAdapter;
+    private AdapterRecyclerSeccionCero adapterRecyclerSeccionCero;
 
 
     /**
@@ -80,7 +83,10 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         if(getArguments().getInt(ARG_NUMERO_SECCION)==0) {
 
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
-
+            listPensums = (RecyclerView) rootView.findViewById(R.id.recycleView);
+            listPensums.setLayoutManager(new LinearLayoutManager(getActivity()));
+            adapterRecyclerSeccionCero = new AdapterRecyclerSeccionCero(getActivity());
+            listPensums.setAdapter(adapterRecyclerSeccionCero);
 
         }
 

@@ -9,7 +9,7 @@ import com.usm.jyd.usemista.R;
 
 public class ActApertura extends AppCompatActivity {
 
-    private static final int SPLASH_TIME = 10000;
+    private static final int SPLASH_TIME = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

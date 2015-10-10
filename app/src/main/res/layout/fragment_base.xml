@@ -12,7 +12,7 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
+        android:background="@drawable/side_nav_bar"
         app:layout_collapseMode="pin"
         app:tabIndicatorColor="@color/colorPrimary"
         app:tabSelectedTextColor="@android:color/white"
