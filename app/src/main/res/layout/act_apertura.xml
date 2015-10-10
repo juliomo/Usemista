@@ -6,25 +6,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/colorWhite"
+    android:background="@mipmap/bg_act_apertura_002"
     android:gravity="center"
 tools:context="com.usm.jyd.usemista.acts.ActApertura">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@mipmap/cover_launcher_6"/>
-    <LinearLayout
+        android:id="@+id/imageView"
+        android:layout_width="320dp"
+        android:layout_height="295dp"
+        android:src="@mipmap/escudo_usm_380"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+   <!-- <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical"
         android:id="@+id/linearLayout">
-       <!-- <TextView
+        <TextView
             android:text="Material Design" />
         <TextView
-            android:text="Sample App" />  -->
-    </LinearLayout>
+            android:text="Sample App" />
+    </LinearLayout> -->
 
 
 </RelativeLayout>

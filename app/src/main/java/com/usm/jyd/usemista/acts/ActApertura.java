@@ -4,8 +4,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.usm.jyd.usemista.R;
+import com.usm.jyd.usemista.anim.AnimUtils;
 
 public class ActApertura extends AppCompatActivity {
 
@@ -15,6 +19,11 @@ public class ActApertura extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_apertura);
+
+//animacion de presentacion Librerias By Daimajia 3 packs
+        YoYo.with(Techniques.Shake)
+                .duration(1000)
+                .playOn(findViewById(R.id.imageView));
 
 
         new AperturaDeAplicacion().execute();

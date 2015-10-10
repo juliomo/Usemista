@@ -1,7 +1,5 @@
 package com.usm.jyd.usemista.fragments;
 
-import android.app.Activity;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -14,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.usm.jyd.usemista.R;
-import com.usm.jyd.usemista.acts.ActBase;
 
 import com.usm.jyd.usemista.adapters.AdapterRecyclerSeccionCero;
 import com.usm.jyd.usemista.adapters.AdapterViewPagerSeccionUno;
@@ -78,7 +75,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_base, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_base_01, container, false);
 
         if(getArguments().getInt(ARG_NUMERO_SECCION)==0) {
 
@@ -92,7 +89,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
 
         if(getArguments().getInt(ARG_NUMERO_SECCION)==1) {
 
-            rootView = inflater.inflate(R.layout.fragment_base, container, false);
+            rootView = inflater.inflate(R.layout.fragment_base_01, container, false);
 
             viewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
             tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
