@@ -15,6 +15,10 @@ import com.usm.jyd.usemista.R;
 
 import com.usm.jyd.usemista.adapters.AdapterRecyclerSeccionCero;
 import com.usm.jyd.usemista.adapters.AdapterViewPagerSeccionUno;
+import com.usm.jyd.usemista.adapters.SimpleSectionedRecyclerViewAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -82,8 +86,29 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
             listPensums = (RecyclerView) rootView.findViewById(R.id.recycleView);
             listPensums.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+            //Nuestro Adaptador de Data
             adapterRecyclerSeccionCero = new AdapterRecyclerSeccionCero(getActivity());
-            listPensums.setAdapter(adapterRecyclerSeccionCero);
+
+
+            //Aca proveemos la lista seccionada por Ejm : Modulo ing, modulo farmacia
+            List<SimpleSectionedRecyclerViewAdapter.Section> sections =
+                    new ArrayList<SimpleSectionedRecyclerViewAdapter.Section>();
+
+            //Secciones de pensum
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(0, "Ingenieria y Arquitectura"));
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(5, "Farmacia"));
+
+            //Combinamos nuestro adaptador con el Adap seccionador :DDDD  listPensums.setAdapter(adapterRecyclerSeccionCero);
+            SimpleSectionedRecyclerViewAdapter.Section[] dummy =
+                    new SimpleSectionedRecyclerViewAdapter.Section[sections.size()];
+            SimpleSectionedRecyclerViewAdapter mSectionedAdapter =
+                    new SimpleSectionedRecyclerViewAdapter(getContext(),R.layout.section,
+                            R.id.section_text,adapterRecyclerSeccionCero);
+            mSectionedAdapter.setSections(sections.toArray(dummy));
+
+            //finalmente podemos adaptar al Recycler
+            listPensums.setAdapter(mSectionedAdapter);
 
         }
 
