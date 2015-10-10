@@ -111,7 +111,7 @@ public class SimpleSectionedRecyclerViewAdapter extends RecyclerView.Adapter<Rec
                 : mBaseAdapter.getItemViewType(sectionedPositionToPosition(position)) +1 ;
     }
 
-    //objeto de section
+    //objeto de section recycler adapter
     public static class Section {
         int firstPosition;
         int sectionedPosition;

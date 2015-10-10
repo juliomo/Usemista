@@ -103,7 +103,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             SimpleSectionedRecyclerViewAdapter.Section[] dummy =
                     new SimpleSectionedRecyclerViewAdapter.Section[sections.size()];
             SimpleSectionedRecyclerViewAdapter mSectionedAdapter =
-                    new SimpleSectionedRecyclerViewAdapter(getContext(),R.layout.section,
+                    new SimpleSectionedRecyclerViewAdapter(getContext(),R.layout.section_recycler_adapter,
                             R.id.section_text,adapterRecyclerSeccionCero);
             mSectionedAdapter.setSections(sections.toArray(dummy));
 
