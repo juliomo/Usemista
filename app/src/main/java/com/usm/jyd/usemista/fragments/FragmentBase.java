@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,6 +17,9 @@ import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerSeccionCero;
 import com.usm.jyd.usemista.adapters.AdapterViewPagerSeccionUno;
 import com.usm.jyd.usemista.adapters.SimpleSectionedRecyclerViewAdapter;
+import com.usm.jyd.usemista.events.ClickListener;
+import com.usm.jyd.usemista.events.RecyclerTouchListener;
+import com.usm.jyd.usemista.logs.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,6 +113,25 @@ public class FragmentBase extends android.support.v4.app.Fragment {
 
             //finalmente podemos adaptar al Recycler
             listPensums.setAdapter(mSectionedAdapter);
+
+
+            //Agregamos GEstos Touch a nuestro recycler
+            listPensums.setSoundEffectsEnabled(true);
+            listPensums.addOnItemTouchListener(new RecyclerTouchListener(getContext(),
+                    listPensums, new ClickListener() {
+                @Override
+                public void onClick(View view, int position) {
+                    L.t(getContext(),"On Click");
+                    listPensums.playSoundEffect(SoundEffectConstants.CLICK);
+
+
+                }
+
+                @Override
+                public void onLongClick(View view, int position) {
+                    L.t(getContext(),"Long Click on This");
+                }
+            }));
 
         }
 

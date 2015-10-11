@@ -25,7 +25,7 @@ public class AdapterRecyclerSeccionCero extends RecyclerView.Adapter<AdapterRecy
     public  AdapterRecyclerSeccionCero(Context context){
         inflater = LayoutInflater.from(context);
         list.add("Ingenieria Sistemas");
-        list.add("Ingenieria Telecom.");
+        list.add("Ingenieria Telecom");
         list.add("Ingenieria Industrial");
         list.add("Ingenieria Civil");
         list.add("Arquitectura");
