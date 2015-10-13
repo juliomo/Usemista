@@ -6,6 +6,9 @@
             android:padding="10dp"
             android:shape="rectangle">
             <solid android:color="#FFFFFF" />  <!--> si no quieres una imagen-->
+           <!-- <stroke
+                android:width="1dip"
+                android:color="#000" />       marco del cuadro -->
             <corners
                 android:bottomLeftRadius="10dp"
                 android:bottomRightRadius="10dp"

@@ -5,8 +5,8 @@
     <string name="drawer_close">close</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="navigation_item_1">Item 1</string>
-    <string name="navigation_item_2">Item 2</string>
+    <string name="navigation_item_1">Pensum</string>
+    <string name="navigation_item_2">Mis Materias</string>
     <string name="navigation_item_3">Item 3</string>
     <string name="navigation_item_4">Item 4</string>
     <string name="navigation_item_5">Item 5</string>
@@ -21,8 +21,11 @@
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_act_apertura">ActApertura</string>
-
-
+    <string name="error_timeOut">Coneccion fuera de Tiempo</string>
+    <string name="error_AuthFail">Autenticacion Fallida</string>
+    <string name="error_Server">No se a Conectado al Sevidor</string>
+    <string name="error_NetWork">Fallo de Coneccion</string>
+    <string name="error_Parse">Perdida de Datos</string>
 
 
 </resources>

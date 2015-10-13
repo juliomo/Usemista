@@ -12,7 +12,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:background="@color/colorAccent"
         android:text="Pensums"
-        android:id="@+id/textView2"
+        android:id="@+id/seccionCeroTitulo"
         android:textColor="#FFF"
         android:padding="5dp"
         android:layout_alignParentTop="true"
@@ -25,9 +25,15 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView2">
+        android:layout_below="@+id/seccionCeroTitulo">
 
     </android.support.v7.widget.RecyclerView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:id="@+id/textVolleyError"
+        android:visibility="gone"/>
 
 
 

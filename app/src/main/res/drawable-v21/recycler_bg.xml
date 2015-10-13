@@ -32,6 +32,10 @@
                         android:topLeftRadius="12dp"
                         android:topRightRadius="12dp" />
 
+                    <!-- <stroke
+                            android:width="1dip"
+                            android:color="#000" />       marco del cuadro -->
+
                     <size
                         android:height="176dp" />
                 </shape>

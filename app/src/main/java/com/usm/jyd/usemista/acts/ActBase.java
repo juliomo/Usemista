@@ -28,13 +28,14 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.usm.jyd.usemista.R;
+import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.fragments.FragmentBase;
 
 import java.util.ArrayList;
 import java.util.TooManyListenersException;
 
 public class ActBase extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ClickCallBack {
 
     // Need this to link with the Snackbar
     private CoordinatorLayout mCoordinator;
@@ -44,6 +45,10 @@ public class ActBase extends AppCompatActivity
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+
+
+    //Localizador del Back Press
+    private int stateBackPress=0;
 
 
 
@@ -97,7 +102,14 @@ public class ActBase extends AppCompatActivity
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else {
+        }else if(stateBackPress==10){
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contenedor_base, FragmentBase.newInstance(0))
+                    .commit();
+
+        }
+        else {
             super.onBackPressed();
         }
     }
@@ -150,5 +162,14 @@ public class ActBase extends AppCompatActivity
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onRSCItemSelected(int position) {
+        stateBackPress=position;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.contenedor_base, FragmentBase.newInstance(position))
+                .commit();
     }
 }
