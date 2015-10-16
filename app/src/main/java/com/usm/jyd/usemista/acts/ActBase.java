@@ -1,6 +1,9 @@
 package com.usm.jyd.usemista.acts;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -19,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
@@ -27,12 +31,18 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.fragments.FragmentBase;
+import com.usm.jyd.usemista.logs.L;
+import com.usm.jyd.usemista.network.notification.RegisterApp;
 
 import java.util.ArrayList;
 import java.util.TooManyListenersException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ActBase extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ClickCallBack {
@@ -50,6 +60,15 @@ public class ActBase extends AppCompatActivity
     //Localizador del Back Press
     private int stateBackPress=0;
 
+    //VARIABLES EMPLEADAS PARA Push notifications
+    private static final  int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    public static final String EXTRA_MESSAGE = "message";
+    public static final String PROPERTY_REG_ID = "registration_id";
+    private static final String PROPERTY_APP_VERSION = "appVersion";
+    private static final String TAG = "GCMRelated";
+    GoogleCloudMessaging gcm;
+    AtomicInteger msgId = new AtomicInteger();
+    String regid;
 
 
     @Override
@@ -107,6 +126,7 @@ public class ActBase extends AppCompatActivity
             fragmentManager.beginTransaction()
                     .replace(R.id.contenedor_base, FragmentBase.newInstance(0))
                     .commit();
+            stateBackPress=0;
 
         }
         else {
@@ -132,6 +152,25 @@ public class ActBase extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
+        if(id == R.id.action_person){
+            if(checkPlayServices()){
+                gcm=GoogleCloudMessaging.getInstance(getApplicationContext());
+                regid= getRegistrationId(getApplicationContext());
+
+                if(regid.isEmpty()){
+                    item.setEnabled(false);
+                    new RegisterApp(
+                            getApplicationContext(),
+                            gcm,
+                            getAppVersion(getApplicationContext()))
+                            .execute();
+                }else{
+                    L.t(getApplicationContext(),"Device already Regi");
+                }
+            }else{
+                Log.i(TAG,"No vailid GP Services APK found");
+            }
+          }
 
         return super.onOptionsItemSelected(item);
     }
@@ -172,4 +211,60 @@ public class ActBase extends AppCompatActivity
                 .replace(R.id.contenedor_base, FragmentBase.newInstance(position))
                 .commit();
     }
+
+
+    ///FUNCIONES y APARTADO DE PUSH NOTIFICATION
+
+private boolean checkPlayServices(){
+    int resultCode = GooglePlayServicesUtil.
+            isGooglePlayServicesAvailable(this);
+    if(resultCode != ConnectionResult.SUCCESS){
+        if(GooglePlayServicesUtil.isUserRecoverableError(resultCode)){
+            GooglePlayServicesUtil.getErrorDialog(resultCode,this,
+                    PLAY_SERVICES_RESOLUTION_REQUEST).show();
+        }else{
+            Log.i(TAG,"Device Not Supported" );
+            finish();
+        }return false;
+    }return true;
+}
+
+    private String getRegistrationId(Context context){
+        final SharedPreferences prefs= getGCMPreferences(context);
+        String registrationId = prefs.getString(PROPERTY_REG_ID,"");
+        if(registrationId.isEmpty()){
+            Log.i(TAG, "Registration Not Found.");
+            return "";
+        }
+        // Check if app was updated; if so, it must clear the registration ID
+        // since the existing regID is not guaranteed to work with the new
+        // app version.
+        int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION,
+                Integer.MIN_VALUE);
+        int currentVersion = getAppVersion(getApplicationContext());
+        if(registeredVersion != currentVersion){
+            Log.i(TAG,"App version changed");
+            return "";
+        }return registrationId;
+    }
+
+    private SharedPreferences getGCMPreferences(Context context){
+        // This sample app persists the registration ID in shared preferences, but
+        // how you store the regID in your app is up to you.
+        return  getSharedPreferences(ActBase.class.getSimpleName(),
+                Context.MODE_PRIVATE);
+    }
+
+
+    private static int getAppVersion(Context context) {
+        try {
+            PackageInfo packageInfo = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            // should never happen
+            throw new RuntimeException("Could not get package name: " + e);
+        }
+    }
+
 }

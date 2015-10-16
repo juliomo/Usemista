@@ -1,12 +1,11 @@
 package com.usm.jyd.usemista.fragments;
 
-import android.app.DownloadManager;
+
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,7 +37,6 @@ import com.usm.jyd.usemista.events.ClickListener;
 import com.usm.jyd.usemista.events.RecyclerTouchListener;
 import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.network.Key;
-import com.usm.jyd.usemista.network.UrlEndPoint;
 import com.usm.jyd.usemista.network.VolleySingleton;
 import com.usm.jyd.usemista.objects.Materia;
 
@@ -157,7 +155,8 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         if(getArguments().getInt(ARG_NUMERO_SECCION)==10) {
 
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
-
+            TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
+            textViewTituloFragment.setText("Ingenieria Sistemas");
             textViewVolleyError=(TextView)rootView.findViewById(R.id.textVolleyError);
             recyclerViewListMateria=(RecyclerView)rootView.findViewById(R.id.recycleView);
             recyclerViewListMateria.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -244,7 +243,6 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     public void enviarPeticionJson(){
 
 
-        L.t(getContext(),"LLEGAMOS AQUI 1");
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
                 "http://usmpemsun.esy.es/materias?ma_modulo=ingSis"
@@ -281,6 +279,8 @@ public class FragmentBase extends android.support.v4.app.Fragment {
                 }
             }
         });
+
+        //sin esta linea no se puede hacer la peticion al server
             requestQueue.add(request);
     }
     public ArrayList<Materia> parseJsonResponse(JSONObject response){
@@ -335,9 +335,9 @@ public class FragmentBase extends android.support.v4.app.Fragment {
                     }
 
                     Materia materia =new Materia();
-                    materia.setId(Integer.parseInt(ma_id));
+                    materia.setId(ma_id);
                     materia.setTitulo(ma_titulo);
-                    materia.setSemestre(Integer.parseInt(ma_semestre));
+                    materia.setSemestre(ma_semestre);
                     materia.setObjetivo(ma_objetivo);
                     materia.setContenido(ma_contenido);
                     materia.setModulo(ma_modulo);

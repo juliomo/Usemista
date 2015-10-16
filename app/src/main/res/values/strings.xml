@@ -26,6 +26,7 @@
     <string name="error_Server">No se a Conectado al Sevidor</string>
     <string name="error_NetWork">Fallo de Coneccion</string>
     <string name="error_Parse">Perdida de Datos</string>
+    <string name="action_person">Act Per</string>
 
 
 </resources>

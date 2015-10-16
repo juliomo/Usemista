@@ -39,7 +39,7 @@ public class DBPensum {
             statement.clearBindings();
             //for a given column index, simply bind the data to be put inside that index
             statement.bindString(2, currentMateria.getTitulo());
-            statement.bindLong(3, currentMateria.getSemestre()); ///Cuidado ESTA PUDE GENERAR ERROR YA Q NO SE A PROBADO
+            statement.bindString(3, currentMateria.getSemestre()); ///Cuidado ESTA PUDE GENERAR ERROR YA Q NO SE A PROBADO
             statement.bindString(4, currentMateria.getObjetivo());
             statement.bindString(5, currentMateria.getContenido());
             statement.bindString(6, currentMateria.getModulo());
@@ -73,7 +73,7 @@ public class DBPensum {
                 //each step is a 2 part process, find the index of the column first, find the data of that column using
                 //that index and finally set our blank materia object to contain our data
                 materia.setTitulo(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_TITULO)));
-                materia.setSemestre(cursor.getInt(cursor.getColumnIndex(PensumHelper.COLUMN_SEMESTRE)));
+                materia.setSemestre(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_SEMESTRE)));
                 materia.setObjetivo(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_CONTENIDO)));
                 materia.setContenido(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_OBJETIVO)));
                 materia.setModulo(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_MODULO)));
@@ -102,7 +102,7 @@ public class DBPensum {
         private static final String CREATE_TABLE_MATERIA = "CREATE TABLE " + TABLE_MATERIA + " (" +
                 COLUMN_UID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 COLUMN_TITULO + " TEXT," +
-                COLUMN_SEMESTRE + " INTEGER," +
+                COLUMN_SEMESTRE + " TEXT," +
                 COLUMN_OBJETIVO + " TEXT," +
                 COLUMN_CONTENIDO + " TEXT," +
                 COLUMN_MODULO + " TEXT" +

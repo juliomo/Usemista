@@ -47,7 +47,7 @@ public class AdapterRecyclerSeccionCeroMateria extends
     public void onBindViewHolder(ViewHolderMateria holder, int position) {
         Materia currentMateria= listMateria.get(position);
         holder.textViewTitulo.setText(currentMateria.getTitulo());
-      //  holder.textViewSemestre.setText(currentMateria.getSemestre());
+        holder.textViewSemestre.setText(currentMateria.getSemestre());
 
         if(position>previousPosition)
         {
