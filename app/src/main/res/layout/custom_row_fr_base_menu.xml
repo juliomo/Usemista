@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginTop="5dp"
+    android:background="@drawable/row_fr_base_menu_bg" >
+
+    <ImageView
+        android:id="@+id/itemImagen"
+        android:layout_width="134dp"
+        android:layout_height="160dp"
+        android:src="@mipmap/escudo_usm_280"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/itemTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.87"
+        android:gravity="left"
+        android:padding="4dp"
+        android:text="Ingenieria Sistemas"
+        android:textSize="18sp"
+        android:textColor="#000"
+        android:layout_below="@+id/itemImagen"
+        android:layout_alignRight="@+id/itemImagen"
+        android:layout_alignEnd="@+id/itemImagen"
+        android:layout_alignLeft="@+id/itemImagen"
+        android:layout_alignStart="@+id/itemImagen" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Accion"
+        android:id="@+id/button"
+        android:layout_below="@+id/itemTitulo"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

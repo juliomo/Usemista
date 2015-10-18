@@ -44,8 +44,6 @@ public class AdapterRecyclerSeccionCero extends RecyclerView.Adapter<AdapterRecy
     public void onBindViewHolder(AdapterRecyclerSeccionCero.SCViewHolder holder, int position) {
         holder.textViewPensumTitulo.setText(list.get(position));
 
-
-
         //Sistema de animacion Gracias a la clase AnimUtilis
         if(position>previousPosition) {
             AnimUtils.animate(holder, true);

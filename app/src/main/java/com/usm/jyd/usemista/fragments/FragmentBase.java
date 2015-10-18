@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.usm.jyd.usemista.R;
 
+import com.usm.jyd.usemista.adapters.AdapterRecyclerMenu;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerSeccionCero;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerSeccionCeroMateria;
 import com.usm.jyd.usemista.adapters.AdapterViewPagerSeccionUno;
@@ -75,6 +77,9 @@ public class FragmentBase extends android.support.v4.app.Fragment {
 
     private RecyclerView listPensums;
     private AdapterRecyclerSeccionCero adapterRecyclerSeccionCero;
+
+    private RecyclerView rcListMenu;
+    private AdapterRecyclerMenu adapterRecyclerMenu;
 
 
     //Vars Parte en Linea
@@ -140,8 +145,18 @@ public class FragmentBase extends android.support.v4.app.Fragment {
            NavMenuCallCero();//simple funcion Void para aligerar a la vista
 
         }
-        ///El argumento == 1 indica Mis Materias/////////
+        ///El argumento == 2 indica TEST/////////
         if(getArguments().getInt(ARG_NUMERO_SECCION)==1) {
+            rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
+            rcListMenu=(RecyclerView) rootView.findViewById(R.id.recycleView);
+            GridLayoutManager manager = new GridLayoutManager(getActivity(),
+                    2,GridLayoutManager.VERTICAL,false);
+            rcListMenu.setLayoutManager(manager);
+            adapterRecyclerMenu= new AdapterRecyclerMenu(getContext());
+            rcListMenu.setAdapter(adapterRecyclerMenu);
+        }
+        ///El argumento == 2 indica TEST/////////
+        if(getArguments().getInt(ARG_NUMERO_SECCION)==2) {
             rootView = inflater.inflate(R.layout.fragment_base_01, container, false);
             viewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
             tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
