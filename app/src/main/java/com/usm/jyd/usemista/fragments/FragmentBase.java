@@ -138,15 +138,8 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         View rootView = inflater.inflate(R.layout.fragment_base_01, container, false);
 
         //////////Cambio del fragmento mediante NAVIGATION VIEW ///////////////////////////////
-        ///El argumento == 0 indica Pensum///////////////
+        ///El argumento == 0 indica HOME/////////
         if(getArguments().getInt(ARG_NUMERO_SECCION)==0) {
-            rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
-            listPensums = (RecyclerView) rootView.findViewById(R.id.recycleView);
-           NavMenuCallCero();//simple funcion Void para aligerar a la vista
-
-        }
-        ///El argumento == 2 indica TEST/////////
-        if(getArguments().getInt(ARG_NUMERO_SECCION)==1) {
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
             rcListMenu=(RecyclerView) rootView.findViewById(R.id.recycleView);
             GridLayoutManager manager = new GridLayoutManager(getActivity(),
@@ -154,9 +147,31 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             rcListMenu.setLayoutManager(manager);
             adapterRecyclerMenu= new AdapterRecyclerMenu(getContext());
             rcListMenu.setAdapter(adapterRecyclerMenu);
+
+            //Agregamos GEstos Touch a nuestro recycler
+            rcListMenu.setSoundEffectsEnabled(true);
+            rcListMenu.addOnItemTouchListener(new RecyclerTouchListener(getContext(),
+                    rcListMenu, new ClickListener() {
+                @Override
+                public void onClick(View view, int position) {
+                    int aux=10;aux=aux+position;
+                    L.t(getContext(), "On Click " + aux);
+                    rcListMenu.playSoundEffect(SoundEffectConstants.CLICK);
+
+                    if (clickCallBack != null && position==0) {
+                        clickCallBack.onRSCItemSelected(aux);
+                    }
+                }
+
+                @Override
+                public void onLongClick(View view, int position) {
+                    L.t(getContext(), "Long Click on This");
+                }
+            }));
+
         }
-        ///El argumento == 2 indica TEST/////////
-        if(getArguments().getInt(ARG_NUMERO_SECCION)==2) {
+        ///El argumento == 1 indica TEST/////////
+        if(getArguments().getInt(ARG_NUMERO_SECCION)==1) {
             rootView = inflater.inflate(R.layout.fragment_base_01, container, false);
             viewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
             tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
@@ -165,9 +180,20 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         /////////////////////////////////FIN DEL TRAMO NAVIGATION VIEW/////////////////////////
 
 
-        ////////////// Cambio del Fragmento Mediante Seleccion de Pensum///////////////////////
-        ///El argumento == 10 indica Pensum de sistema/////////
+        ///El argumento == 10 indica Pensum///////////////
         if(getArguments().getInt(ARG_NUMERO_SECCION)==10) {
+            rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
+            listPensums = (RecyclerView) rootView.findViewById(R.id.recycleView);
+            NavMenuCallCero();//simple funcion Void para aligerar a la vista
+
+        }
+
+
+
+
+        ////////////// Cambio del Fragmento Mediante Seleccion de Pensum///////////////////////
+        ///El argumento == 100 indica Pensum de sistema/////////
+        if(getArguments().getInt(ARG_NUMERO_SECCION)==100) {
 
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
@@ -228,11 +254,11 @@ public class FragmentBase extends android.support.v4.app.Fragment {
                 listPensums, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                L.t(getContext(), "On Click " + (10 * position));
+                L.t(getContext(), "On Click " + (100 * position));
                 listPensums.playSoundEffect(SoundEffectConstants.CLICK);
 
                 if (position != 0 && clickCallBack != null && position == 1) {
-                    clickCallBack.onRSCItemSelected(10 * position);
+                    clickCallBack.onRSCItemSelected(100 * position);
                 }
             }
 

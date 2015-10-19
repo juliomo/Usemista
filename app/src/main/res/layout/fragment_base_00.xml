@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:background="@color/colorPrimary"
-        android:text="Pensums"
+        android:text="Topicos"
         android:id="@+id/seccionCeroTitulo"
         android:textColor="#FFF"
         android:padding="5dp"

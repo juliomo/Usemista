@@ -127,7 +127,12 @@ public class ActBase extends AppCompatActivity
                     .replace(R.id.contenedor_base, FragmentBase.newInstance(0))
                     .commit();
             stateBackPress=0;
-
+        }else if(stateBackPress==100){
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contenedor_base, FragmentBase.newInstance(10))
+                    .commit();
+            stateBackPress=10;
         }
         else {
             super.onBackPressed();
@@ -184,12 +189,6 @@ public class ActBase extends AppCompatActivity
             poss = 0;
         } else if (id == R.id.navigation_item_2) {
             poss = 1;
-        } else if (id == R.id.navigation_item_3) {
-            poss = 2;
-        } else if (id == R.id.navigation_item_4) {
-            poss = 3;
-        } else if (id == R.id.navigation_item_5) {
-            poss = 4;
         }
 
 

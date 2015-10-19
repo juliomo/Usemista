@@ -5,8 +5,8 @@
     <string name="drawer_close">close</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="navigation_item_1">Pensum</string>
-    <string name="navigation_item_2">Mis Materias</string>
+    <string name="navigation_item_1">Home</string>
+    <string name="navigation_item_2">Test Tum</string>
     <string name="navigation_item_3">Item 3</string>
     <string name="navigation_item_4">Item 4</string>
     <string name="navigation_item_5">Item 5</string>
