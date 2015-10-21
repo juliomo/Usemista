@@ -37,10 +37,10 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
 
     public AdapterRecyclerMenu (Context context){
         inflater = LayoutInflater.from(context);
-        listTitulo.add("Pensum");  listImage[0]=R.drawable.rc_menu_pensum_01;
-        listTitulo.add("Mis Materias");listImage[1]=R.drawable.rc_menu_materia_01;
-        listTitulo.add("Horario"); listImage[2]=R.drawable.rc_menu_horario_01;
-        listTitulo.add("Notify"); listImage[3]=R.drawable.ic_notifications_black_48dp;
+        listTitulo.add("Pensum & Programa");  listImage[0]=R.drawable.ic_pensum_01;
+        listTitulo.add("Mis Materias");listImage[1]=R.drawable.ic_materia_01;
+        listTitulo.add("Horario Virtual"); listImage[2]=R.drawable.ic_horario_01;
+        listTitulo.add("Notify"); listImage[3]=R.drawable.ic_notify_01;
 
     }
 
