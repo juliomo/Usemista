@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.anim.AnimUtils;
 import com.usm.jyd.usemista.events.ClickCallBack;
@@ -38,7 +40,7 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
         listTitulo.add("Pensum");  listImage[0]=R.drawable.rc_menu_pensum_01;
         listTitulo.add("Mis Materias");listImage[1]=R.drawable.rc_menu_materia_01;
         listTitulo.add("Horario"); listImage[2]=R.drawable.rc_menu_horario_01;
-        listTitulo.add("Noticia"); listImage[3]=R.drawable.rc_menu_news_01;
+        listTitulo.add("Noticia"); listImage[3]=R.drawable.ic_notifications_black_48dp;
 
     }
 
@@ -102,6 +104,11 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
                 L.t(context,"Este es el body: "+getAdapterPosition());
                 if (clickCallBack != null && getAdapterPosition()==0) {
                     clickCallBack.onRSCItemSelected(10+getAdapterPosition());
+                }
+                if(getAdapterPosition()==3){
+                    YoYo.with(Techniques.Shake)
+                            .duration(1000)
+                            .playOn(v.findViewById(R.id.itemImagen));       //(findViewById(R.id.imageView));
                 }
             }
             else if(v==v.findViewById(R.id.buttonAction)){
