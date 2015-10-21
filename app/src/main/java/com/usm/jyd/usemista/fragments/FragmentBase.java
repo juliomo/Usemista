@@ -141,6 +141,9 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         ///El argumento == 0 indica HOME/////////
         if(getArguments().getInt(ARG_NUMERO_SECCION)==0) {
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
+            TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
+            textViewTituloFragment.setText("Inicio");
+
             rcListMenu=(RecyclerView) rootView.findViewById(R.id.recycleView);
             GridLayoutManager manager = new GridLayoutManager(getActivity(),
                     2,GridLayoutManager.VERTICAL,false);
@@ -183,6 +186,9 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         ///El argumento == 10 indica Pensum///////////////
         if(getArguments().getInt(ARG_NUMERO_SECCION)==10) {
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
+            TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
+            textViewTituloFragment.setText("Pensum y Programa");
+
             listPensums = (RecyclerView) rootView.findViewById(R.id.recycleView);
             NavMenuCallCero();//simple funcion Void para aligerar a la vista
 
@@ -240,7 +246,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         SimpleSectionedRecyclerViewAdapter.Section[] dummy =
                 new SimpleSectionedRecyclerViewAdapter.Section[sections.size()];
         SimpleSectionedRecyclerViewAdapter mSectionedAdapter =
-                new SimpleSectionedRecyclerViewAdapter(getContext(),R.layout.section_recycler_adapter,
+                new SimpleSectionedRecyclerViewAdapter(getContext(),R.layout.row_rc_section_adapter,
                         R.id.section_text,adapterRecyclerSeccionCero);
         mSectionedAdapter.setSections(sections.toArray(dummy));
 

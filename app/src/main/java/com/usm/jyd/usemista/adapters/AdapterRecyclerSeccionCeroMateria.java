@@ -38,7 +38,7 @@ public class AdapterRecyclerSeccionCeroMateria extends
 
     @Override
     public ViewHolderMateria onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.custom_row_materia,parent,false);
+        View view = layoutInflater.inflate(R.layout.row_rc_fr_base_pensum_materia,parent,false);
         ViewHolderMateria viewHolderMateria = new ViewHolderMateria(view);
         return viewHolderMateria;
     }

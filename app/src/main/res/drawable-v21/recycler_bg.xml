@@ -37,7 +37,7 @@
                             android:color="#000" />       marco del cuadro -->
 
                     <size
-                        android:height="176dp" />
+                        android:height="150dp" />
                 </shape>
             </item>
 

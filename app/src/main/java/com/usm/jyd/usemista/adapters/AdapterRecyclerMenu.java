@@ -1,6 +1,7 @@
 package com.usm.jyd.usemista.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,16 +27,16 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
 
     public AdapterRecyclerMenu (Context context){
         inflater = LayoutInflater.from(context);
-        listTitulo.add("Pensum");  listImage[0]=R.mipmap.rc_menu_pensum_01;
-        listTitulo.add("Mis Materias");listImage[1]=R.mipmap.rc_menu_materia_01;
-        listTitulo.add("Horario"); listImage[2]=R.mipmap.rc_menu_horario_01;
-        listTitulo.add("Noticia"); listImage[3]=R.mipmap.rc_menu_news_01;
+        listTitulo.add("Pensum");  listImage[0]=R.drawable.rc_menu_pensum_01;
+        listTitulo.add("Mis Materias");listImage[1]=R.drawable.rc_menu_materia_01;
+        listTitulo.add("Horario"); listImage[2]=R.drawable.rc_menu_horario_01;
+        listTitulo.add("Noticia"); listImage[3]=R.drawable.rc_menu_news_01;
 
     }
 
     @Override
     public RMViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View root = inflater.inflate(R.layout.custom_row_fr_base_menu, parent, false);
+        View root = inflater.inflate(R.layout.row_rc_fr_base_menu, parent, false);
         RMViewHolder holder = new RMViewHolder(root);
 
         return holder;
@@ -60,7 +61,7 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
         return listTitulo.size();
     }
 
-    public class RMViewHolder extends RecyclerView.ViewHolder {
+    public class RMViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView textViewItemTitulo;
         ImageView imageViewItemImagen;
 
@@ -69,6 +70,11 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
 
             textViewItemTitulo = (TextView) itemView.findViewById(R.id.itemTitulo);
             imageViewItemImagen = (ImageView) itemView.findViewById(R.id.itemImagen);
+        }
+
+        @Override
+        public void onClick(View v) {
+
         }
     }
 }

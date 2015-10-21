@@ -4,8 +4,6 @@ package com.usm.jyd.usemista.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.usm.jyd.usemista.R;
-import com.usm.jyd.usemista.acts.ActBase;
 
 import java.util.ArrayList;
 
@@ -133,7 +130,7 @@ class YourRecyclerAdapter extends RecyclerView.Adapter<YourRecyclerAdapter.YourR
 
     @Override
     public YourRecyclerViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View root = inflater.inflate(R.layout.custom_row, viewGroup, false);
+        View root = inflater.inflate(R.layout.row_rc_fr_base_test, viewGroup, false);
         YourRecyclerViewHolder holder = new YourRecyclerViewHolder(root);
         return holder;
     }

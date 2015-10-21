@@ -13,7 +13,7 @@
         android:id="@+id/itemImagen"
         android:layout_width="134dp"
         android:layout_height="160dp"
-        android:src="@mipmap/escudo_usm_280"
+        android:src="@drawable/escudo_usm_280"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 

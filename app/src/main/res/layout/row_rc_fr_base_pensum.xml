@@ -11,10 +11,10 @@
 
     <ImageView
         android:id="@+id/pensumImagen"
-        android:layout_width="134dp"
-        android:layout_height="160dp"
+        android:layout_width="124dp"
+        android:layout_height="150dp"
         android:layout_centerVertical="true"
-        android:src="@mipmap/escudo_usm_280" />
+        android:src="@drawable/escudo_usm_280" />
 
     <TextView
         android:id="@+id/penusmTitulo"
@@ -42,10 +42,19 @@
         android:text="Parrafo de estructura generado a partir de android studio brindano una suave lectura en el desarrollo del mismo "
         android:textSize="14sp"
         android:textColor="#000"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_below="@+id/penusmTitulo"
         android:layout_alignLeft="@+id/penusmTitulo"
-        android:layout_alignStart="@+id/penusmTitulo" />
+        android:layout_alignStart="@+id/penusmTitulo"
+        android:layout_toLeftOf="@+id/imageView2"
+        android:layout_toStartOf="@+id/imageView2" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
+        android:id="@+id/imageView2"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
