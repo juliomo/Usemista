@@ -6,11 +6,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.anim.AnimUtils;
+import com.usm.jyd.usemista.events.ClickCallBack;
+import com.usm.jyd.usemista.logs.L;
 
 import java.util.ArrayList;
 
@@ -24,6 +28,10 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
     private LayoutInflater inflater;
 
     private int previousPosition=0;
+
+    ClickCallBack clickCallBack;
+    Context context;
+
 
     public AdapterRecyclerMenu (Context context){
         inflater = LayoutInflater.from(context);
@@ -61,20 +69,47 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
         return listTitulo.size();
     }
 
+    public void setClickListener(Context context, ClickCallBack clickCallBack){
+        this.context=context;
+        this.clickCallBack=clickCallBack;
+    }
+
     public class RMViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView textViewItemTitulo;
         ImageView imageViewItemImagen;
+        Button buttonAction;
+
+        RelativeLayout relativeLayout;
 
         public RMViewHolder(View itemView) {
             super(itemView);
 
             textViewItemTitulo = (TextView) itemView.findViewById(R.id.itemTitulo);
             imageViewItemImagen = (ImageView) itemView.findViewById(R.id.itemImagen);
+            buttonAction = (Button)itemView.findViewById(R.id.buttonAction);
+
+            relativeLayout=(RelativeLayout)itemView.findViewById(R.id.bodyRelative);
+
+            buttonAction.setOnClickListener(this);
+            relativeLayout.setOnClickListener(this);
+
         }
 
         @Override
         public void onClick(View v) {
 
+            if(v==v.findViewById(R.id.bodyRelative)){
+                L.t(context,"Este es el body: "+getAdapterPosition());
+                if (clickCallBack != null && getAdapterPosition()==0) {
+                    clickCallBack.onRSCItemSelected(10+getAdapterPosition());
+                }
+            }
+            else if(v==v.findViewById(R.id.buttonAction)){
+                L.t(context,"Boton de Accion: "+getAdapterPosition());
+            }
+
         }
     }
+
+
 }

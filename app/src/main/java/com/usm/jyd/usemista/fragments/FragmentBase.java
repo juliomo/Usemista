@@ -149,11 +149,14 @@ public class FragmentBase extends android.support.v4.app.Fragment {
                     2,GridLayoutManager.VERTICAL,false);
             rcListMenu.setLayoutManager(manager);
             adapterRecyclerMenu= new AdapterRecyclerMenu(getContext());
-            rcListMenu.setAdapter(adapterRecyclerMenu);
-
+            adapterRecyclerMenu.setClickListener(getContext(),clickCallBack);
             //Agregamos GEstos Touch a nuestro recycler
             rcListMenu.setSoundEffectsEnabled(true);
-            rcListMenu.addOnItemTouchListener(new RecyclerTouchListener(getContext(),
+            rcListMenu.setAdapter(adapterRecyclerMenu);
+
+
+
+         /*   rcListMenu.addOnItemTouchListener(new RecyclerTouchListener(getContext(),
                     rcListMenu, new ClickListener() {
                 @Override
                 public void onClick(View view, int position) {
@@ -170,7 +173,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
                 public void onLongClick(View view, int position) {
                     L.t(getContext(), "Long Click on This");
                 }
-            }));
+            }));*/
 
         }
         ///El argumento == 1 indica TEST/////////
@@ -428,6 +431,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         super.onDetach();
         mListener = null;
     }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

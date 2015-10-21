@@ -6,6 +6,7 @@
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:layout_marginTop="5dp"
+    android:id="@+id/bodyRelative"
     android:background="@drawable/row_fr_base_menu_bg"
     android:clickable="true">
 
@@ -39,7 +40,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/colorWhite"
         android:text="Accion"
-        android:id="@+id/button"
+        android:id="@+id/buttonAction"
         android:layout_below="@+id/itemTitulo"
         android:layout_centerHorizontal="true" />
 
