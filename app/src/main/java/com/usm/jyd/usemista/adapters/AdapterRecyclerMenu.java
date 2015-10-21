@@ -40,7 +40,7 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
         listTitulo.add("Pensum");  listImage[0]=R.drawable.rc_menu_pensum_01;
         listTitulo.add("Mis Materias");listImage[1]=R.drawable.rc_menu_materia_01;
         listTitulo.add("Horario"); listImage[2]=R.drawable.rc_menu_horario_01;
-        listTitulo.add("Noticia"); listImage[3]=R.drawable.ic_notifications_black_48dp;
+        listTitulo.add("Notify"); listImage[3]=R.drawable.ic_notifications_black_48dp;
 
     }
 
