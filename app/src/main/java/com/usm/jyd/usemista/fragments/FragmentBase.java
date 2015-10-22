@@ -132,9 +132,8 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         volleySingleton=VolleySingleton.getInstance();
         requestQueue=volleySingleton.getRequestQueue();
 
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.app_bar);
 
-        if(getArguments().getInt(ARG_NUMERO_SECCION)==0){
+      /*  if(getArguments().getInt(ARG_NUMERO_SECCION)==0){
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Usemista");
 
         }
@@ -142,6 +141,10 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Pensum & programa");
 
         }
+        if(getArguments().getInt(ARG_NUMERO_SECCION)==100){
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Ingenieria Sistemas");
+
+        }*/
     }
 
     @Override

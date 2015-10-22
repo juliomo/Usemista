@@ -26,11 +26,11 @@ public class AdapterRecyclerSeccionCero extends RecyclerView.Adapter<AdapterRecy
 
     public  AdapterRecyclerSeccionCero(Context context){
         inflater = LayoutInflater.from(context);
-        list.add("Ingenieria Sistemas");listImage[0]=R.drawable.p_sistemas_01;
-        list.add("Ingenieria Telecom");listImage[1]=R.drawable.p_telecom_01;
-        list.add("Ingenieria Industrial");listImage[2]=R.drawable.p_industrial_01;
-        list.add("Ingenieria Civil");listImage[3]=R.drawable.p_civil_01;
-        list.add("Arquitectura");listImage[4]=R.drawable.p_arq_01;
+        list.add("Ingenieria Sistemas");listImage[0]=R.drawable.ic_gear_01;
+        list.add("Ingenieria Telecom");listImage[1]=R.drawable.ic_telecom_01;
+        list.add("Ingenieria Industrial");listImage[2]=R.drawable.ic_industrial_01;
+        list.add("Ingenieria Civil");listImage[3]=R.drawable.ic_civil_01;
+        list.add("Arquitectura");listImage[4]=R.drawable.ic_arq_01;
 
     }
     @Override
