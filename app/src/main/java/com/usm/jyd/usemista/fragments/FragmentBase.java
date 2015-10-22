@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.SoundEffectConstants;
 import android.view.View;
@@ -129,6 +131,17 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         //parte en linea unico manipulador web
         volleySingleton=VolleySingleton.getInstance();
         requestQueue=volleySingleton.getRequestQueue();
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.app_bar);
+
+        if(getArguments().getInt(ARG_NUMERO_SECCION)==0){
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Usemista");
+
+        }
+        if(getArguments().getInt(ARG_NUMERO_SECCION)==10){
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Pensum & programa");
+
+        }
     }
 
     @Override

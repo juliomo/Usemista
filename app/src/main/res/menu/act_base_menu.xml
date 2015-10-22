@@ -13,4 +13,10 @@
         android:orderInCategory="200"
         android:title="@string/action_person"
         app:showAsAction="always"/>
+
+    <item android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:orderInCategory="300"
+        android:title="@string/action_search"
+        app:showAsAction="always"/>
 </menu>

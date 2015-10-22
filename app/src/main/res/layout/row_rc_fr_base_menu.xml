@@ -26,7 +26,7 @@
         android:gravity="center"
         android:padding="4dp"
         android:text="Ingenieria Sistemas"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textColor="#000"
         android:layout_below="@+id/itemImagen"
         android:layout_alignRight="@+id/itemImagen"
