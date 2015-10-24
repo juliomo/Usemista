@@ -5,10 +5,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.anim.AnimUtils;
+import com.usm.jyd.usemista.dialogs.MateriaDialog;
+import com.usm.jyd.usemista.events.ClickCallBack;
+import com.usm.jyd.usemista.events.ClickCallBackMateriaDialog;
+import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.network.VolleySingleton;
 import com.usm.jyd.usemista.objects.Materia;
 
@@ -25,10 +30,18 @@ public class AdapterRecyclerSeccionCeroMateria extends
     private VolleySingleton volleySingleton;
 
     private int previousPosition=0;
+    private ClickCallBackMateriaDialog clickCallBackMateriaDialog;
+    private Context context;
+
 
     public AdapterRecyclerSeccionCeroMateria(Context context){
         layoutInflater=LayoutInflater.from(context);
         volleySingleton=VolleySingleton.getInstance();
+    }
+
+    public void setClickListener(Context context, ClickCallBackMateriaDialog clickCallBackMateriaDialog){
+        this.context=context;
+        this.clickCallBackMateriaDialog=clickCallBackMateriaDialog;
     }
 
     public void setMateriaList(ArrayList<Materia> listMateria){
@@ -65,14 +78,33 @@ public class AdapterRecyclerSeccionCeroMateria extends
         return listMateria.size();
     }
 
-    public class ViewHolderMateria extends RecyclerView.ViewHolder{
+    public class ViewHolderMateria extends RecyclerView.ViewHolder implements View.OnClickListener{
+        private RelativeLayout relativeLayout;
         private TextView textViewTitulo;
         private TextView textViewSemestre;
 
         public ViewHolderMateria(View itemView) {
             super(itemView);
+            relativeLayout=(RelativeLayout) itemView.findViewById(R.id.bodyRelative);
             textViewTitulo=(TextView) itemView.findViewById(R.id.nombMateria);
             textViewSemestre=(TextView) itemView.findViewById(R.id.semestreMateria);
+
+            relativeLayout.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(v==v.findViewById(R.id.bodyRelative)){
+                L.t(context, "Materia: " + getAdapterPosition());
+                if (clickCallBackMateriaDialog != null ) {
+                    if(getAdapterPosition()==0) {
+                        clickCallBackMateriaDialog.onRSCMateriaSelected(
+                                getAdapterPosition(),listMateria.get(getAdapterPosition()));
+                    }else{clickCallBackMateriaDialog.onRSCMateriaSelected(
+                            getAdapterPosition(),listMateria.get(getAdapterPosition()));}
+                }
+            }
+
         }
     }
 

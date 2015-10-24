@@ -31,8 +31,8 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
 
     private int previousPosition=0;
 
-    ClickCallBack clickCallBack;
-    Context context;
+    private ClickCallBack clickCallBack;
+    private Context context;
 
 
     public AdapterRecyclerMenu (Context context){
@@ -86,11 +86,11 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
         public RMViewHolder(View itemView) {
             super(itemView);
 
+
+            relativeLayout=(RelativeLayout)itemView.findViewById(R.id.bodyRelative);
             textViewItemTitulo = (TextView) itemView.findViewById(R.id.itemTitulo);
             imageViewItemImagen = (ImageView) itemView.findViewById(R.id.itemImagen);
             buttonAction = (Button)itemView.findViewById(R.id.buttonAction);
-
-            relativeLayout=(RelativeLayout)itemView.findViewById(R.id.bodyRelative);
 
             buttonAction.setOnClickListener(this);
             relativeLayout.setOnClickListener(this);

@@ -29,20 +29,26 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 import com.usm.jyd.usemista.R;
 
 import com.usm.jyd.usemista.adapters.AdapterRecyclerMenu;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerSeccionCero;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerSeccionCeroMateria;
+import com.usm.jyd.usemista.adapters.AdapterReyclerSemestreMateria;
 import com.usm.jyd.usemista.adapters.AdapterViewPagerSeccionUno;
 import com.usm.jyd.usemista.adapters.SimpleSectionedRecyclerViewAdapter;
+import com.usm.jyd.usemista.aplicativo.MiAplicativo;
 import com.usm.jyd.usemista.events.ClickCallBack;
+import com.usm.jyd.usemista.events.ClickCallBackMateriaDialog;
 import com.usm.jyd.usemista.events.ClickListener;
 import com.usm.jyd.usemista.events.RecyclerTouchListener;
 import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.network.Key;
+import com.usm.jyd.usemista.network.UrlEndPoint;
 import com.usm.jyd.usemista.network.VolleySingleton;
 import com.usm.jyd.usemista.objects.Materia;
+import com.usm.jyd.usemista.objects.Semestre;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,6 +74,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
 
     // TODO: Rename and change types of parameters
     private ClickCallBack clickCallBack;
+    private ClickCallBackMateriaDialog clickCallBackMateriaDialog;
 
     private String mParam1;
 
@@ -227,23 +234,127 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             recyclerViewListMateria=(RecyclerView)rootView.findViewById(R.id.recycleView);
             recyclerViewListMateria.setLayoutManager(new LinearLayoutManager(getContext()));
             adapterRecyclerSeccionCeroMateria = new AdapterRecyclerSeccionCeroMateria(getContext());
-
+            adapterRecyclerSeccionCeroMateria.setClickListener(getContext(),clickCallBackMateriaDialog);
             recyclerViewListMateria.setAdapter(adapterRecyclerSeccionCeroMateria);
+
+           /* AdapterReyclerSemestreMateria adapterReyclerSemestreMateria;
+            adapterReyclerSemestreMateria =
+                    new AdapterReyclerSemestreMateria(getContext(),getListSemestre());
+
+            recyclerViewListMateria.setAdapter(adapterReyclerSemestreMateria);*/
 
             if(savedInstanceState!=null){
 
                 listMateria=savedInstanceState.getParcelableArrayList(STATE_MATERIA);
                 adapterRecyclerSeccionCeroMateria.setMateriaList(listMateria);
+
             }else{
 
-                enviarPeticionJson();
+                listMateria=MiAplicativo.getWritableDatabase().getAllMateriaPensum();
+                //L.t(getContext(),"data reg 1 DB: "+listMateria.get(0).getModulo());
+                if(listMateria.isEmpty()){
+                enviarPeticionJson();}
             }
+
+            adapterRecyclerSeccionCeroMateria.setMateriaList(listMateria);
 
         }
         /////////////////////////////////FIN DEL TRAMO Seleccion de pensum/////////////////////////
         return  rootView;
     }
 
+    public List<ParentListItem> getListSemestre(){
+
+        enviarPeticionJson();
+        L.t(getContext(), "aca: " + listMateria.get(1).getTitulo());
+        List<ParentListItem> parenList=new ArrayList<>();
+        Semestre s1= new Semestre();Semestre s2= new Semestre();
+     /*   Semestre s3= new Semestre();Semestre s4= new Semestre();
+        Semestre s5= new Semestre();Semestre s6= new Semestre();
+        Semestre s7= new Semestre();Semestre s8= new Semestre();
+        Semestre s9= new Semestre();Semestre s10= new Semestre();*/
+
+
+        List<Materia> filtroListMateria1= new ArrayList<>();
+        List<Materia> filtroListMateria2= new ArrayList<>();
+      /*  List<Materia> filtroListMateria3= new ArrayList<>();
+        List<Materia> filtroListMateria4= new ArrayList<>();
+        List<Materia> filtroListMateria5= new ArrayList<>();
+        List<Materia> filtroListMateria6= new ArrayList<>();
+        List<Materia> filtroListMateria7= new ArrayList<>();
+        List<Materia> filtroListMateria8= new ArrayList<>();
+        List<Materia> filtroListMateria9= new ArrayList<>();
+        List<Materia> filtroListMateria10= new ArrayList<>();*/
+
+        for(int i=0; i<listMateria.size();i++) {
+            if(listMateria.get(i).getSemestre().equals("1")){
+                filtroListMateria1.add(listMateria.get(i));
+                L.t(getContext(),"aca: "+listMateria.get(i).getTitulo());
+            }
+        }
+        for(int i=0; i<listMateria.size();i++) {
+            if(listMateria.get(i).getSemestre().equals("2")){
+                filtroListMateria2.add(listMateria.get(i));
+            }
+        }
+      /*  for(int i=0; i<listMateria.size();i++) {
+            if(listMateria.get(i).getSemestre().equals("3")){
+                filtroListMateria3.add(listMateria.get(i));
+            }
+        }
+        for(int i=0; i<listMateria.size();i++) {
+            if(listMateria.get(i).getSemestre().equals("4")){
+                filtroListMateria4.add(listMateria.get(i));
+            }
+        }
+        for(int i=0; i<listMateria.size();i++) {
+            if(listMateria.get(i).getSemestre().equals("5")){
+                filtroListMateria5.add(listMateria.get(i));
+            }
+        }
+        for(int i=0; i<listMateria.size();i++) {
+            if(listMateria.get(i).getSemestre().equals("6")){
+                filtroListMateria6.add(listMateria.get(i));
+            }
+        }
+        for(int i=0; i<listMateria.size();i++) {
+            if(listMateria.get(i).getSemestre().equals("7")){
+                filtroListMateria7.add(listMateria.get(i));
+            }
+        }
+        for(int i=0; i<listMateria.size();i++) {
+            if(listMateria.get(i).getSemestre().equals("8")){
+                filtroListMateria8.add(listMateria.get(i));
+            }
+        }
+        for(int i=0; i<listMateria.size();i++) {
+            if(listMateria.get(i).getSemestre().equals("9")){
+                filtroListMateria9.add(listMateria.get(i));
+            }
+        }
+        for(int i=0; i<listMateria.size();i++) {
+            if(listMateria.get(i).getSemestre().equals("10")){
+                filtroListMateria10.add(listMateria.get(i));
+            }
+        }*/
+
+        s1.setMateriaItemList(filtroListMateria1);
+        s2.setMateriaItemList(filtroListMateria2);
+     /*   s3.setMateriaItemList(filtroListMateria3);
+        s4.setMateriaItemList(filtroListMateria4);
+        s5.setMateriaItemList(filtroListMateria5);
+        s6.setMateriaItemList(filtroListMateria6);
+        s7.setMateriaItemList(filtroListMateria7);
+        s8.setMateriaItemList(filtroListMateria8);
+        s9.setMateriaItemList(filtroListMateria9);
+        s10.setMateriaItemList(filtroListMateria10);*/
+
+        parenList.add(s1);parenList.add(s2);/*parenList.add(s3);
+        parenList.add(s4);parenList.add(s5);parenList.add(s6);
+        parenList.add(s7);parenList.add(s8);parenList.add(s9);
+        parenList.add(s10);*/
+        return parenList;
+    }
 
     //Llamados NAVIGATION Menuu
     public void NavMenuCallCero(){
@@ -251,7 +362,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
 
         //Nuestro Adaptador de Data
         adapterRecyclerSeccionCero = new AdapterRecyclerSeccionCero(getActivity());
-
+        adapterRecyclerSeccionCero.setClickListener(getContext(),clickCallBack);
 
         //Aca proveemos la lista seccionada por Ejm : Modulo ing, modulo farmacia
         List<SimpleSectionedRecyclerViewAdapter.Section> sections =
@@ -275,7 +386,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
 
         //Agregamos GEstos Touch a nuestro recycler
         listPensums.setSoundEffectsEnabled(true);
-        listPensums.addOnItemTouchListener(new RecyclerTouchListener(getContext(),
+     /*   listPensums.addOnItemTouchListener(new RecyclerTouchListener(getContext(),
                 listPensums, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -291,7 +402,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             public void onLongClick(View view, int position) {
                 L.t(getContext(), "Long Click on This");
             }
-        }));
+        }));*/
     }
     public void NavMenuCallTest(){
 
@@ -311,13 +422,15 @@ public class FragmentBase extends android.support.v4.app.Fragment {
 
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
-                "http://usmpemsun.esy.es/materias?ma_modulo=ingSis"
+                UrlEndPoint.URL_PENSUM+UrlEndPoint.URL_QUESTION+
+                        UrlEndPoint.URL_MODULO+"="+UrlEndPoint.URL_SIS
                 , (String) null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         textViewVolleyError.setVisibility(View.GONE);
                         listMateria=parseJsonResponse(response);
+                        MiAplicativo.getWritableDatabase().insertMateriaPensum(listMateria, true);//IMPORTANTE
                         adapterRecyclerSeccionCeroMateria.setMateriaList(listMateria);
 
                     }
@@ -365,6 +478,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
                 estado = response.getString(Key.EndPointMateria.KEY_ESTADO);}
 
                 String ma_id ="NA";
+                String ma_cod ="NA";
                 String ma_titulo = "NA";
                 String ma_semestre ="NA";
                 String ma_objetivo ="NA";
@@ -378,6 +492,10 @@ public class FragmentBase extends android.support.v4.app.Fragment {
                     if(currentMateria.has(Key.EndPointMateria.KEY_ID)&&
                             !currentMateria.isNull(Key.EndPointMateria.KEY_ID)){
                         ma_id=currentMateria.getString(Key.EndPointMateria.KEY_ID);
+                    }
+                    if(currentMateria.has(Key.EndPointMateria.KEY_COD)&&
+                            !currentMateria.isNull(Key.EndPointMateria.KEY_COD)){
+                        ma_cod=currentMateria.getString(Key.EndPointMateria.KEY_COD);
                     }
                     if(currentMateria.has(Key.EndPointMateria.KEY_TITULO)&&
                             !currentMateria.isNull(Key.EndPointMateria.KEY_TITULO)){
@@ -402,6 +520,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
 
                     Materia materia =new Materia();
                     materia.setId(ma_id);
+                    materia.setCod(ma_cod);
                     materia.setTitulo(ma_titulo);
                     materia.setSemestre(ma_semestre);
                     materia.setObjetivo(ma_objetivo);
@@ -436,6 +555,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         try {
                 //gracias al metodo on Attach damos valor al clickCallBack evitamos Null value
             clickCallBack=(ClickCallBack)context;
+            clickCallBackMateriaDialog=(ClickCallBackMateriaDialog)context;
           //  mListener = (OnFragmentInteractionListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()

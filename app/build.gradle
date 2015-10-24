@@ -35,6 +35,7 @@ dependencies {
     compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.8.1@aar') {
         transitive = true
     }
+    compile 'com.bignerdranch.android:expandablerecyclerview:2.0.3'
 
     compile 'com.google.android.gms:play-services:8.1.0'
 }

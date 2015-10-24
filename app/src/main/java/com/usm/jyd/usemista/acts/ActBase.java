@@ -36,17 +36,21 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.usm.jyd.usemista.R;
+import com.usm.jyd.usemista.dialogs.MateriaDialog;
 import com.usm.jyd.usemista.events.ClickCallBack;
+import com.usm.jyd.usemista.events.ClickCallBackMateriaDialog;
 import com.usm.jyd.usemista.fragments.FragmentBase;
 import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.network.notification.RegisterApp;
+import com.usm.jyd.usemista.objects.Materia;
 
 import java.util.ArrayList;
 import java.util.TooManyListenersException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ActBase extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ClickCallBack {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        ClickCallBack, ClickCallBackMateriaDialog {
 
     // Need this to link with the Snackbar
     private CoordinatorLayout mCoordinator;
@@ -206,11 +210,20 @@ public class ActBase extends AppCompatActivity
 
     @Override
     public void onRSCItemSelected(int position) {
+
         stateBackPress=position;
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.contenedor_base, FragmentBase.newInstance(position))
                 .commit();
+
+    }
+    @Override
+    public void onRSCMateriaSelected(int position, Materia materia) {
+
+        MateriaDialog newDialog= new MateriaDialog();
+        newDialog.setMateriaObject(materia);
+        newDialog.show(getSupportFragmentManager(),"Materia");
     }
 
 
@@ -267,5 +280,6 @@ private boolean checkPlayServices(){
             throw new RuntimeException("Could not get package name: " + e);
         }
     }
+
 
 }

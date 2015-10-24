@@ -9,6 +9,7 @@ public interface Key {
         String KEY_MATERIA="materia";
 
         String KEY_ID="ma_id";
+        String KEY_COD="ma_cod";
         String KEY_TITULO = "ma_titulo";
         String KEY_SEMESTRE ="ma_semestre";
         String KEY_OBJETIVO ="ma_objetivo";

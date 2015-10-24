@@ -30,7 +30,7 @@ public class DBPensum {
             deleteAll();
         }
         //create a sql prepared statement
-        String sql = "INSERT INTO " + PensumHelper.TABLE_MATERIA + " VALUES (?,?,?,?,?);";
+        String sql = "INSERT INTO " + PensumHelper.TABLE_MATERIA + " VALUES (?,?,?,?,?,?,?);";
         //compile the statement and start a transaction
         SQLiteStatement statement = mDatabase.compileStatement(sql);
         mDatabase.beginTransaction();
@@ -38,11 +38,12 @@ public class DBPensum {
             Materia currentMateria = listMaterias.get(i);
             statement.clearBindings();
             //for a given column index, simply bind the data to be put inside that index
-            statement.bindString(2, currentMateria.getTitulo());
-            statement.bindString(3, currentMateria.getSemestre()); ///Cuidado ESTA PUDE GENERAR ERROR YA Q NO SE A PROBADO
-            statement.bindString(4, currentMateria.getObjetivo());
-            statement.bindString(5, currentMateria.getContenido());
-            statement.bindString(6, currentMateria.getModulo());
+            statement.bindString(2, currentMateria.getCod());
+            statement.bindString(3, currentMateria.getTitulo());
+            statement.bindString(4, currentMateria.getSemestre()); ///Cuidado ESTA PUDE GENERAR ERROR YA Q NO SE A PROBADO
+            statement.bindString(5, currentMateria.getObjetivo());
+            statement.bindString(6, currentMateria.getContenido());
+            statement.bindString(7, currentMateria.getModulo());
 
             statement.execute();
         }
@@ -53,10 +54,11 @@ public class DBPensum {
     }
 
     public ArrayList<Materia> getAllMateriaPensum() {
-        ArrayList<Materia> listMovies = new ArrayList<>();
+        ArrayList<Materia> listMateria = new ArrayList<>();
 
         //get a list of columns to be retrieved, we need all of them
         String[] columns = {PensumHelper.COLUMN_UID,
+                PensumHelper.COLUMN_COD,
                 PensumHelper.COLUMN_TITULO,
                 PensumHelper.COLUMN_SEMESTRE,
                 PensumHelper.COLUMN_CONTENIDO,
@@ -72,17 +74,18 @@ public class DBPensum {
                 Materia materia = new Materia();
                 //each step is a 2 part process, find the index of the column first, find the data of that column using
                 //that index and finally set our blank materia object to contain our data
+                materia.setCod(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_COD)));
                 materia.setTitulo(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_TITULO)));
                 materia.setSemestre(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_SEMESTRE)));
                 materia.setObjetivo(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_CONTENIDO)));
                 materia.setContenido(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_OBJETIVO)));
                 materia.setModulo(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_MODULO)));
                 //add the movie to the list of movie objects which we plan to return
-                listMovies.add(materia);
+                listMateria.add(materia);
             }
             while (cursor.moveToNext());
         }
-        return listMovies;
+        return listMateria;
     }
 
     public void deleteAll() {
@@ -93,6 +96,7 @@ public class DBPensum {
 
         public static final String TABLE_MATERIA = "materia";
         public static final String COLUMN_UID = "ma_id";
+        public static final String COLUMN_COD = "ma_cod";
         public static final String COLUMN_TITULO = "ma_title";
         public static final String COLUMN_SEMESTRE = "ma_semestre";
         public static final String COLUMN_OBJETIVO = "ma_objetivo";
@@ -101,6 +105,7 @@ public class DBPensum {
 
         private static final String CREATE_TABLE_MATERIA = "CREATE TABLE " + TABLE_MATERIA + " (" +
                 COLUMN_UID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                COLUMN_COD + " TEXT, " +
                 COLUMN_TITULO + " TEXT," +
                 COLUMN_SEMESTRE + " TEXT," +
                 COLUMN_OBJETIVO + " TEXT," +

@@ -23,6 +23,7 @@ public class Materia implements Parcelable {
         }
     };
     private String id;
+    private String cod;
     private String titulo;
     private String semestre;
     private String objetivo;
@@ -37,6 +38,7 @@ public class Materia implements Parcelable {
 
     public Materia(Parcel input) {
         id = input.readString();
+        cod= input.readString();
         titulo = input.readString();
         semestre = input.readString();
         objetivo = input.readString();
@@ -45,12 +47,14 @@ public class Materia implements Parcelable {
     }
 
     public Materia(String id,
+                   String cod,
                  String title,
                    String semestre,
                  String objetivo,
                  String contenido,
                  String modulo) {
         this.id = id;
+        this.cod = cod;
         this.titulo = title;
         this.semestre = semestre;
         this.objetivo = objetivo;
@@ -65,6 +69,10 @@ public class Materia implements Parcelable {
     public void setId(String id) {
         this.id = id;
     }
+
+    public String getCod(){return cod;}
+
+    public void setCod(String cod){this.cod = cod;}
 
     public String getSemestre() {
         return semestre;
@@ -109,6 +117,7 @@ public class Materia implements Parcelable {
     @Override
     public String toString() {
         return "\nID: " + id +
+                "\nCod: " + cod +
                 "\nTitulo " + titulo +
                 "\nSemestre " + semestre +
                 "\nObjetivo " + objetivo +
@@ -127,6 +136,7 @@ public class Materia implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
 //        L.m("writeToParcel Movie");
         dest.writeString(id);
+        dest.writeString(cod);
         dest.writeString(titulo);
         dest.writeString(semestre);
         dest.writeString(objetivo);
