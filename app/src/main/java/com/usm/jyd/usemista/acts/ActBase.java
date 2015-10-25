@@ -52,15 +52,14 @@ public class ActBase extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ClickCallBack, ClickCallBackMateriaDialog {
 
-    // Need this to link with the Snackbar
+    // Necesario para coordinar vistas dentro del Layout "SnackBar"
     private CoordinatorLayout mCoordinator;
-    //Need this to set the title of the app bar
+    //Vars para setear el titulo del App Bar
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private FloatingActionButton mFab;
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-
 
     //Localizador del Back Press
     private int stateBackPress=0;
@@ -91,11 +90,8 @@ public class ActBase extends AppCompatActivity
         //Notice how the title is set on the Collapsing Toolbar Layout instead of the Toolbar
         mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.app_name));
 
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.contenedor_base, FragmentBase.newInstance(0))
-                .commit();
+        //Transaction del fragmento
+        setFragmentBase(0);
     }
 
     public void iniToolBar(){
@@ -121,22 +117,22 @@ public class ActBase extends AppCompatActivity
             }
         });
     }
+    public void setFragmentBase(int pos){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.contenedor_base, FragmentBase.newInstance(pos))
+                .commit();
+    }
 
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         }else if(stateBackPress==10){
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.contenedor_base, FragmentBase.newInstance(0))
-                    .commit();
+            setFragmentBase(0);
             stateBackPress=0;
         }else if(stateBackPress==100){
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.contenedor_base, FragmentBase.newInstance(10))
-                    .commit();
+            setFragmentBase(10);
             stateBackPress=10;
         }
         else {
@@ -196,14 +192,7 @@ public class ActBase extends AppCompatActivity
         } else if (id == R.id.navigation_item_2) {
             poss = 1;
         }
-
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.contenedor_base, FragmentBase.newInstance(poss))
-                .commit();
-
-
+        setFragmentBase(poss);
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -212,10 +201,7 @@ public class ActBase extends AppCompatActivity
     public void onRSCItemSelected(int position) {
 
         stateBackPress=position;
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.contenedor_base, FragmentBase.newInstance(position))
-                .commit();
+        setFragmentBase(position);
 
     }
     @Override
@@ -223,7 +209,7 @@ public class ActBase extends AppCompatActivity
 
         MateriaDialog newDialog= new MateriaDialog();
         newDialog.setMateriaObject(materia);
-        newDialog.show(getSupportFragmentManager(),"Materia");
+        newDialog.show(getSupportFragmentManager(), "Materia");
     }
 
 
@@ -268,7 +254,6 @@ private boolean checkPlayServices(){
         return  getSharedPreferences(ActBase.class.getSimpleName(),
                 Context.MODE_PRIVATE);
     }
-
 
     private static int getAppVersion(Context context) {
         try {

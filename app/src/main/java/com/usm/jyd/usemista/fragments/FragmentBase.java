@@ -73,18 +73,18 @@ public class FragmentBase extends android.support.v4.app.Fragment {
 
 
     // TODO: Rename and change types of parameters
+    //Grupo de variables-interfas q habilitan un llamado en la actividad Base
     private ClickCallBack clickCallBack;
     private ClickCallBackMateriaDialog clickCallBackMateriaDialog;
 
     private String mParam1;
-
     private OnFragmentInteractionListener mListener;
 
     private ViewPager viewPager;
     private AdapterViewPagerSeccionUno adapterViewPagerSeccionUno;
     private TabLayout tabLayout;
 
-    private RecyclerView listPensums;
+    private RecyclerView rcListPensums;
     private AdapterRecyclerSeccionCero adapterRecyclerSeccionCero;
 
     private RecyclerView rcListMenu;
@@ -166,19 +166,9 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
             textViewTituloFragment.setText("Inicio");
-
             rcListMenu=(RecyclerView) rootView.findViewById(R.id.recycleView);
-            GridLayoutManager manager = new GridLayoutManager(getActivity(),
-                    2,GridLayoutManager.VERTICAL,false);
-            rcListMenu.setLayoutManager(manager);
-            adapterRecyclerMenu= new AdapterRecyclerMenu(getContext());
-            adapterRecyclerMenu.setClickListener(getContext(),clickCallBack);
-            //Agregamos GEstos Touch a nuestro recycler
-            rcListMenu.setSoundEffectsEnabled(true);
-            rcListMenu.setAdapter(adapterRecyclerMenu);
-
-
-
+            NavMenuCallPrincipal();
+                ///metodo ON ITEM TOUCH LISTENER
          /*   rcListMenu.addOnItemTouchListener(new RecyclerTouchListener(getContext(),
                     rcListMenu, new ClickListener() {
                 @Override
@@ -209,21 +199,21 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         /////////////////////////////////FIN DEL TRAMO NAVIGATION VIEW/////////////////////////
 
 
+        //////////Cambio del fragmento mediante MENU PRINCIPAL ///////////////////////////////
         ///El argumento == 10 indica Pensum///////////////
         if(getArguments().getInt(ARG_NUMERO_SECCION)==10) {
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
             textViewTituloFragment.setText("Pensum y Programa");
 
-            listPensums = (RecyclerView) rootView.findViewById(R.id.recycleView);
-            NavMenuCallCero();//simple funcion Void para aligerar a la vista
+            rcListPensums = (RecyclerView) rootView.findViewById(R.id.recycleView);
+            PensumCallCero(); //simple funcion Void para aligerar a la vista
 
         }
+        /////////////////////////////////FIN DEL TRAMO MENU PRICIPAL/////////////////////////
 
 
-
-
-        ////////////// Cambio del Fragmento Mediante Seleccion de Pensum///////////////////////
+        ////////////// Cambio del Fragmento Mediante SELECCION DE PENSUM///////////////////////
         ///El argumento == 100 indica Pensum de sistema/////////
         if(getArguments().getInt(ARG_NUMERO_SECCION)==100) {
 
@@ -259,7 +249,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             adapterRecyclerSeccionCeroMateria.setMateriaList(listMateria);
 
         }
-        /////////////////////////////////FIN DEL TRAMO Seleccion de pensum/////////////////////////
+        /////////////////////////////////FIN DEL TRAMO SELECCION DE PENSUM/////////////////////////
         return  rootView;
     }
 
@@ -357,8 +347,31 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     }
 
     //Llamados NAVIGATION Menuu
-    public void NavMenuCallCero(){
-        listPensums.setLayoutManager(new LinearLayoutManager(getActivity()));
+    public void NavMenuCallPrincipal(){
+        GridLayoutManager manager = new GridLayoutManager(getActivity(),
+                2,GridLayoutManager.VERTICAL,false);
+        rcListMenu.setLayoutManager(manager);
+        adapterRecyclerMenu= new AdapterRecyclerMenu(getContext());
+        adapterRecyclerMenu.setClickListener(getContext(),clickCallBack);
+        //Agregamos GEstos Touch a nuestro recycler
+        rcListMenu.setSoundEffectsEnabled(true);
+        rcListMenu.setAdapter(adapterRecyclerMenu);
+
+    }
+    public void NavMenuCallTest(){
+
+        adapterViewPagerSeccionUno = new AdapterViewPagerSeccionUno(getFragmentManager());
+        viewPager.setAdapter(adapterViewPagerSeccionUno);
+        //link between  tabs an pager adapter
+        tabLayout.setTabsFromPagerAdapter(adapterViewPagerSeccionUno);
+        //link tab & viewpager object
+        tabLayout.setupWithViewPager(viewPager);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+    }
+
+    //Llamados Menu Principal
+    public void PensumCallCero(){
+        rcListPensums.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         //Nuestro Adaptador de Data
         adapterRecyclerSeccionCero = new AdapterRecyclerSeccionCero(getActivity());
@@ -370,7 +383,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
 
         //Secciones de pensum
         sections.add(new SimpleSectionedRecyclerViewAdapter.Section(0, "Ingenieria y Arquitectura"));
-      // sections.add(new SimpleSectionedRecyclerViewAdapter.Section(5, "Farmacia"));
+        // sections.add(new SimpleSectionedRecyclerViewAdapter.Section(5, "Farmacia"));
 
         //Combinamos nuestro adaptador con el Adap seccionador :DDDD  listPensums.setAdapter(adapterRecyclerSeccionCero);
         SimpleSectionedRecyclerViewAdapter.Section[] dummy =
@@ -381,11 +394,11 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         mSectionedAdapter.setSections(sections.toArray(dummy));
 
         //finalmente podemos adaptar al Recycler
-        listPensums.setAdapter(mSectionedAdapter);
+        rcListPensums.setAdapter(mSectionedAdapter);
 
 
         //Agregamos GEstos Touch a nuestro recycler
-        listPensums.setSoundEffectsEnabled(true);
+        rcListPensums.setSoundEffectsEnabled(true);
      /*   listPensums.addOnItemTouchListener(new RecyclerTouchListener(getContext(),
                 listPensums, new ClickListener() {
             @Override
@@ -404,22 +417,10 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             }
         }));*/
     }
-    public void NavMenuCallTest(){
-
-        adapterViewPagerSeccionUno = new AdapterViewPagerSeccionUno(getFragmentManager());
-        viewPager.setAdapter(adapterViewPagerSeccionUno);
-        //link between  tabs an pager adapter
-        tabLayout.setTabsFromPagerAdapter(adapterViewPagerSeccionUno);
-        //link tab & viewpager object
-        tabLayout.setupWithViewPager(viewPager);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-    }
 
 
     ///Llamados Pensum////
     public void enviarPeticionJson(){
-
-
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
                 UrlEndPoint.URL_PENSUM+UrlEndPoint.URL_QUESTION+
