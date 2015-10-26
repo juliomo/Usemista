@@ -7,7 +7,7 @@
     android:layout_marginRight="16dp"
     android:layout_marginTop="5dp"
     android:id="@+id/bodyRelative"
-    android:background="@drawable/recycler_bg"
+    android:background="@drawable/row_fr_base_pensum_bg"
     android:clickable="true" >
 
     <ImageView

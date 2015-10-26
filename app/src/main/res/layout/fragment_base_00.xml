@@ -6,18 +6,39 @@
     android:orientation="vertical"
     tools:context="com.usm.jyd.usemista.fragments.FragmentBase">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:background="@color/colorPrimaryDark"
-        android:text="Topicos"
-        android:id="@+id/seccionCeroTitulo"
-        android:textColor="#FFF"
-        android:padding="5dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/seccionCeroHead"
+        android:orientation="horizontal"
+        android:background="@drawable/fr_base_head_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:background="@drawable/curver_fill_01">
+        <ImageView
+            android:id="@+id/seccionCeroImageView"
+            android:src="@drawable/ic_home_green_24dp_01"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Topicos"
+            android:id="@+id/seccionCeroTitulo"
+            android:textColor="@color/colorAccent"
+            android:padding="5dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </LinearLayout>
+    </LinearLayout>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleView"
@@ -25,13 +46,15 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/seccionCeroTitulo">
+        android:layout_below="@+id/seccionCeroHead">
 
     </android.support.v7.widget.RecyclerView>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Handle Errors"
         android:gravity="center"
+        android:layout_centerVertical="true"
         android:id="@+id/textVolleyError"
         android:visibility="gone"/>
 

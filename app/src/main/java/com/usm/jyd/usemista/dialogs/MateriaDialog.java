@@ -1,6 +1,9 @@
 package com.usm.jyd.usemista.dialogs;
 
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -11,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.usm.jyd.usemista.R;
+import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.objects.Materia;
 
 /**
@@ -32,10 +36,16 @@ public class MateriaDialog extends DialogFragment {
         View view= inflater.inflate(R.layout.materia_dialog,null);
 
         ImageView imageView =  (ImageView)view.findViewById(R.id.imageView);
-        imageView.setImageResource(R.drawable.ic_search_white_24dp);
+        //imageView.setImageResource(R.drawable.ic_search_white_24dp);
 
-        TextView textView =  (TextView) view.findViewById(R.id.textMateria);
-        textView.setText(materia.getTitulo());
+        TextView textViewMateria =  (TextView) view.findViewById(R.id.textMateria);
+        textViewMateria.setText(materia.getTitulo());
+
+        final TextView textViewObjetivo =  (TextView) view.findViewById(R.id.textObjetivo);
+        textViewObjetivo.setText(materia.getObjetivo());
+
+        TextView textViewContenido =  (TextView) view.findViewById(R.id.textContenido);
+        textViewContenido.setText(materia.getContenido());
 
         builder.setView(view)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {

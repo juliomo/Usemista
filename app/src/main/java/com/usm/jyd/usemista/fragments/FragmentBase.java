@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -96,6 +97,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     private RequestQueue requestQueue;
 
     private ArrayList<Materia> listMateria = new ArrayList<>();
+    private ArrayList<Materia> listUserMateria= new ArrayList<>();
     private TextView textViewVolleyError;
     private RecyclerView recyclerViewListMateria;
     private AdapterRecyclerSeccionCeroMateria adapterRecyclerSeccionCeroMateria;
@@ -164,8 +166,10 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         ///El argumento == 0 indica HOME/////////
         if(getArguments().getInt(ARG_NUMERO_SECCION)==0) {
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
+            ImageView imageViewIcon= (ImageView)rootView.findViewById(R.id.seccionCeroImageView);
+            imageViewIcon.setImageResource(R.drawable.ic_home_green_24dp_01);
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
-            textViewTituloFragment.setText("Inicio");
+            textViewTituloFragment.setText("Home");
             rcListMenu=(RecyclerView) rootView.findViewById(R.id.recycleView);
             NavMenuCallPrincipal();
                 ///metodo ON ITEM TOUCH LISTENER
@@ -203,8 +207,11 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         ///El argumento == 10 indica Pensum///////////////
         if(getArguments().getInt(ARG_NUMERO_SECCION)==10) {
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
+
+            ImageView imageViewIcon= (ImageView)rootView.findViewById(R.id.seccionCeroImageView);
+            imageViewIcon.setImageResource(R.drawable.ic_pensum_24dp_01);
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
-            textViewTituloFragment.setText("Pensum y Programa");
+            textViewTituloFragment.setText("P&P");
 
             rcListPensums = (RecyclerView) rootView.findViewById(R.id.recycleView);
             PensumCallCero(); //simple funcion Void para aligerar a la vista
@@ -218,14 +225,45 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         if(getArguments().getInt(ARG_NUMERO_SECCION)==100) {
 
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
+
+            ImageView imageViewIcon= (ImageView)rootView.findViewById(R.id.seccionCeroImageView);
+            imageViewIcon.setImageResource(R.drawable.ic_gear_24dp_01);
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
-            textViewTituloFragment.setText("Ingenieria Sistemas");
+            textViewTituloFragment.setText("Sistemas");
             textViewVolleyError=(TextView)rootView.findViewById(R.id.textVolleyError);
             recyclerViewListMateria=(RecyclerView)rootView.findViewById(R.id.recycleView);
             recyclerViewListMateria.setLayoutManager(new LinearLayoutManager(getContext()));
             adapterRecyclerSeccionCeroMateria = new AdapterRecyclerSeccionCeroMateria(getContext());
             adapterRecyclerSeccionCeroMateria.setClickListener(getContext(),clickCallBackMateriaDialog);
-            recyclerViewListMateria.setAdapter(adapterRecyclerSeccionCeroMateria);
+
+        /*    //Aca proveemos la lista seccionada por Ejm : Modulo ing, modulo farmacia
+            List<SimpleSectionedRecyclerViewAdapter.Section> sections =
+                    new ArrayList<SimpleSectionedRecyclerViewAdapter.Section>();
+
+            //Secciones de pensum
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(0, "1er Semestre"));
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(5, "2do Semestre"));
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(10, "3er Semestre"));
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(15, "4to Semestre"));
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(20, "5to Semestre"));
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(25, "6to Semestre"));
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(30, "7mo Semestre"));
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(34, "8vo Semestre"));
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(38, "9no Semestre"));
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(44, "10mo Semestre"));
+            // sections.add(new SimpleSectionedRecyclerViewAdapter.Section(5, "Farmacia"));
+
+            //Combinamos nuestro adaptador con el Adap seccionador :DDDD  listPensums.setAdapter(adapterRecyclerSeccionCero);
+            SimpleSectionedRecyclerViewAdapter.Section[] dummy =
+                    new SimpleSectionedRecyclerViewAdapter.Section[sections.size()];
+            SimpleSectionedRecyclerViewAdapter mSectionedAdapter =
+                    new SimpleSectionedRecyclerViewAdapter(getContext(),R.layout.row_rc_section_adapter,
+                            R.id.section_text,adapterRecyclerSeccionCeroMateria);
+            mSectionedAdapter.setSections(sections.toArray(dummy));
+
+            //finalmente podemos adaptar al Recycler
+            recyclerViewListMateria.setAdapter(mSectionedAdapter);*/
+           recyclerViewListMateria.setAdapter(adapterRecyclerSeccionCeroMateria);
 
            /* AdapterReyclerSemestreMateria adapterReyclerSemestreMateria;
             adapterReyclerSemestreMateria =
@@ -527,6 +565,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
                     materia.setObjetivo(ma_objetivo);
                     materia.setContenido(ma_contenido);
                     materia.setModulo(ma_modulo);
+                    materia.setU_materia("0");
 
                     //Carga completa del Json
                     listMateria.add(materia);

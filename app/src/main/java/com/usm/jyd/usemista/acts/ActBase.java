@@ -207,6 +207,7 @@ public class ActBase extends AppCompatActivity
     @Override
     public void onRSCMateriaSelected(int position, Materia materia) {
 
+
         MateriaDialog newDialog= new MateriaDialog();
         newDialog.setMateriaObject(materia);
         newDialog.show(getSupportFragmentManager(), "Materia");

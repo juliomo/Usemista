@@ -3,10 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/bodyRelative"
-    android:layout_marginBottom="5dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
     android:layout_marginTop="5dp"
+    android:background="@drawable/row_fr_base_pensum_materia_bg"
     android:clickable="true">
 
     <TextView
@@ -17,6 +18,7 @@
         android:text="Nombre Materia"
         android:id="@+id/nombMateria"
         android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/switchMateria"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -34,9 +36,18 @@
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add"
-        android:id="@+id/switch1"
-        android:layout_alignBottom="@+id/nombMateria"
+        android:id="@+id/switchMateria"
+        android:layout_alignTop="@+id/switchMateriaIcon"
+        android:layout_toStartOf="@+id/switchMateriaIcon"
+        android:layout_alignBottom="@+id/switchMateriaIcon"
+        android:layout_toLeftOf="@+id/switchMateriaIcon" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/switchMateriaIcon"
+        android:src="@drawable/ic_materia_24dp_01"
+        android:layout_alignTop="@+id/nombMateria"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 </RelativeLayout>
