@@ -8,7 +8,7 @@
     android:paddingRight="16dp"
     android:singleLine="true"
     android:textAllCaps="true"
-    android:textColor="#000"
+    android:textColor="@color/colorTextPrimary"
     android:background="@drawable/shape_round_bg"
     android:textSize="16sp"
     android:id="@+id/section_text"

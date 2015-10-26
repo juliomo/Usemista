@@ -13,12 +13,13 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/colorTextPrimary"
         android:padding="2dp"
         android:text="Nombre Materia"
         android:id="@+id/nombMateria"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/switchMateria"
+        android:layout_toLeftOf="@+id/checkBoxMateria"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -26,6 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/colorTextPrimary"
         android:padding="2dp"
         android:text="Semestre"
         android:id="@+id/semestreMateria"
@@ -33,21 +35,16 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/switchMateria"
-        android:layout_alignTop="@+id/switchMateriaIcon"
-        android:layout_toStartOf="@+id/switchMateriaIcon"
-        android:layout_alignBottom="@+id/switchMateriaIcon"
-        android:layout_toLeftOf="@+id/switchMateriaIcon" />
 
-    <ImageView
+
+    <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/switchMateriaIcon"
-        android:src="@drawable/ic_materia_24dp_01"
+        android:id="@+id/checkBoxMateria"
+        android:button="@drawable/row_rc_fr_base_pensum_materia_checkbox_bg"
         android:layout_alignTop="@+id/nombMateria"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginEnd="30dp" />
 </RelativeLayout>

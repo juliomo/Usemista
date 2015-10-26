@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -67,11 +68,12 @@ public class AdapterRecyclerSeccionCeroMateria extends
         holder.textViewTitulo.setText(currentMateria.getTitulo());
         holder.textViewSemestre.setText(currentMateria.getSemestre());
 
-          if(currentMateria.getU_materia().equals("0")){
-                holder.switchMateria.setChecked(false);}
-            else if(currentMateria.getU_materia().equals("1")){
-               holder.switchMateria.setChecked(true);
-            }
+        if(currentMateria.getU_materia().equals("0")){
+            holder.checkBoxMateria.setChecked(false);}
+        else if(currentMateria.getU_materia().equals("1")){
+            holder.checkBoxMateria.setChecked(true);
+        }
+
 
         if(position>previousPosition)
         {
@@ -93,14 +95,14 @@ public class AdapterRecyclerSeccionCeroMateria extends
         private RelativeLayout relativeLayout;
         private TextView textViewTitulo;
         private TextView textViewSemestre;
-        private Switch switchMateria;
+        private CheckBox checkBoxMateria;
 
         public ViewHolderMateria(View itemView) {
             super(itemView);
             relativeLayout=(RelativeLayout) itemView.findViewById(R.id.bodyRelative);
             textViewTitulo=(TextView) itemView.findViewById(R.id.nombMateria);
             textViewSemestre=(TextView) itemView.findViewById(R.id.semestreMateria);
-            switchMateria=(Switch)itemView.findViewById(R.id.switchMateria);
+            checkBoxMateria=(CheckBox) itemView.findViewById(R.id.checkBoxMateria);
 
             relativeLayout.setOnClickListener(this);
 
@@ -111,7 +113,7 @@ public class AdapterRecyclerSeccionCeroMateria extends
             }*/
 
 
-                switchMateria.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            checkBoxMateria.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
@@ -127,6 +129,7 @@ public class AdapterRecyclerSeccionCeroMateria extends
                     }
                 }
             });
+
         }
 
         @Override
