@@ -167,7 +167,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         if(getArguments().getInt(ARG_NUMERO_SECCION)==0) {
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
             ImageView imageViewIcon= (ImageView)rootView.findViewById(R.id.seccionCeroImageView);
-            imageViewIcon.setImageResource(R.drawable.ic_home_green_24dp_01);
+            imageViewIcon.setImageResource(R.drawable.ic_home_white_24dp);
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
             textViewTituloFragment.setText("Home");
             rcListMenu=(RecyclerView) rootView.findViewById(R.id.recycleView);
@@ -209,7 +209,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
 
             ImageView imageViewIcon= (ImageView)rootView.findViewById(R.id.seccionCeroImageView);
-            imageViewIcon.setImageResource(R.drawable.ic_pensum_24dp_01);
+            imageViewIcon.setImageResource(R.drawable.ic_pensum_white_24dp_01);
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
             textViewTituloFragment.setText("P&P");
 
@@ -227,7 +227,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
 
             ImageView imageViewIcon= (ImageView)rootView.findViewById(R.id.seccionCeroImageView);
-            imageViewIcon.setImageResource(R.drawable.ic_gear_24dp_01);
+            imageViewIcon.setImageResource(R.drawable.ic_gear_white_24dp_01);
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
             textViewTituloFragment.setText("Sistemas");
             textViewVolleyError=(TextView)rootView.findViewById(R.id.textVolleyError);
