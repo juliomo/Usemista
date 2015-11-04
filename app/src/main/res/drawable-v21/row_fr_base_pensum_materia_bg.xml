@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape
+            android:padding="5dp"
+            android:shape="rectangle">
+            <!--   <solid android:color="#FFFFFF" />  -> si no quieres una imagen -->
+            <gradient
+                android:angle="0"
+                android:startColor="#FAFAFA"
+                android:centerColor="#FAFAFA"
+                android:endColor="#15FFFFFF"
+                android:type="linear" />
+            <corners
+                android:bottomLeftRadius="1dp"
+                android:bottomRightRadius="1dp"
+                android:topLeftRadius="1dp"
+                android:topRightRadius="1dp" />
+
+
+        </shape>
+    </item>
+    <item>
+        <ripple xmlns:android="http://schemas.android.com/apk/res/android"
+            android:color="@color/colorAccent">
+
+            <item android:id="@android:id/mask"
+                android:drawable="@android:color/white" ></item>
+
+            <item>
+                <shape
+                    android:padding="10dp"
+                    android:shape="rectangle">
+                    <corners
+                        android:bottomLeftRadius="12dp"
+                        android:bottomRightRadius="12dp"
+                        android:topLeftRadius="12dp"
+                        android:topRightRadius="12dp" />
+
+                    <!-- <stroke
+                            android:width="1dip"
+                            android:color="#000" />       marco del cuadro -
+
+                    <size
+                        android:height="150dp" /> -->
+                </shape>
+            </item>
+
+        </ripple>
+    </item>
+
+</layer-list>

@@ -81,9 +81,11 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     private String mParam1;
     private OnFragmentInteractionListener mListener;
 
+    //Grupo de Fragment Test
     private ViewPager viewPager;
     private AdapterViewPagerSeccionUno adapterViewPagerSeccionUno;
     private TabLayout tabLayout;
+    //fin Grupo fragment Test
 
     private RecyclerView rcListPensums;
     private AdapterRecyclerSeccionCero adapterRecyclerSeccionCero;
@@ -118,6 +120,12 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         args.putInt(ARG_NUMERO_SECCION, num_seccion);
         fragment.setArguments(args);
         return fragment;
+    }
+    //Propuesta para Separar semestre-materia
+    public static  FragmentBase newInstance2(int num_seccion, List<Materia> list){
+        FragmentBase fragmentBase = new FragmentBase();
+
+        return fragmentBase;
     }
 
     public FragmentBase() {
@@ -220,9 +228,15 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         /////////////////////////////////FIN DEL TRAMO MENU PRICIPAL/////////////////////////
 
 
+
+
+
+
+
+
         ////////////// Cambio del Fragmento Mediante SELECCION DE PENSUM///////////////////////
         ///El argumento == 100 indica Pensum de sistema/////////
-        if(getArguments().getInt(ARG_NUMERO_SECCION)==100) {
+        if(getArguments().getInt(ARG_NUMERO_SECCION)==15400) {
 
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
 
@@ -236,40 +250,8 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             adapterRecyclerSeccionCeroMateria = new AdapterRecyclerSeccionCeroMateria(getContext());
             adapterRecyclerSeccionCeroMateria.setClickListener(getContext(),clickCallBackMateriaDialog);
 
-        /*    //Aca proveemos la lista seccionada por Ejm : Modulo ing, modulo farmacia
-            List<SimpleSectionedRecyclerViewAdapter.Section> sections =
-                    new ArrayList<SimpleSectionedRecyclerViewAdapter.Section>();
-
-            //Secciones de pensum
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(0, "1er Semestre"));
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(5, "2do Semestre"));
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(10, "3er Semestre"));
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(15, "4to Semestre"));
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(20, "5to Semestre"));
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(25, "6to Semestre"));
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(30, "7mo Semestre"));
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(34, "8vo Semestre"));
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(38, "9no Semestre"));
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(44, "10mo Semestre"));
-            // sections.add(new SimpleSectionedRecyclerViewAdapter.Section(5, "Farmacia"));
-
-            //Combinamos nuestro adaptador con el Adap seccionador :DDDD  listPensums.setAdapter(adapterRecyclerSeccionCero);
-            SimpleSectionedRecyclerViewAdapter.Section[] dummy =
-                    new SimpleSectionedRecyclerViewAdapter.Section[sections.size()];
-            SimpleSectionedRecyclerViewAdapter mSectionedAdapter =
-                    new SimpleSectionedRecyclerViewAdapter(getContext(),R.layout.row_rc_section_adapter,
-                            R.id.section_text,adapterRecyclerSeccionCeroMateria);
-            mSectionedAdapter.setSections(sections.toArray(dummy));
-
-            //finalmente podemos adaptar al Recycler
-            recyclerViewListMateria.setAdapter(mSectionedAdapter);*/
            recyclerViewListMateria.setAdapter(adapterRecyclerSeccionCeroMateria);
 
-           /* AdapterReyclerSemestreMateria adapterReyclerSemestreMateria;
-            adapterReyclerSemestreMateria =
-                    new AdapterReyclerSemestreMateria(getContext(),getListSemestre());
-
-            recyclerViewListMateria.setAdapter(adapterReyclerSemestreMateria);*/
 
             if(savedInstanceState!=null){
 
@@ -279,7 +261,6 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             }else{
 
                 listMateria=MiAplicativo.getWritableDatabase().getAllMateriaPensum();
-                //L.t(getContext(),"data reg 1 DB: "+listMateria.get(0).getModulo());
                 if(listMateria.isEmpty()){
                 enviarPeticionJson();}
             }
@@ -390,7 +371,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
                 2,GridLayoutManager.VERTICAL,false);
         rcListMenu.setLayoutManager(manager);
         adapterRecyclerMenu= new AdapterRecyclerMenu(getContext());
-        adapterRecyclerMenu.setClickListener(getContext(),clickCallBack);
+        adapterRecyclerMenu.setClickListener(getContext(), clickCallBack);
         //Agregamos GEstos Touch a nuestro recycler
         rcListMenu.setSoundEffectsEnabled(true);
         rcListMenu.setAdapter(adapterRecyclerMenu);

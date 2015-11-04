@@ -7,6 +7,7 @@ public class UrlEndPoint {
     public static final  String URL_PENSUM="http://usmpemsun.esy.es/materias";
     public static final String URL_MODULO="ma_modulo";
     public static final String URL_SIS="ingSis";
+    public static final String URL_TELECOM="telecom";
 
 
 

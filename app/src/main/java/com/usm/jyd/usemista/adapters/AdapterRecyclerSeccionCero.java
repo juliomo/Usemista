@@ -91,8 +91,8 @@ public class AdapterRecyclerSeccionCero extends RecyclerView.Adapter<AdapterRecy
         @Override
         public void onClick(View v) {
             if(v==v.findViewById(R.id.bodyRelative)){
-                L.t(context, "Este es el pensum: " + getAdapterPosition());
-                if (clickCallBack != null && getAdapterPosition()==1) {
+                L.t(context, "Este es el pensum: " + 100 * getAdapterPosition());
+                if (clickCallBack != null && (getAdapterPosition()==1|| getAdapterPosition()==2)) {
                     clickCallBack.onRSCItemSelected(100 * getAdapterPosition());
                 }
             }

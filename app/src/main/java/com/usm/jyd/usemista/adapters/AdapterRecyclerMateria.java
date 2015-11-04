@@ -8,14 +8,11 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.anim.AnimUtils;
 import com.usm.jyd.usemista.aplicativo.MiAplicativo;
-import com.usm.jyd.usemista.dialogs.MateriaDialog;
-import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.events.ClickCallBackMateriaDialog;
 import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.network.VolleySingleton;
@@ -24,10 +21,9 @@ import com.usm.jyd.usemista.objects.Materia;
 import java.util.ArrayList;
 
 /**
- * Created by der_w on 10/12/2015.
+ * Created by der_w on 10/31/2015.
  */
-public class AdapterRecyclerSeccionCeroMateria extends
-        RecyclerView.Adapter<AdapterRecyclerSeccionCeroMateria.ViewHolderMateria> {
+public class AdapterRecyclerMateria extends RecyclerView.Adapter<AdapterRecyclerMateria.RCMViewHolder>{
 
     private LayoutInflater layoutInflater;
     private ArrayList<Materia> listMateria = new ArrayList<>();
@@ -39,30 +35,28 @@ public class AdapterRecyclerSeccionCeroMateria extends
     private Context context;
 
 
-    public AdapterRecyclerSeccionCeroMateria(Context context){
+    public AdapterRecyclerMateria(Context context){
         layoutInflater=LayoutInflater.from(context);
         volleySingleton=VolleySingleton.getInstance();
     }
-
     public void setClickListener(Context context, ClickCallBackMateriaDialog clickCallBackMateriaDialog){
         this.context=context;
         this.clickCallBackMateriaDialog=clickCallBackMateriaDialog;
     }
-
     public void setMateriaList(ArrayList<Materia> listMateria){
         this.listMateria=listMateria;
         notifyItemChanged(0, listMateria.size());
     }
 
     @Override
-    public ViewHolderMateria onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RCMViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = layoutInflater.inflate(R.layout.row_rc_fr_base_pensum_materia,parent,false);
-        ViewHolderMateria viewHolderMateria = new ViewHolderMateria(view);
-        return viewHolderMateria;
+        RCMViewHolder rcmViewHolder = new RCMViewHolder(view);
+        return rcmViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolderMateria holder, int position) {
+    public void onBindViewHolder(RCMViewHolder holder, int position) {
         Materia currentMateria= listMateria.get(position);
         holder.textViewTitulo.setText(currentMateria.getTitulo());
         holder.textViewSemestre.setText(currentMateria.getSemestre());
@@ -90,13 +84,15 @@ public class AdapterRecyclerSeccionCeroMateria extends
         return listMateria.size();
     }
 
-    public class ViewHolderMateria extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+    public class RCMViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private RelativeLayout relativeLayout;
         private TextView textViewTitulo;
         private TextView textViewSemestre;
         private CheckBox checkBoxMateria;
 
-        public ViewHolderMateria(View itemView) {
+
+        public RCMViewHolder(View itemView) {
             super(itemView);
             relativeLayout=(RelativeLayout) itemView.findViewById(R.id.bodyRelative);
             textViewTitulo=(TextView) itemView.findViewById(R.id.nombMateria);
@@ -104,13 +100,6 @@ public class AdapterRecyclerSeccionCeroMateria extends
             checkBoxMateria=(CheckBox) itemView.findViewById(R.id.checkBoxMateria);
 
             relativeLayout.setOnClickListener(this);
-
-          /*  if(listMateria.get(getAdapterPosition()).getU_materia().equals("0")){
-                switchMateria.setChecked(false);}
-            else if(listMateria.get(getAdapterPosition()).getU_materia().equals("1")){
-                switchMateria.setChecked(true);
-            }*/
-
 
             checkBoxMateria.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -133,21 +122,14 @@ public class AdapterRecyclerSeccionCeroMateria extends
 
         @Override
         public void onClick(View v) {
-            if(v==v.findViewById(R.id.bodyRelative)){
-
-
-                L.t(context, "Materia: " + getAdapterPosition());
-                if (clickCallBackMateriaDialog != null ) {
-                    if(getAdapterPosition()==0) {
-                        clickCallBackMateriaDialog.onRSCMateriaSelected(
-                                getAdapterPosition(), listMateria.get(getAdapterPosition()));
-                    }else{clickCallBackMateriaDialog.onRSCMateriaSelected(
-                            getAdapterPosition(), listMateria.get(getAdapterPosition()));}
-                }
+            L.t(context, "Materia: " + getAdapterPosition());
+            if (clickCallBackMateriaDialog != null ) {
+                if(getAdapterPosition()==0) {
+                    clickCallBackMateriaDialog.onRSCMateriaSelected(
+                            getAdapterPosition(), listMateria.get(getAdapterPosition()));
+                }else{clickCallBackMateriaDialog.onRSCMateriaSelected(
+                        getAdapterPosition(), listMateria.get(getAdapterPosition()));}
             }
-
         }
     }
-
-
 }

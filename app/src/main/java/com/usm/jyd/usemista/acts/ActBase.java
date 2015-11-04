@@ -40,6 +40,8 @@ import com.usm.jyd.usemista.dialogs.MateriaDialog;
 import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.events.ClickCallBackMateriaDialog;
 import com.usm.jyd.usemista.fragments.FragmentBase;
+import com.usm.jyd.usemista.fragments.FragmentBaseMateriaSelector;
+import com.usm.jyd.usemista.fragments.FragmentBaseSemestreSelector;
 import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.network.notification.RegisterApp;
 import com.usm.jyd.usemista.objects.Materia;
@@ -73,6 +75,7 @@ public class ActBase extends AppCompatActivity
     GoogleCloudMessaging gcm;
     AtomicInteger msgId = new AtomicInteger();
     String regid;
+
 
 
     @Override
@@ -118,10 +121,20 @@ public class ActBase extends AppCompatActivity
         });
     }
     public void setFragmentBase(int pos){
-        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        if(pos<=99){
+            FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.contenedor_base, FragmentBase.newInstance(pos))
                 .commit();
+        }
+        if(pos>=100){
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contenedor_base, FragmentBaseSemestreSelector.newInstance(pos))
+                    .commit();
+        }
+
     }
 
     @Override
@@ -134,6 +147,15 @@ public class ActBase extends AppCompatActivity
         }else if(stateBackPress==100){
             setFragmentBase(10);
             stateBackPress=10;
+        }else if(stateBackPress==200){
+            setFragmentBase(10);
+            stateBackPress=(10);
+        }else if(stateBackPress==1000){
+            setFragmentBase(100);
+            stateBackPress=100;
+        }else if(stateBackPress==2000){
+            setFragmentBase(200);
+            stateBackPress=200;
         }
         else {
             super.onBackPressed();
@@ -200,10 +222,26 @@ public class ActBase extends AppCompatActivity
     @Override
     public void onRSCItemSelected(int position) {
 
-        stateBackPress=position;
+
         setFragmentBase(position);
+        stateBackPress=position;
 
     }
+
+    @Override
+    public void onRSCSemestreSelected(int position, ArrayList<Materia> listMateria) {
+        FragmentManager fragmentManager=getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.contenedor_base, FragmentBaseMateriaSelector.newInstance(position,listMateria))
+                .commit();
+
+        if(listMateria.get(0).getModulo().equals("ingSis")){
+            stateBackPress=1000;
+        }else if(listMateria.get(0).getModulo().equals("telecom")){
+            stateBackPress=2000;
+        }
+    }
+
     @Override
     public void onRSCMateriaSelected(int position, Materia materia) {
 

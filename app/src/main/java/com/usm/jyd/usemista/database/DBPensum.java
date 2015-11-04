@@ -80,6 +80,76 @@ public class DBPensum {
         return listUserMateria;
     }
 
+    public void insertMateriaPensumIndividual(ArrayList<Materia> listMaterias,String ma_modulo, boolean clearPrevious) {
+        if (clearPrevious) {
+            deleteAllTopic(ma_modulo);
+        }
+        //create a sql prepared statement
+        String sql = "INSERT INTO " + PensumHelper.TABLE_MATERIA + " VALUES (?,?,?,?,?,?,?,?);";
+        //compile the statement and start a transaction
+        SQLiteStatement statement = mDatabase.compileStatement(sql);
+        mDatabase.beginTransaction();
+        for (int i = 0; i < listMaterias.size(); i++) {
+            Materia currentMateria = listMaterias.get(i);
+            statement.clearBindings();
+            //for a given column index, simply bind the data to be put inside that index
+            statement.bindString(2, currentMateria.getCod());
+            statement.bindString(3, currentMateria.getTitulo());
+            statement.bindString(4, currentMateria.getSemestre()); ///Cuidado ESTA PUDE GENERAR ERROR YA Q NO SE A PROBADO
+            statement.bindString(5, currentMateria.getObjetivo());
+            statement.bindString(6, currentMateria.getContenido());
+            statement.bindString(7, currentMateria.getModulo());
+            statement.bindString(8, currentMateria.getU_materia());
+
+            statement.execute();
+        }
+        //set the transaction as successful and end the transaction
+        L.m("inserting entries " + listMaterias.size() + new Date(System.currentTimeMillis()));
+        mDatabase.setTransactionSuccessful();
+        mDatabase.endTransaction();
+    }
+    public ArrayList<Materia> getAllMateriaPensumIndividual(String ma_modulo) {
+
+        String selection = PensumHelper.COLUMN_MODULO + " LIKE ?";
+        String[] selectionArgs = { String.valueOf(ma_modulo) };
+
+        ArrayList<Materia> listMateria = new ArrayList<>();
+
+        //get a list of columns to be retrieved, we need all of them
+        String[] columns = {PensumHelper.COLUMN_UID,
+                PensumHelper.COLUMN_COD,
+                PensumHelper.COLUMN_TITULO,
+                PensumHelper.COLUMN_SEMESTRE,
+                PensumHelper.COLUMN_OBJETIVO,
+                PensumHelper.COLUMN_CONTENIDO,
+                PensumHelper.COLUMN_MODULO,
+                PensumHelper.COLUMN_U_MATERIA
+        };
+        Cursor cursor = mDatabase.query(PensumHelper.TABLE_MATERIA, columns, selection, selectionArgs, null, null, null);//parametros no estudiados
+        if (cursor != null && cursor.moveToFirst()) {
+            L.m("loading entries " + cursor.getCount() + new Date(System.currentTimeMillis()));
+            do {
+
+                //create a new materia object and retrieve the data from the cursor to be stored in this materia object
+                Materia materia = new Materia();
+                //each step is a 2 part process, find the index of the column first, find the data of that column using
+                //that index and finally set our blank materia object to contain our data
+                materia.setCod(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_COD)));
+                materia.setTitulo(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_TITULO)));
+                materia.setSemestre(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_SEMESTRE)));
+                materia.setObjetivo(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_OBJETIVO)));
+                materia.setContenido(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_CONTENIDO)));
+                materia.setModulo(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_MODULO)));
+                materia.setU_materia(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_U_MATERIA)));
+                //add the materia to the list of materia objects which we plan to return
+                listMateria.add(materia);
+            }
+            while (cursor.moveToNext());
+        }
+        return listMateria;
+    }
+
+
 
     public void insertMateriaPensum(ArrayList<Materia> listMaterias, boolean clearPrevious) {
         if (clearPrevious) {
@@ -149,6 +219,12 @@ public class DBPensum {
 
     public void deleteAll() {
         mDatabase.delete(PensumHelper.TABLE_MATERIA, null, null);
+    }
+    public void deleteAllTopic(String ma_modulo){
+
+        String selection = PensumHelper.COLUMN_MODULO + " LIKE ?";
+        String[] selectionArgs = { String.valueOf(ma_modulo) };
+        mDatabase.delete(PensumHelper.TABLE_MATERIA,selection,selectionArgs);
     }
     public  void updateMateriaUserPic(String newValor,String ma_cod ){
 
