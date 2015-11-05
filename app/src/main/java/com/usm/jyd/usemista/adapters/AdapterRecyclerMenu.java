@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMenu.RMViewHolder> {
 
     private ArrayList<String> listTitulo = new ArrayList<>();
-    private int[] listImage = new int[4];
+    private int[] listImage = new int[6];
     private LayoutInflater inflater;
 
     private int previousPosition=0;
@@ -41,6 +41,9 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
         listTitulo.add("Mis Materias");listImage[1]=R.drawable.ic_materia_01;
         listTitulo.add("Horario Virtual"); listImage[2]=R.drawable.ic_horario_01;
         listTitulo.add("Notify"); listImage[3]=R.drawable.ic_notify_01;
+        listTitulo.add("Tu Calendario"); listImage[4]=R.drawable.ic_calendar_01;
+        listTitulo.add("Mis Tutores"); listImage[5]=R.drawable.ic_profesor_01;
+
 
     }
 
