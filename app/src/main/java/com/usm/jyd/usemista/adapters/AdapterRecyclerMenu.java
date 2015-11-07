@@ -2,6 +2,7 @@ package com.usm.jyd.usemista.adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +16,10 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.anim.AnimUtils;
+import com.usm.jyd.usemista.aplicativo.MiAplicativo;
 import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.logs.L;
+import com.usm.jyd.usemista.objects.MenuStatus;
 
 import java.util.ArrayList;
 
@@ -26,7 +29,9 @@ import java.util.ArrayList;
 public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMenu.RMViewHolder> {
 
     private ArrayList<String> listTitulo = new ArrayList<>();
+    private ArrayList<MenuStatus> listMenuStatus =  new ArrayList<>();
     private int[] listImage = new int[6];
+    private String[] listcolor = new String[6];
     private LayoutInflater inflater;
 
     private int previousPosition=0;
@@ -35,16 +40,26 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
     private Context context;
 
 
+    public int subIcon(String  cod){
+        int aux=0;
+        if(cod.equals("100")){
+            aux=R.drawable.ic_gear_24dp_01;
+        }else if(cod.equals("200")){
+            aux=R.drawable.ic_telecom_24dp_01;
+        }
+        return aux;
+    }
+
     public AdapterRecyclerMenu (Context context){
         inflater = LayoutInflater.from(context);
-        listTitulo.add("Pensum & Programa");  listImage[0]=R.drawable.ic_pensum_01;
-        listTitulo.add("Mis Materias");listImage[1]=R.drawable.ic_materia_01;
-        listTitulo.add("Horario Virtual"); listImage[2]=R.drawable.ic_horario_01;
-        listTitulo.add("Notify"); listImage[3]=R.drawable.ic_notify_01;
-        listTitulo.add("Tu Calendario"); listImage[4]=R.drawable.ic_calendar_01;
-        listTitulo.add("Mis Tutores"); listImage[5]=R.drawable.ic_profesor_01;
+        listTitulo.add("Pensum & Programa");  listImage[0]=R.drawable.ic_pensum_01; listcolor[0]="#09b985";
+        listTitulo.add("Mis Materias");listImage[1]=R.drawable.ic_materia_01;       listcolor[1]="#09b985";
+        listTitulo.add("Horario Virtual"); listImage[2]=R.drawable.ic_horario_01;   listcolor[2]="#cb901d";
+        listTitulo.add("Notify"); listImage[3]=R.drawable.ic_notify_01;             listcolor[3]="#e20f0f";
+        listTitulo.add("Tu Calendario"); listImage[4]=R.drawable.ic_calendar_01;    listcolor[4]="#cb901d";
+        listTitulo.add("Mis Tutores"); listImage[5]=R.drawable.ic_profesor_01;      listcolor[5]="#1977c7";
 
-
+        listMenuStatus= MiAplicativo.getWritableDatabase().getAllMenuStatus();
     }
 
     @Override
@@ -59,7 +74,25 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
     public void onBindViewHolder(RMViewHolder holder, int position) {
 
         holder.textViewItemTitulo.setText(listTitulo.get(position));
+        holder.textViewItemTitulo.setTextColor(Color.parseColor(listcolor[position]));
+        holder.textViewItemTitulo.setHighlightColor(Color.parseColor(listcolor[position]));
         holder.imageViewItemImagen.setImageResource(listImage[position]);
+
+        if(!listMenuStatus.isEmpty()){
+            for(int i=0;i<listMenuStatus.size();i++ ){
+                if(listMenuStatus.get(i).getCod().equals("pensumSub1")&& position==0){
+                    holder.imageViewSub1.setImageResource(subIcon(
+                            listMenuStatus.get(i).getItem()));
+                    holder.imageViewSub1.setVisibility(View.VISIBLE);
+                }
+                if(listMenuStatus.get(i).getCod().equals("pensumSub2")&&
+                   listMenuStatus.get(i).getActivo().equals("1") && position==0){
+                    holder.imageViewSub2.setImageResource(subIcon(
+                            listMenuStatus.get(i).getItem()));
+                    holder.imageViewSub2.setVisibility(View.VISIBLE);
+                }
+            }
+        }
 
         //Sistema de animacion Gracias a la clase AnimUtilis
         if(position>previousPosition) {
@@ -82,6 +115,8 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
     public class RMViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView textViewItemTitulo;
         ImageView imageViewItemImagen;
+        ImageView imageViewSub1;
+        ImageView imageViewSub2;
         Button buttonAction;
 
         RelativeLayout relativeLayout;
@@ -93,6 +128,8 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
             relativeLayout=(RelativeLayout)itemView.findViewById(R.id.bodyRelative);
             textViewItemTitulo = (TextView) itemView.findViewById(R.id.itemTitulo);
             imageViewItemImagen = (ImageView) itemView.findViewById(R.id.itemImagen);
+            imageViewSub1=(ImageView)itemView.findViewById(R.id.imageView3);
+            imageViewSub2=(ImageView)itemView.findViewById(R.id.imageView4);
             buttonAction = (Button)itemView.findViewById(R.id.buttonAction);
 
             buttonAction.setOnClickListener(this);
@@ -105,7 +142,7 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
 
             if(v==v.findViewById(R.id.bodyRelative)){
                 L.t(context,"Este es el body: "+getAdapterPosition());
-                if (clickCallBack != null && getAdapterPosition()==0) {
+                if (clickCallBack != null && (getAdapterPosition()==0 || getAdapterPosition()==2)) {
                     clickCallBack.onRSCItemSelected(10+getAdapterPosition());
                 }
                 if(getAdapterPosition()==3){

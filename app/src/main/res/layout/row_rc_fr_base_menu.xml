@@ -14,7 +14,7 @@
         android:id="@+id/itemImagen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/escudo_usm_280"
+        android:src="@drawable/ic_pensum_01"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -22,17 +22,15 @@
         android:id="@+id/itemTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:alpha="0.87"
         android:gravity="center"
         android:padding="4dp"
         android:text="Ingenieria Sistemas"
         android:textSize="16sp"
-        android:textColor="@color/colorTextPrimary"
-        android:layout_below="@+id/itemImagen"
-        android:layout_alignRight="@+id/itemImagen"
-        android:layout_alignEnd="@+id/itemImagen"
-        android:layout_alignLeft="@+id/itemImagen"
-        android:layout_alignStart="@+id/itemImagen" />
+        android:textColor="@color/colorTextMenuGreen"
+        android:layout_below="@+id/imageView3"
+        android:layout_centerHorizontal="true" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -43,5 +41,31 @@
         android:id="@+id/buttonAction"
         android:layout_below="@+id/itemTitulo"
         android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:background="@drawable/tiny_icon_onclic_bg"
+        android:id="@+id/imageView3"
+        android:src="@drawable/ic_pensum_24dp_01"
+        android:layout_below="@+id/itemImagen"
+        android:layout_alignLeft="@+id/itemImagen"
+        android:layout_alignStart="@+id/itemImagen"
+        android:visibility="gone"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:background="@drawable/tiny_icon_onclic_bg"
+        android:id="@+id/imageView4"
+        android:src="@drawable/ic_gear_24dp_01"
+        android:visibility="gone"
+        android:layout_below="@+id/itemImagen"
+        android:layout_toRightOf="@+id/itemImagen"
+        android:layout_toEndOf="@+id/itemImagen" />
+
 
 </RelativeLayout>

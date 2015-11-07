@@ -15,4 +15,12 @@
 
 
 
+  <!-- Colors MENUUUUU -->
+  <color name="colorTextMenuGreen">#09b985</color>
+  <color name="colorTextMenuYellow">#cb901d</color>
+  <color name="colorTextMenuRed">#e20f0f</color>
+  <color name="colorTextMenuBlue">#1977c7</color>
+
+
+
 </resources>

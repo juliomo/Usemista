@@ -7,10 +7,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.provider.SyncStateContract;
+import android.view.Menu;
 
 import com.usm.jyd.usemista.aplicativo.MiAplicativo;
 import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.objects.Materia;
+import com.usm.jyd.usemista.objects.MenuStatus;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -79,6 +82,71 @@ public class DBPensum {
         }
         return listUserMateria;
     }
+
+    public void insertMenuStatus(MenuStatus menuStatus){
+
+        ContentValues values =  new ContentValues();
+        values.put(PensumHelper.COLUMN_M_COD,menuStatus.getCod());
+        values.put(PensumHelper.COLUMN_M_ITEM,menuStatus.getItem());
+        values.put(PensumHelper.COLUMN_M_ACTIVO,menuStatus.getActivo());
+
+
+        mDatabase.insert(PensumHelper.TABLE_MENU_STATUS,
+               null ,values);
+
+       /* String sql= "INSERT INTO "+PensumHelper.TABLE_MENU_STATUS+" VALUES(?,?,?,?,?);";
+        SQLiteStatement statement= mDatabase.compileStatement(sql);
+        mDatabase.beginTransaction();
+        statement.clearBindings();
+        statement.bindString(2, menuStatus.getCod());
+        statement.bindString(3, menuStatus.getItem_num());
+        statement.bindString(4, menuStatus.getItem());
+        statement.bindString(5, menuStatus.getActivo());
+        mDatabase.setTransactionSuccessful();
+        mDatabase.endTransaction();*/
+
+    }
+    public  void updateMenuStatus(MenuStatus menuStatus){
+
+        ContentValues values = new ContentValues();
+        values.put(PensumHelper.COLUMN_M_ITEM, menuStatus.getItem());
+        values.put(PensumHelper.COLUMN_M_ACTIVO, menuStatus.getActivo());
+
+        // Which row to update, based on the ID
+        String selection = PensumHelper.COLUMN_M_COD + " LIKE ?";
+        String[] selectionArgs = { String.valueOf(menuStatus.getCod()) };
+
+        mDatabase.update(PensumHelper.TABLE_MENU_STATUS, values, selection, selectionArgs);
+    }
+    public  ArrayList<MenuStatus> getAllMenuStatus(){
+        ArrayList<MenuStatus> listMenuStatus = new ArrayList<>();
+
+        String[] columns = {PensumHelper.COLUMN_M_COD,
+                PensumHelper.COLUMN_M_ITEM,
+                PensumHelper.COLUMN_M_ACTIVO
+        };
+        Cursor cursor = mDatabase.query(PensumHelper.TABLE_MENU_STATUS, columns, null, null, null, null, null);//parametros no estudiados
+        if (cursor != null && cursor.moveToFirst()) {
+            L.m("loading entries " + cursor.getCount() + new Date(System.currentTimeMillis()));
+            do {
+
+                //create a new materia object and retrieve the data from the cursor to be stored in this materia object
+                MenuStatus menuStatus = new MenuStatus();
+                //each step is a 2 part process, find the index of the column first, find the data of that column using
+                //that index and finally set our blank materia object to contain our data
+                menuStatus.setCod(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_M_COD)));
+                menuStatus.setItem(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_M_ITEM)));
+                menuStatus.setActivo(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_M_ACTIVO)));
+                //add the materia to the list of materia objects which we plan to return
+                listMenuStatus.add(menuStatus);
+            }
+            while (cursor.moveToNext());
+        }
+        return listMenuStatus;
+    }
+
+
+
 
     public void insertMateriaPensumIndividual(ArrayList<Materia> listMaterias,String ma_modulo, boolean clearPrevious) {
         if (clearPrevious) {
@@ -149,8 +217,6 @@ public class DBPensum {
         return listMateria;
     }
 
-
-
     public void insertMateriaPensum(ArrayList<Materia> listMaterias, boolean clearPrevious) {
         if (clearPrevious) {
             deleteAll();
@@ -179,7 +245,6 @@ public class DBPensum {
         mDatabase.setTransactionSuccessful();
         mDatabase.endTransaction();
     }
-
     public ArrayList<Materia> getAllMateriaPensum() {
         ArrayList<Materia> listMateria = new ArrayList<>();
 
@@ -264,6 +329,22 @@ public class DBPensum {
                 COLUMN_U_MATERIA+ " TEXT DEFAULT 0"+
                 ");";
 
+        public static final String TABLE_MENU_STATUS = "menu_status";
+        public static final String COLUMN_M_UID = "me_id";
+        public static final String COLUMN_M_COD = "me_cod";
+        public static final String COLUMN_M_ITEM = "me_item";
+        public static final String COLUMN_M_ACTIVO = "me_activo";
+
+        private static final String CREATE_TABLE_MENU_STATUS = "CREATE TABLE " + TABLE_MENU_STATUS + " (" +
+                COLUMN_M_UID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                COLUMN_M_COD + " TEXT, " +
+                COLUMN_M_ITEM + " TEXT," +
+                COLUMN_M_ACTIVO + " TEXT" +
+                ");";
+
+
+
+
         public static final String TABLE_USER_MATERIA = "user_materia";
         public static final String COLUMN_U_UID = "u_ma_id";
         public static final String COLUMN_U_COD = "u_ma_cod";
@@ -294,6 +375,7 @@ public class DBPensum {
             try {
                 db.execSQL(CREATE_TABLE_MATERIA);
                 db.execSQL(CREATE_TABLE_USER_MATERIA);
+                db.execSQL(CREATE_TABLE_MENU_STATUS);
                 L.m("create table box office executed");
             } catch (SQLiteException exception) {
                 L.t(mContext, exception + "");
