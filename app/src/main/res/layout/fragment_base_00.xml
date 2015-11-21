@@ -5,18 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.usm.jyd.usemista.fragments.FragmentBase">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/seccionCeroHead"
-        android:orientation="horizontal"
-        android:background="@drawable/fr_base_head_bg"
-       >
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal"
+        android:id="@+id/seccionCeroHead"
         android:background="@drawable/curver_fill_02">
         <ImageView
             android:id="@+id/seccionCeroImageView"
@@ -37,7 +32,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
     </LinearLayout>
-    </LinearLayout>
+
 
 
     <android.support.v7.widget.RecyclerView

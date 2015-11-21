@@ -26,7 +26,6 @@ import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerSemestre;
 import com.usm.jyd.usemista.aplicativo.MiAplicativo;
 import com.usm.jyd.usemista.events.ClickCallBack;
-import com.usm.jyd.usemista.events.ClickCallBackMateriaDialog;
 import com.usm.jyd.usemista.network.Key;
 import com.usm.jyd.usemista.network.UrlEndPoint;
 import com.usm.jyd.usemista.network.VolleySingleton;
@@ -48,7 +47,6 @@ public class FragmentBaseSemestreSelector extends Fragment {
     private String mParam1;
 
     private ClickCallBack clickCallBack;
-    private ClickCallBackMateriaDialog clickCallBackMateriaDialog;
 
     //Vars Parte en Linea
     private VolleySingleton volleySingleton;

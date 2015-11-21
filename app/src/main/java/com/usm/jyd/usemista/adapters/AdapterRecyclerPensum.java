@@ -103,7 +103,7 @@ public class AdapterRecyclerPensum extends RecyclerView.Adapter<AdapterRecyclerP
 
                     ///SETEO DEL MENU ESTATUS ///////
                     if(!listMenuStatus.isEmpty()){
-                        Boolean flag=false;
+
 
                         for(int i=0;i<listMenuStatus.size();i++){
                             if(listMenuStatus.get(i).getCod().equals("pensumSub1")) {
@@ -113,7 +113,8 @@ public class AdapterRecyclerPensum extends RecyclerView.Adapter<AdapterRecyclerP
                                 menuStatusUpdate.setActivo("1");
                                 MiAplicativo.getWritableDatabase().updateMenuStatus(menuStatusUpdate);
 
-                                if (!listMenuStatus.get(i).getItem().equals(Integer.toString(100 * getAdapterPosition()))) {
+                                if (!listMenuStatus.get(i).getItem().equals(Integer.toString(0)) &&
+                                        !listMenuStatus.get(i).getItem().equals(Integer.toString(100 * getAdapterPosition()))) {
 
                                 MenuStatus menuStatusPreview = new MenuStatus();
                                 menuStatusPreview = listMenuStatus.get(i);
@@ -121,34 +122,10 @@ public class AdapterRecyclerPensum extends RecyclerView.Adapter<AdapterRecyclerP
                                 menuStatusPreview.setActivo("1");
                                 MiAplicativo.getWritableDatabase().updateMenuStatus(menuStatusPreview);
                                 }
-                                flag=true;
+
                             }
                         }
-                        if(flag==false){
-                            MenuStatus menuStatusInsert = new MenuStatus();
-                            menuStatusInsert.setCod("pensumSub1");
-                            menuStatusInsert.setItem(Integer.toString(100 * getAdapterPosition()));
-                            menuStatusInsert.setActivo("1");
-                            MiAplicativo.getWritableDatabase().insertMenuStatus(menuStatusInsert);
 
-                            MenuStatus menuStatusInsert2 = new MenuStatus();
-                            menuStatusInsert2.setCod("pensumSub2");
-                            menuStatusInsert2.setItem("0");
-                            menuStatusInsert2.setActivo("0");
-                            MiAplicativo.getWritableDatabase().insertMenuStatus(menuStatusInsert2);
-                        }
-                    }else{
-                        MenuStatus menuStatusInsert = new MenuStatus();
-                        menuStatusInsert.setCod("pensumSub1");
-                        menuStatusInsert.setItem(Integer.toString(100 * getAdapterPosition()));
-                        menuStatusInsert.setActivo("1");
-                        MiAplicativo.getWritableDatabase().insertMenuStatus(menuStatusInsert);
-
-                        MenuStatus menuStatusInsert2 = new MenuStatus();
-                        menuStatusInsert2.setCod("pensumSub2");
-                        menuStatusInsert2.setItem("0");
-                        menuStatusInsert2.setActivo("0");
-                        MiAplicativo.getWritableDatabase().insertMenuStatus(menuStatusInsert2);
                     }
                     ///Fin SETEO DEL MENU STATUS/////////
 

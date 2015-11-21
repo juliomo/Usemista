@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerMateria;
 import com.usm.jyd.usemista.events.ClickCallBack;
-import com.usm.jyd.usemista.events.ClickCallBackMateriaDialog;
 import com.usm.jyd.usemista.objects.Materia;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class FragmentBaseMateriaSelector extends Fragment {
 
 
     private ClickCallBack clickCallBack;
-    private ClickCallBackMateriaDialog clickCallBackMateriaDialog;
+
 
     private ArrayList<Materia> listMateria = new ArrayList<>();
     private RecyclerView recyclerViewListMateria;
@@ -86,7 +85,7 @@ public class FragmentBaseMateriaSelector extends Fragment {
             recyclerViewListMateria.setLayoutManager(new LinearLayoutManager(getContext()));
             adapterRecyclerMateria = new AdapterRecyclerMateria(getContext());
             adapterRecyclerMateria.setMateriaList(listMateria);
-            adapterRecyclerMateria.setClickListener(getContext(), clickCallBackMateriaDialog);
+            adapterRecyclerMateria.setClickListener(getContext(), clickCallBack);
 
             recyclerViewListMateria.setAdapter(adapterRecyclerMateria);
 
@@ -103,7 +102,6 @@ public class FragmentBaseMateriaSelector extends Fragment {
         try {
             //gracias al metodo on Attach damos valor al clickCallBack evitamos Null value
             clickCallBack=(ClickCallBack)context;
-            clickCallBackMateriaDialog=(ClickCallBackMateriaDialog)context;
             //  mListener = (OnFragmentInteractionListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()

@@ -4,64 +4,76 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.TableLayout;
-import android.widget.TextView;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.usm.jyd.usemista.R;
+import com.usm.jyd.usemista.aplicativo.MiAplicativo;
+import com.usm.jyd.usemista.dialogs.HorarioVDialog;
 import com.usm.jyd.usemista.dialogs.MateriaDialog;
 import com.usm.jyd.usemista.events.ClickCallBack;
-import com.usm.jyd.usemista.events.ClickCallBackMateriaDialog;
+import com.usm.jyd.usemista.events.HVTimeToSet;
 import com.usm.jyd.usemista.fragments.FragmentBase;
+import com.usm.jyd.usemista.fragments.FragmentBaseHVAdd;
 import com.usm.jyd.usemista.fragments.FragmentBaseMateriaSelector;
 import com.usm.jyd.usemista.fragments.FragmentBaseSemestreSelector;
 import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.network.notification.RegisterApp;
+import com.usm.jyd.usemista.objects.HVWeek;
+import com.usm.jyd.usemista.objects.HorarioVirtual;
 import com.usm.jyd.usemista.objects.Materia;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.ArrayList;
-import java.util.TooManyListenersException;
+import java.util.Calendar;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import yuku.ambilwarna.AmbilWarnaDialog;
+
 public class ActBase extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        ClickCallBack, ClickCallBackMateriaDialog {
+        implements NavigationView.OnNavigationItemSelectedListener,ClickCallBack,
+        TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener  {
+
 
     // Necesario para coordinar vistas dentro del Layout "SnackBar"
     private CoordinatorLayout mCoordinator;
     //Vars para setear el titulo del App Bar
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private AppBarLayout mAppBarLayout;
     private FloatingActionButton mFab;
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+
+    //VARIABLES PARA HORARIO VIRTUAL
+    private int HVposition=0;
+    private String HVweekDay="";
+    private HVTimeToSet hvTimeToSet;
+    public int HVColorToSet;
 
     //Localizador del Back Press
     private int stateBackPress=0;
@@ -86,6 +98,7 @@ public class ActBase extends AppCompatActivity
         //Grupo de Coordinacion para la actividad Base
         mCoordinator = (CoordinatorLayout) findViewById(R.id.root_coordinator);
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout);
+        mAppBarLayout=(AppBarLayout)findViewById(R.id.app_bar_layout);
 
         iniToolBar();
         iniNavDrawer();
@@ -112,28 +125,92 @@ public class ActBase extends AppCompatActivity
     }
     public void iniFab(){
         mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Notice how the Coordinator Layout object is used here
-                Snackbar.make(mCoordinator, "FAB Clicked", Snackbar.LENGTH_SHORT).setAction("DISMISS", null).show();
-            }
-        });
+
     }
+
     public void setFragmentBase(int pos){
 
-        if(pos<=99){
+        if(pos==0||pos==1){
+            mAppBarLayout.setExpanded(true,true);
+            mCollapsingToolbarLayout.setTitle("Usemista");
+            mFab.setVisibility(View.VISIBLE);
+            mFab.setImageResource(R.drawable.ic_home_white_24dp);
+            mFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Notice how the Coordinator Layout object is used here
+                    Snackbar.make(mCoordinator, "FAB in HOME",
+                            Snackbar.LENGTH_SHORT).setAction("DISMISS", null).show();
+                }
+            });
+
             FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.contenedor_base, FragmentBase.newInstance(pos))
-                .commit();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contenedor_base, FragmentBase.newInstance(pos))
+                    .commit();
+        }else if(pos==10){
+            mCollapsingToolbarLayout.setTitle("Pensum");
+            mFab.setVisibility(View.GONE);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contenedor_base, FragmentBase.newInstance(pos))
+                    .commit();
+
+        }else if(pos==11){
+
+        }else if(pos==12){
+            mCollapsingToolbarLayout.setTitle("Horario");
+            mFab.setVisibility(View.VISIBLE);
+            mFab.setImageResource(R.drawable.ic_add_white_48dp);
+            mFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Notice how the Coordinator Layout object is used here
+                    Snackbar.make(mCoordinator, "FAB To Add",
+                            Snackbar.LENGTH_SHORT).setAction("DISMISS", null).show();
+
+                    stateBackPress = 121;
+                    mCollapsingToolbarLayout.setTitle("Add");
+                    mAppBarLayout.setExpanded(true,true);
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.contenedor_base, FragmentBaseHVAdd.newInstance(121,
+                                    MiAplicativo.getWritableDatabase().getAllUserMateria()))
+                            .commit();
+
+                }
+            });
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contenedor_base, FragmentBase.newInstance(pos))
+                    .commit();
+
+        }else if(pos==13){
+
+        }else if(pos==14){
+
+        }else if(pos==15){
+
         }
-        if(pos>=100){
+
+        else if(pos==100){
+            mCollapsingToolbarLayout.setTitle("Sistema");
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contenedor_base, FragmentBaseSemestreSelector.newInstance(pos))
+                    .commit();
+
+        }else if(pos==200){
+            mCollapsingToolbarLayout.setTitle("Telecom");
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.contenedor_base, FragmentBaseSemestreSelector.newInstance(pos))
                     .commit();
         }
+
+
+
 
     }
 
@@ -141,15 +218,15 @@ public class ActBase extends AppCompatActivity
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        }else if(stateBackPress==10){
+        }else if(stateBackPress==10 || stateBackPress==12){
             setFragmentBase(0);
             stateBackPress=0;
-        }else if(stateBackPress==100){
+        }else if(stateBackPress==100 || stateBackPress==200){
             setFragmentBase(10);
             stateBackPress=10;
-        }else if(stateBackPress==200){
-            setFragmentBase(10);
-            stateBackPress=(10);
+        }else if(stateBackPress==121){
+            setFragmentBase(12);
+            stateBackPress=12;
         }else if(stateBackPress==1000){
             setFragmentBase(100);
             stateBackPress=100;
@@ -169,6 +246,7 @@ public class ActBase extends AppCompatActivity
 
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -221,11 +299,8 @@ public class ActBase extends AppCompatActivity
 
     @Override
     public void onRSCItemSelected(int position) {
-
-
         setFragmentBase(position);
         stateBackPress=position;
-
     }
 
     @Override
@@ -245,11 +320,80 @@ public class ActBase extends AppCompatActivity
     @Override
     public void onRSCMateriaSelected(int position, Materia materia) {
 
-
         MateriaDialog newDialog= new MateriaDialog();
         newDialog.setMateriaObject(materia);
         newDialog.show(getSupportFragmentManager(), "Materia");
     }
+
+    @Override
+    public void onRSCHorarioVSelected(int position, Materia materia, HorarioVirtual horarioVirtual, ArrayList<HVWeek> listHVWeek) {
+        stateBackPress = 121;
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.contenedor_base, FragmentBaseHVAdd.newInstance(position, materia, horarioVirtual, listHVWeek))
+                .commit();
+    }
+
+
+    @Override
+    public void onHVTimeSelected(int HVposition, String HVweekDay) {
+
+        this.HVposition=HVposition;this.HVweekDay=HVweekDay;
+
+        Calendar now = Calendar.getInstance();
+        TimePickerDialog dpd = TimePickerDialog.newInstance(
+                ActBase.this,
+                now.get(Calendar.HOUR_OF_DAY),
+                now.get(Calendar.MINUTE),
+                false
+        );
+        dpd.show(getFragmentManager(), "Datepickerdialog");
+
+
+    }
+
+    @Override
+    public void onHVCalendarSelected(int HVposition) {
+
+        this.HVposition=HVposition;
+        Calendar now = Calendar.getInstance();
+        DatePickerDialog dpd = DatePickerDialog.newInstance(
+                ActBase.this,
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)
+        );
+        dpd.show(getFragmentManager(), "Datepickerdialog");
+
+    }
+
+    @Override
+    public void onHVColorSelected() {
+
+        HorarioVDialog newHvColorPicker = new HorarioVDialog();
+        newHvColorPicker.setHVCallBack(hvTimeToSet);
+                newHvColorPicker.show(getSupportFragmentManager(), "Color Picker");
+       /* mCollapsingToolbarLayout.setBackgroundColor(HVColorToSet);
+        mCollapsingToolbarLayout.setContentScrimColor(HVColorToSet);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(HVColorToSet);
+        }*/
+    }
+
+    @Override
+    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+        hvTimeToSet.seteoDeTiempo(hourOfDay, minute, HVweekDay, HVposition);
+    }
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        hvTimeToSet.seteoDeFecha(year, monthOfYear, dayOfMonth, HVposition);
+    }
+
+
 
 
     ///FUNCIONES y APARTADO DE PUSH NOTIFICATION
@@ -302,6 +446,14 @@ private boolean checkPlayServices(){
         } catch (PackageManager.NameNotFoundException e) {
             // should never happen
             throw new RuntimeException("Could not get package name: " + e);
+        }
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        if(fragment instanceof FragmentBaseHVAdd){
+            hvTimeToSet=(HVTimeToSet)fragment;
         }
     }
 

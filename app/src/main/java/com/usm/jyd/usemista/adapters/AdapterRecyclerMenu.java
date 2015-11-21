@@ -3,6 +3,7 @@ package com.usm.jyd.usemista.adapters;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,7 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
     private ArrayList<String> listTitulo = new ArrayList<>();
     private ArrayList<MenuStatus> listMenuStatus =  new ArrayList<>();
     private int[] listImage = new int[6];
-    private String[] listcolor = new String[6];
+    private int[] listcolor = new int[6];
     private LayoutInflater inflater;
 
     private int previousPosition=0;
@@ -39,6 +40,18 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
     private ClickCallBack clickCallBack;
     private Context context;
 
+
+    public AdapterRecyclerMenu (Context context){
+        inflater = LayoutInflater.from(context);
+        listTitulo.add("Pensum & Programa");  listImage[0]=R.drawable.ic_pensum_01; listcolor[0]= ContextCompat.getColor(context, R.color.colorTextMenuGreen);
+        listTitulo.add("Mis Materias");listImage[1]=R.drawable.ic_materia_01;       listcolor[1]=ContextCompat.getColor(context, R.color.colorTextMenuGreen);
+        listTitulo.add("Horario Virtual"); listImage[2]=R.drawable.ic_horario_01;   listcolor[2]=ContextCompat.getColor(context, R.color.colorTextMenuYellow);
+        listTitulo.add("Notify"); listImage[3]=R.drawable.ic_notify_01;             listcolor[3]=ContextCompat.getColor(context, R.color.colorTextMenuRed);
+        listTitulo.add("Tu Calendario"); listImage[4]=R.drawable.ic_calendar_01;    listcolor[4]=ContextCompat.getColor(context, R.color.colorTextMenuYellow);
+        listTitulo.add("Mis Tutores"); listImage[5]=R.drawable.ic_profesor_01;      listcolor[5]=ContextCompat.getColor(context, R.color.colorTextMenuBlue);
+
+        listMenuStatus= MiAplicativo.getWritableDatabase().getAllMenuStatus();
+    }
 
     public int subIcon(String  cod){
         int aux=0;
@@ -48,18 +61,6 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
             aux=R.drawable.ic_telecom_24dp_01;
         }
         return aux;
-    }
-
-    public AdapterRecyclerMenu (Context context){
-        inflater = LayoutInflater.from(context);
-        listTitulo.add("Pensum & Programa");  listImage[0]=R.drawable.ic_pensum_01; listcolor[0]="#09b985";
-        listTitulo.add("Mis Materias");listImage[1]=R.drawable.ic_materia_01;       listcolor[1]="#09b985";
-        listTitulo.add("Horario Virtual"); listImage[2]=R.drawable.ic_horario_01;   listcolor[2]="#cb901d";
-        listTitulo.add("Notify"); listImage[3]=R.drawable.ic_notify_01;             listcolor[3]="#e20f0f";
-        listTitulo.add("Tu Calendario"); listImage[4]=R.drawable.ic_calendar_01;    listcolor[4]="#cb901d";
-        listTitulo.add("Mis Tutores"); listImage[5]=R.drawable.ic_profesor_01;      listcolor[5]="#1977c7";
-
-        listMenuStatus= MiAplicativo.getWritableDatabase().getAllMenuStatus();
     }
 
     @Override
@@ -74,13 +75,14 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
     public void onBindViewHolder(RMViewHolder holder, int position) {
 
         holder.textViewItemTitulo.setText(listTitulo.get(position));
-        holder.textViewItemTitulo.setTextColor(Color.parseColor(listcolor[position]));
-        holder.textViewItemTitulo.setHighlightColor(Color.parseColor(listcolor[position]));
+        holder.textViewItemTitulo.setTextColor(listcolor[position]);
+        holder.textViewItemTitulo.setHighlightColor(listcolor[position]);
         holder.imageViewItemImagen.setImageResource(listImage[position]);
 
         if(!listMenuStatus.isEmpty()){
             for(int i=0;i<listMenuStatus.size();i++ ){
-                if(listMenuStatus.get(i).getCod().equals("pensumSub1")&& position==0){
+                if(listMenuStatus.get(i).getCod().equals("pensumSub1")&&
+                   listMenuStatus.get(i).getActivo().equals("1") && position==0){
                     holder.imageViewSub1.setImageResource(subIcon(
                             listMenuStatus.get(i).getItem()));
                     holder.imageViewSub1.setVisibility(View.VISIBLE);
@@ -135,6 +137,9 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
             buttonAction.setOnClickListener(this);
             relativeLayout.setOnClickListener(this);
 
+            imageViewSub1.setOnClickListener(this);
+            imageViewSub2.setOnClickListener(this);
+
         }
 
         @Override
@@ -149,6 +154,28 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
                     YoYo.with(Techniques.Shake)
                             .duration(1000)
                             .playOn(v.findViewById(R.id.itemImagen));       //(findViewById(R.id.imageView));
+                }
+            }else if(v==v.findViewById(R.id.imageView3)){
+                if(getAdapterPosition()==0){
+                    String selector="";
+                    if(!listMenuStatus.isEmpty()) {
+                        for (int i = 0; i < listMenuStatus.size(); i++) {
+                            if (listMenuStatus.get(i).getCod().equals("pensumSub1")) {
+                                selector=listMenuStatus.get(i).getItem();
+                            }
+                        }
+                    }  clickCallBack.onRSCItemSelected(Integer.valueOf(selector));
+                }
+            }else if(v==v.findViewById(R.id.imageView4)){
+                if(getAdapterPosition()==0){
+                    String selector="";
+                    if(!listMenuStatus.isEmpty()) {
+                        for (int i = 0; i < listMenuStatus.size(); i++) {
+                            if (listMenuStatus.get(i).getCod().equals("pensumSub2")) {
+                                selector=listMenuStatus.get(i).getItem();
+                            }
+                        }
+                    }  clickCallBack.onRSCItemSelected(Integer.valueOf(selector));
                 }
             }
             else if(v==v.findViewById(R.id.buttonAction)){

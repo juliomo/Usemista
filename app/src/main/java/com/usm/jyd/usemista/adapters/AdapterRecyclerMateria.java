@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.anim.AnimUtils;
 import com.usm.jyd.usemista.aplicativo.MiAplicativo;
-import com.usm.jyd.usemista.events.ClickCallBackMateriaDialog;
+import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.network.VolleySingleton;
 import com.usm.jyd.usemista.objects.Materia;
@@ -31,7 +31,7 @@ public class AdapterRecyclerMateria extends RecyclerView.Adapter<AdapterRecycler
     private VolleySingleton volleySingleton;
 
     private int previousPosition=0;
-    private ClickCallBackMateriaDialog clickCallBackMateriaDialog;
+    private ClickCallBack clickCallBack;
     private Context context;
 
 
@@ -39,9 +39,9 @@ public class AdapterRecyclerMateria extends RecyclerView.Adapter<AdapterRecycler
         layoutInflater=LayoutInflater.from(context);
         volleySingleton=VolleySingleton.getInstance();
     }
-    public void setClickListener(Context context, ClickCallBackMateriaDialog clickCallBackMateriaDialog){
+    public void setClickListener(Context context, ClickCallBack clickCallBack){
         this.context=context;
-        this.clickCallBackMateriaDialog=clickCallBackMateriaDialog;
+        this.clickCallBack=clickCallBack;
     }
     public void setMateriaList(ArrayList<Materia> listMateria){
         this.listMateria=listMateria;
@@ -105,15 +105,21 @@ public class AdapterRecyclerMateria extends RecyclerView.Adapter<AdapterRecycler
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
-                        MiAplicativo.getWritableDatabase()
-                                .updateMateriaUserPic("1",
-                                        listMateria.get(getAdapterPosition()).getCod());
-                        // The toggle is enabled
+                        if(listMateria.get(getAdapterPosition()).getU_materia().equals("0")){
+                            MiAplicativo.getWritableDatabase()
+                                    .updateMateriaUserPic("1",
+                                            listMateria.get(getAdapterPosition()).getCod());
+                            MiAplicativo.getWritableDatabase()
+                                    .insertUserMateria(listMateria.get(getAdapterPosition()));
+                            listMateria.get(getAdapterPosition()).setU_materia("1");
+                        }
                     } else {
                         MiAplicativo.getWritableDatabase()
                                 .updateMateriaUserPic("0",
                                         listMateria.get(getAdapterPosition()).getCod());
-                        // The toggle is disabled
+                        MiAplicativo.getWritableDatabase()
+                                .deleteUserMateria(listMateria.get(getAdapterPosition()).getCod());
+                        listMateria.get(getAdapterPosition()).setU_materia("0");
                     }
                 }
             });
@@ -123,11 +129,11 @@ public class AdapterRecyclerMateria extends RecyclerView.Adapter<AdapterRecycler
         @Override
         public void onClick(View v) {
             L.t(context, "Materia: " + getAdapterPosition());
-            if (clickCallBackMateriaDialog != null ) {
+            if (clickCallBack != null ) {
                 if(getAdapterPosition()==0) {
-                    clickCallBackMateriaDialog.onRSCMateriaSelected(
+                    clickCallBack.onRSCMateriaSelected(
                             getAdapterPosition(), listMateria.get(getAdapterPosition()));
-                }else{clickCallBackMateriaDialog.onRSCMateriaSelected(
+                }else{clickCallBack.onRSCMateriaSelected(
                         getAdapterPosition(), listMateria.get(getAdapterPosition()));}
             }
         }

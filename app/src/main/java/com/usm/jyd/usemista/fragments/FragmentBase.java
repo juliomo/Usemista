@@ -11,6 +11,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,12 +22,12 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.usm.jyd.usemista.R;
 
+import com.usm.jyd.usemista.adapters.AdapterRecyclerHorarioV;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerMenu;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerPensum;
 import com.usm.jyd.usemista.adapters.AdapterViewPagerSeccionUno;
 import com.usm.jyd.usemista.adapters.SimpleSectionedRecyclerViewAdapter;
 import com.usm.jyd.usemista.events.ClickCallBack;
-import com.usm.jyd.usemista.events.ClickCallBackMateriaDialog;
 import com.usm.jyd.usemista.network.VolleySingleton;
 import com.usm.jyd.usemista.objects.Materia;
 
@@ -49,7 +52,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     // TODO: Rename and change types of parameters
     //Grupo de variables-interfas q habilitan un llamado en la actividad Base
     private ClickCallBack clickCallBack;
-    private ClickCallBackMateriaDialog clickCallBackMateriaDialog;
+
 
     private String mParam1;
     private OnFragmentInteractionListener mListener;
@@ -67,6 +70,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     private AdapterRecyclerMenu adapterRecyclerMenu;
 
     private RecyclerView rcListHorarioVirtual;
+    private AdapterRecyclerHorarioV adapterRecyclerHorarioV;
 
     //Vars Parte en Linea
     private VolleySingleton volleySingleton;
@@ -108,6 +112,8 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         outState.putParcelableArrayList(STATE_MATERIA,listMateria);
     }
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,19 +125,20 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         volleySingleton=VolleySingleton.getInstance();
         requestQueue=volleySingleton.getRequestQueue();
 
+        setHasOptionsMenu(true);
 
-      /*  if(getArguments().getInt(ARG_NUMERO_SECCION)==0){
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Usemista");
 
-        }
-        if(getArguments().getInt(ARG_NUMERO_SECCION)==10){
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Pensum & programa");
+    }
 
-        }
-        if(getArguments().getInt(ARG_NUMERO_SECCION)==100){
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Ingenieria Sistemas");
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.act_base_fr_sec_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
-        }*/
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -177,11 +184,20 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             PensumCallCero(); //simple funcion Void para aligerar a la vista
 
         }
-        ///El argumento == 30 indica Horario Virtual/////////////////
+        ///El argumento == 12 indica Horario Virtual/////////////////
         if(getArguments().getInt(ARG_NUMERO_SECCION)==12){
             rootView = inflater.inflate(R.layout.fragment_base_00, container,false);
 
+            TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
+            textViewTituloFragment.setText("HV");
+
             rcListHorarioVirtual=(RecyclerView)rootView.findViewById(R.id.recycleView);
+            rcListHorarioVirtual.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+            adapterRecyclerHorarioV=new AdapterRecyclerHorarioV(getContext());
+            adapterRecyclerHorarioV.setClickCallBack(clickCallBack);
+            rcListHorarioVirtual.setSoundEffectsEnabled(true);
+            rcListHorarioVirtual.setAdapter(adapterRecyclerHorarioV);
 
 
 
@@ -281,7 +297,6 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         try {
                 //gracias al metodo on Attach damos valor al clickCallBack evitamos Null value
             clickCallBack=(ClickCallBack)context;
-            clickCallBackMateriaDialog=(ClickCallBackMateriaDialog)context;
           //  mListener = (OnFragmentInteractionListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()

@@ -1,9 +1,6 @@
 package com.usm.jyd.usemista.dialogs;
 
 import android.app.Dialog;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -14,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.usm.jyd.usemista.R;
-import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.objects.Materia;
 
 /**
@@ -33,7 +29,7 @@ public class MateriaDialog extends DialogFragment {
 
         //Layout Inflater
         LayoutInflater inflater  = getActivity().getLayoutInflater();
-        View view= inflater.inflate(R.layout.materia_dialog,null);
+        View view= inflater.inflate(R.layout.dialog_materia,null);
 
         ImageView imageView =  (ImageView)view.findViewById(R.id.imageView);
         //imageView.setImageResource(R.drawable.ic_search_white_24dp);
@@ -51,7 +47,7 @@ public class MateriaDialog extends DialogFragment {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //cod
+
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

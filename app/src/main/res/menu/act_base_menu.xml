@@ -12,7 +12,7 @@
         android:icon="@mipmap/ic_person_white_24dp"
         android:orderInCategory="200"
         android:title="@string/action_person"
-        app:showAsAction="always"/>
+        />
 
 
 </menu>
