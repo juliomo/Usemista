@@ -80,6 +80,11 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
     private ImageView imageViewIconMateria;
 
 
+    private EditText editTextLunMod, editTextMarMod,editTextMieMod,editTextJueMod,editTextVieMod ;
+    private EditText editTextLunSa, editTextMarSa,editTextMieSa,editTextJueSa,editTextVieSa ;
+
+
+
     public static FragmentBaseHVAdd newInstance(int num_seccion, Materia materia, HorarioVirtual horarioVirtual, ArrayList<HVWeek> listHVWeek) {
         FragmentBaseHVAdd fragment = new FragmentBaseHVAdd();
         Bundle args = new Bundle();
@@ -185,9 +190,85 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
+            String auxCodMateria="";
+            if(getArguments().getInt(ARG_NUMERO_SECCION)==121){
+                MiAplicativo.getWritableDatabase().updateUserMateriaHvPic("1",listUserMateria.get(positionListSpinnerAux).getCod());
+                auxCodMateria=listUserMateria.get(positionListSpinnerAux).getCod();
+            }else if(getArguments().getInt(ARG_NUMERO_SECCION)==122){
+                MiAplicativo.getWritableDatabase().deleteHorarioVirtual(materiaInEd.getCod());
+                MiAplicativo.getWritableDatabase().deleteHorarioVirtualWeek(materiaInEd.getCod());
+                auxCodMateria=materiaInEd.getCod();
+            }
+
+
+            HorarioVirtual horarioVirtual =new HorarioVirtual();
+            horarioVirtual.setCod(auxCodMateria);
+            horarioVirtual.setTitulo(editTextTitulo.getText().toString());
+            if(switchCalendar.isChecked()){
+                horarioVirtual.setCalendar("1");
+            }else{
+                horarioVirtual.setCalendar("0");
+            }
+            horarioVirtual.setCalIni(calIni);
+            horarioVirtual.setCalEnd(calEnd);
+            horarioVirtual.setColor(colorHV);
+
+            if(switchLun.isChecked()){
+                HVWeek hvWeek = new HVWeek();
+                hvWeek.setCod(auxCodMateria);
+                hvWeek.setModulo(editTextLunMod.getText().toString());
+                hvWeek.setAula(editTextLunSa.getText().toString());
+                hvWeek.setWeekDay("Lun");
+                hvWeek.setTimeIni(timeLunIni);
+                hvWeek.setTimeEnd(timeLunEnd);
+                MiAplicativo.getWritableDatabase().insertHorarioVirtualWeek(hvWeek);
+            }if(switchMar.isChecked()){
+                HVWeek hvWeek = new HVWeek();
+                hvWeek.setCod(auxCodMateria);
+                hvWeek.setModulo(editTextMarMod.getText().toString());
+                hvWeek.setAula(editTextMarSa.getText().toString());
+                hvWeek.setWeekDay("Mar");
+                hvWeek.setTimeIni(timeMarIni);
+                hvWeek.setTimeEnd(timeMarEnd);
+                MiAplicativo.getWritableDatabase().insertHorarioVirtualWeek(hvWeek);
+            }if(switchMie.isChecked()){
+                HVWeek hvWeek = new HVWeek();
+                hvWeek.setCod(auxCodMateria);
+                hvWeek.setModulo(editTextMieMod.getText().toString());
+                hvWeek.setAula(editTextMieSa.getText().toString());
+                hvWeek.setWeekDay("Mie");
+                hvWeek.setTimeIni(timeMieIni);
+                hvWeek.setTimeEnd(timeMieEnd);
+                MiAplicativo.getWritableDatabase().insertHorarioVirtualWeek(hvWeek);
+            }if(switchJue.isChecked()){
+                HVWeek hvWeek = new HVWeek();
+                hvWeek.setCod(auxCodMateria);
+                hvWeek.setModulo(editTextJueMod.getText().toString());
+                hvWeek.setAula(editTextJueSa.getText().toString());
+                hvWeek.setWeekDay("Jue");
+                hvWeek.setTimeIni(timeJueIni);
+                hvWeek.setTimeEnd(timeJueEnd);
+                MiAplicativo.getWritableDatabase().insertHorarioVirtualWeek(hvWeek);
+            }if(switchVie.isChecked()){
+                HVWeek hvWeek = new HVWeek();
+                hvWeek.setCod(auxCodMateria);
+                hvWeek.setModulo(editTextVieMod.getText().toString());
+                hvWeek.setAula(editTextVieSa.getText().toString());
+                hvWeek.setWeekDay("Vie");
+                hvWeek.setTimeIni(timeVieIni);
+                hvWeek.setTimeEnd(timeVieEnd);
+                MiAplicativo.getWritableDatabase().insertHorarioVirtualWeek(hvWeek);
+            }
+
+            MiAplicativo.getWritableDatabase().insertHorarioVirtual(horarioVirtual);
+            clickCallBack.onRSCItemSelected(12);
             return true;
         }
         if (id == R.id.action_delete) {
+            MiAplicativo.getWritableDatabase().updateUserMateriaHvPic("0", materiaInEd.getCod());
+            MiAplicativo.getWritableDatabase().deleteHorarioVirtual(materiaInEd.getCod());
+            MiAplicativo.getWritableDatabase().deleteHorarioVirtualWeek(materiaInEd.getCod());
+            clickCallBack.onRSCItemSelected(12);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -201,6 +282,7 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
 
         imageViewIconMateria=(ImageView)rootView.findViewById(R.id.imageViewIconMateria);
         editTextTitulo=(EditText)rootView.findViewById(R.id.editTextTitulo);
+
         final TextView textViewNombMateria=(TextView)rootView.findViewById(R.id.textNombMateria);
         final Spinner spinnerMateria=(Spinner)rootView.findViewById(R.id.spinnerMaterias);
 
@@ -237,40 +319,41 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
          textViewlunEnd=(TextView)rootView.findViewById(R.id.textViewLunEnd);
         final TextView textViewLunMod=(TextView)rootView.findViewById(R.id.textViewLunModulo);
         final TextView textViewLunSa=(TextView)rootView.findViewById(R.id.textViewLunSalon);
-        final EditText editTextLunMod=(EditText)rootView.findViewById(R.id.editTextLunModulo);
-        final EditText editTextLunSa=(EditText)rootView.findViewById(R.id.editTextLunSalon);
+         editTextLunMod=(EditText)rootView.findViewById(R.id.editTextLunModulo);
+         editTextLunSa=(EditText)rootView.findViewById(R.id.editTextLunSalon);
 
          switchMar = (Switch)rootView.findViewById(R.id.switchMar);
         textViewMarIni=(TextView)rootView.findViewById(R.id.textViewMarIni);
          textViewMarEnd=(TextView)rootView.findViewById(R.id.textViewMarEnd);
         final TextView textViewMarMod=(TextView)rootView.findViewById(R.id.textViewMarModulo);
         final TextView textViewMarSa=(TextView)rootView.findViewById(R.id.textViewMarSalon);
-        final EditText editTextMarMod=(EditText)rootView.findViewById(R.id.editTextMarModulo);
-        final EditText editTextMarSa=(EditText)rootView.findViewById(R.id.editTextMarSalon);
+         editTextMarMod=(EditText)rootView.findViewById(R.id.editTextMarModulo);
+         editTextMarSa=(EditText)rootView.findViewById(R.id.editTextMarSalon);
 
          switchMie = (Switch)rootView.findViewById(R.id.switchMie);
          textViewMieIni=(TextView)rootView.findViewById(R.id.textViewMieIni);
          textViewMieEnd=(TextView)rootView.findViewById(R.id.textViewMieEnd);
         final TextView textViewMieMod=(TextView)rootView.findViewById(R.id.textViewMieModulo);
         final TextView textViewMieSa=(TextView)rootView.findViewById(R.id.textViewMieSalon);
-        final EditText editTextMieMod=(EditText)rootView.findViewById(R.id.editTextMieModulo);
-        final EditText editTextMieSa=(EditText)rootView.findViewById(R.id.editTextMieSalon);
+         editTextMieMod=(EditText)rootView.findViewById(R.id.editTextMieModulo);
+        editTextMieSa=(EditText)rootView.findViewById(R.id.editTextMieSalon);
 
          switchJue = (Switch)rootView.findViewById(R.id.switchJue);
          textViewJueIni=(TextView)rootView.findViewById(R.id.textViewJueIni);
          textViewJueEnd=(TextView)rootView.findViewById(R.id.textViewJueEnd);
         final TextView textViewJueMod=(TextView)rootView.findViewById(R.id.textViewJueModulo);
         final TextView textViewJueSa=(TextView)rootView.findViewById(R.id.textViewJueSalon);
-        final EditText editTextJueMod=(EditText)rootView.findViewById(R.id.editTextJueModulo);
-        final EditText editTextJueSa=(EditText)rootView.findViewById(R.id.editTextJueSalon);
+         editTextJueMod=(EditText)rootView.findViewById(R.id.editTextJueModulo);
+         editTextJueSa=(EditText)rootView.findViewById(R.id.editTextJueSalon);
 
          switchVie = (Switch)rootView.findViewById(R.id.switchVie);
         textViewVieIni=(TextView)rootView.findViewById(R.id.textViewVieIni);
         textViewVieEnd=(TextView)rootView.findViewById(R.id.textViewVieEnd);
         final TextView textViewVieMod=(TextView)rootView.findViewById(R.id.textViewVieModulo);
         final TextView textViewVieSa=(TextView)rootView.findViewById(R.id.textViewVieSalon);
-        final EditText editTextVieMod=(EditText)rootView.findViewById(R.id.editTextVieModulo);
-        final EditText editTextVieSa=(EditText)rootView.findViewById(R.id.editTextVieSalon);
+         editTextVieMod=(EditText)rootView.findViewById(R.id.editTextVieModulo);
+        editTextVieSa=(EditText)rootView.findViewById(R.id.editTextVieSalon);
+
 
         switchLun.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -413,86 +496,6 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
         });
          imageViewIconColor=(ImageView)rootView.findViewById(R.id.imageViewColorPalette);
 
-
-        Button buttonGuardar=(Button) rootView.findViewById(R.id.buttonGuardar);
-        buttonGuardar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String auxCodMateria="";
-                if(getArguments().getInt(ARG_NUMERO_SECCION)==121){
-                    MiAplicativo.getWritableDatabase().updateUserMateriaHvPic("1",listUserMateria.get(positionListSpinnerAux).getCod());
-                    auxCodMateria=listUserMateria.get(positionListSpinnerAux).getCod();
-                }else if(getArguments().getInt(ARG_NUMERO_SECCION)==122){
-                    MiAplicativo.getWritableDatabase().deleteHorarioVirtual(materiaInEd.getCod());
-                    MiAplicativo.getWritableDatabase().deleteHorarioVirtualWeek(materiaInEd.getCod());
-                    auxCodMateria=materiaInEd.getCod();
-                }
-
-
-                HorarioVirtual horarioVirtual =new HorarioVirtual();
-                horarioVirtual.setCod(auxCodMateria);
-                horarioVirtual.setTitulo(editTextTitulo.getText().toString());
-                if(switchCalendar.isChecked()){
-                    horarioVirtual.setCalendar("1");
-                }else{
-                    horarioVirtual.setCalendar("0");
-                }
-                horarioVirtual.setCalIni(calIni);
-                horarioVirtual.setCalEnd(calEnd);
-                horarioVirtual.setColor(colorHV);
-
-             if(switchLun.isChecked()){
-                 HVWeek hvWeek = new HVWeek();
-                 hvWeek.setCod(auxCodMateria);
-                 hvWeek.setModulo(editTextLunMod.getText().toString());
-                 hvWeek.setAula(editTextLunSa.getText().toString());
-                 hvWeek.setWeekDay("Lun");
-                 hvWeek.setTimeIni(timeLunIni);
-                 hvWeek.setTimeEnd(timeLunEnd);
-                 MiAplicativo.getWritableDatabase().insertHorarioVirtualWeek(hvWeek);
-             }if(switchMar.isChecked()){
-                 HVWeek hvWeek = new HVWeek();
-                 hvWeek.setCod(auxCodMateria);
-                 hvWeek.setModulo(editTextMarMod.getText().toString());
-                 hvWeek.setAula(editTextMarSa.getText().toString());
-                 hvWeek.setWeekDay("Mar");
-                 hvWeek.setTimeIni(timeMarIni);
-                 hvWeek.setTimeEnd(timeMarEnd);
-                 MiAplicativo.getWritableDatabase().insertHorarioVirtualWeek(hvWeek);
-             }if(switchMie.isChecked()){
-                 HVWeek hvWeek = new HVWeek();
-                 hvWeek.setCod(auxCodMateria);
-                 hvWeek.setModulo(editTextMieMod.getText().toString());
-                 hvWeek.setAula(editTextMieSa.getText().toString());
-                 hvWeek.setWeekDay("Mie");
-                 hvWeek.setTimeIni(timeMieIni);
-                 hvWeek.setTimeEnd(timeMieEnd);
-                 MiAplicativo.getWritableDatabase().insertHorarioVirtualWeek(hvWeek);
-             }if(switchJue.isChecked()){
-                 HVWeek hvWeek = new HVWeek();
-                 hvWeek.setCod(auxCodMateria);
-                 hvWeek.setModulo(editTextJueMod.getText().toString());
-                 hvWeek.setAula(editTextJueSa.getText().toString());
-                 hvWeek.setWeekDay("Jue");
-                 hvWeek.setTimeIni(timeJueIni);
-                 hvWeek.setTimeEnd(timeJueEnd);
-                 MiAplicativo.getWritableDatabase().insertHorarioVirtualWeek(hvWeek);
-             }if(switchVie.isChecked()){
-                 HVWeek hvWeek = new HVWeek();
-                 hvWeek.setCod(auxCodMateria);
-                 hvWeek.setModulo(editTextVieMod.getText().toString());
-                 hvWeek.setAula(editTextVieSa.getText().toString());
-                 hvWeek.setWeekDay("Vie");
-                 hvWeek.setTimeIni(timeVieIni);
-                 hvWeek.setTimeEnd(timeVieEnd);
-                 MiAplicativo.getWritableDatabase().insertHorarioVirtualWeek(hvWeek);
-             }
-
-                MiAplicativo.getWritableDatabase().insertHorarioVirtual(horarioVirtual);
-                clickCallBack.onRSCItemSelected(12);
-            }
-        });
 
         if(getArguments().getInt(ARG_NUMERO_SECCION)==121){
 

@@ -90,6 +90,7 @@
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="Nombre Corto"
+                    android:selectAllOnFocus="true"
                     android:id="@+id/editTextTitulo"
                     android:layout_toRightOf="@+id/textView3"
                     android:layout_column="1" />
@@ -157,6 +158,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/editTextLunModulo"
+                    android:selectAllOnFocus="true"
+                    android:phoneNumber="true"
                     android:visibility="gone"
                     android:layout_column="4" />
             </TableRow>
@@ -178,6 +181,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
+                    android:selectAllOnFocus="true"
+                    android:phoneNumber="true"
                     android:id="@+id/editTextLunSalon"
                     android:layout_column="4" />
             </TableRow>
@@ -232,6 +237,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
+                    android:selectAllOnFocus="true"
+                    android:phoneNumber="true"
                     android:id="@+id/editTextMarModulo"
                     android:layout_column="4" />
             </TableRow>
@@ -253,6 +260,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
+                    android:selectAllOnFocus="true"
+                    android:phoneNumber="true"
                     android:id="@+id/editTextMarSalon"
                     android:layout_column="4" />
             </TableRow>
@@ -307,6 +316,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
+                    android:selectAllOnFocus="true"
+                    android:phoneNumber="true"
                     android:id="@+id/editTextMieModulo"
                     android:layout_column="4" />
             </TableRow>
@@ -328,6 +339,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
+                    android:selectAllOnFocus="true"
+                    android:phoneNumber="true"
                     android:id="@+id/editTextMieSalon"
                     android:layout_column="4" />
             </TableRow>
@@ -382,6 +395,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
+                    android:selectAllOnFocus="true"
+                    android:phoneNumber="true"
                     android:id="@+id/editTextJueModulo"
                     android:layout_column="4" />
             </TableRow>
@@ -403,6 +418,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
+                    android:phoneNumber="true"
+                    android:selectAllOnFocus="true"
                     android:id="@+id/editTextJueSalon"
                     android:layout_column="4" />
             </TableRow>
@@ -457,6 +474,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
+                    android:phoneNumber="true"
+                    android:selectAllOnFocus="true"
                     android:id="@+id/editTextVieModulo"
                     android:layout_column="4" />
             </TableRow>
@@ -478,7 +497,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/editTextVieSalon"
+                    android:phoneNumber="true"
                     android:visibility="gone"
+                    android:selectAllOnFocus="true"
                     android:layout_column="4" />
             </TableRow>
         </TableLayout>
@@ -556,14 +577,6 @@
                     android:text="Color"
                     android:id="@+id/buttonColor"
                     android:layout_column="1" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Guardar TODO"
-                    android:textColor="@color/colorWhite"
-                    android:id="@+id/buttonGuardar"
-                    android:layout_column="2" />
 
             </TableRow>
             </TableLayout>

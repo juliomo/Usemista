@@ -171,7 +171,6 @@ public class ActBase extends AppCompatActivity
 
                     stateBackPress = 121;
                     mCollapsingToolbarLayout.setTitle("Add");
-                    mAppBarLayout.setExpanded(true,true);
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction()
                             .replace(R.id.contenedor_base, FragmentBaseHVAdd.newInstance(121,
@@ -328,6 +327,15 @@ public class ActBase extends AppCompatActivity
     @Override
     public void onRSCHorarioVSelected(int position, Materia materia, HorarioVirtual horarioVirtual, ArrayList<HVWeek> listHVWeek) {
         stateBackPress = 121;
+
+        mCollapsingToolbarLayout.setBackgroundColor(horarioVirtual.getColor());
+        mCollapsingToolbarLayout.setContentScrimColor(horarioVirtual.getColor());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(horarioVirtual.getColor());
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
