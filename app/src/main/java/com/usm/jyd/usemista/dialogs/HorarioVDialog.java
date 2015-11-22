@@ -21,7 +21,8 @@ import com.usm.jyd.usemista.events.HVTimeToSet;
 public class HorarioVDialog extends DialogFragment {
 
     private HVTimeToSet hvTimeToSet;
-    public void setHVCallBack(HVTimeToSet hvTimeToSet){this.hvTimeToSet=hvTimeToSet;}
+    private int prevColor;
+    public void setHVCallBack(HVTimeToSet hvTimeToSet, int prevColor){this.hvTimeToSet=hvTimeToSet; this.prevColor=prevColor;}
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -34,6 +35,7 @@ public class HorarioVDialog extends DialogFragment {
         SVBar svBar = (SVBar) view.findViewById(R.id.svbar);
         OpacityBar opacityBar = (OpacityBar) view.findViewById(R.id.opacitybar);
 
+        picker.setOldCenterColor(prevColor);
         picker.addSVBar(svBar);
         picker.addOpacityBar(opacityBar);
 

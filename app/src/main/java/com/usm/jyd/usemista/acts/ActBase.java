@@ -14,6 +14,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,8 +24,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.GridLayout;
+import android.widget.Spinner;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -50,6 +55,7 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
@@ -99,6 +105,7 @@ public class ActBase extends AppCompatActivity
         mCoordinator = (CoordinatorLayout) findViewById(R.id.root_coordinator);
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout);
         mAppBarLayout=(AppBarLayout)findViewById(R.id.app_bar_layout);
+       // spinnerCarrera=(Spinner)findViewById(R.id.spinnerCarrera);
 
         iniToolBar();
         iniNavDrawer();
@@ -127,9 +134,19 @@ public class ActBase extends AppCompatActivity
         mFab = (FloatingActionButton) findViewById(R.id.fab);
 
     }
+    public void setColorThemeByMenu(int color){
+        mCollapsingToolbarLayout.setBackgroundColor(color);
+        mCollapsingToolbarLayout.setContentScrimColor(color);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(color);
+        }
+    }
+
 
     public void setFragmentBase(int pos){
-
         if(pos==0||pos==1){
             mAppBarLayout.setExpanded(true,true);
             mCollapsingToolbarLayout.setTitle("Usemista");
@@ -149,6 +166,7 @@ public class ActBase extends AppCompatActivity
                     .replace(R.id.contenedor_base, FragmentBase.newInstance(pos))
                     .commit();
         }else if(pos==10){
+           // setColorThemeByMenu(ContextCompat.getColor(ActBase.this,R.color.colorTextMenuGreen));
             mCollapsingToolbarLayout.setTitle("Pensum");
             mFab.setVisibility(View.GONE);
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -159,6 +177,7 @@ public class ActBase extends AppCompatActivity
         }else if(pos==11){
 
         }else if(pos==12){
+           // setColorThemeByMenu(ContextCompat.getColor(ActBase.this,R.color.colorTextMenuYellow));
             mCollapsingToolbarLayout.setTitle("Horario");
             mFab.setVisibility(View.VISIBLE);
             mFab.setImageResource(R.drawable.ic_add_white_48dp);
@@ -171,6 +190,7 @@ public class ActBase extends AppCompatActivity
 
                     stateBackPress = 121;
                     mCollapsingToolbarLayout.setTitle("Add");
+                    mFab.setVisibility(View.GONE);
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction()
                             .replace(R.id.contenedor_base, FragmentBaseHVAdd.newInstance(121,
@@ -328,14 +348,7 @@ public class ActBase extends AppCompatActivity
     public void onRSCHorarioVSelected(int position, Materia materia, HorarioVirtual horarioVirtual, ArrayList<HVWeek> listHVWeek) {
         stateBackPress = 121;
 
-        mCollapsingToolbarLayout.setBackgroundColor(horarioVirtual.getColor());
-        mCollapsingToolbarLayout.setContentScrimColor(horarioVirtual.getColor());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = this.getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(horarioVirtual.getColor());
-        }
+       setColorThemeByMenu(horarioVirtual.getColor());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -377,10 +390,10 @@ public class ActBase extends AppCompatActivity
     }
 
     @Override
-    public void onHVColorSelected() {
+    public void onHVColorSelected(int prevColor) {
 
         HorarioVDialog newHvColorPicker = new HorarioVDialog();
-        newHvColorPicker.setHVCallBack(hvTimeToSet);
+        newHvColorPicker.setHVCallBack(hvTimeToSet, prevColor);
                 newHvColorPicker.show(getSupportFragmentManager(), "Color Picker");
        /* mCollapsingToolbarLayout.setBackgroundColor(HVColorToSet);
         mCollapsingToolbarLayout.setContentScrimColor(HVColorToSet);

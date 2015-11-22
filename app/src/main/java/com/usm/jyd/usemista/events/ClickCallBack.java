@@ -18,6 +18,6 @@ public interface ClickCallBack {
     void onRSCHorarioVSelected(int position, Materia materia, HorarioVirtual horarioVirtual,ArrayList<HVWeek> listHVWeek);
     void onHVTimeSelected(int HVposition, String weekDay);
     void onHVCalendarSelected(int HVposition);
-    void onHVColorSelected();
+    void onHVColorSelected(int prevColor);
 
 }

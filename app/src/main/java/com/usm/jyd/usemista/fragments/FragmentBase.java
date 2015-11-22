@@ -27,8 +27,10 @@ import com.usm.jyd.usemista.adapters.AdapterRecyclerMenu;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerPensum;
 import com.usm.jyd.usemista.adapters.AdapterViewPagerSeccionUno;
 import com.usm.jyd.usemista.adapters.SimpleSectionedRecyclerViewAdapter;
+import com.usm.jyd.usemista.aplicativo.MiAplicativo;
 import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.network.VolleySingleton;
+import com.usm.jyd.usemista.objects.HorarioVirtual;
 import com.usm.jyd.usemista.objects.Materia;
 
 import java.util.ArrayList;
@@ -53,6 +55,11 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     //Grupo de variables-interfas q habilitan un llamado en la actividad Base
     private ClickCallBack clickCallBack;
 
+    //GRUPO de variables HORARIO VIRTUAL
+    private ArrayList<Materia> listUserMateria = new ArrayList<>();
+    private ArrayList<Materia> listUMLoad = new ArrayList<>();
+    private ArrayList<HorarioVirtual> listHV=new ArrayList<>();
+    private ArrayList<HorarioVirtual> listHVLoad=new ArrayList<>();
 
     private String mParam1;
     private OnFragmentInteractionListener mListener;
@@ -109,7 +116,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(STATE_MATERIA,listMateria);
+        outState.putParcelableArrayList(STATE_MATERIA, listMateria);
     }
 
 
@@ -125,6 +132,15 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         volleySingleton=VolleySingleton.getInstance();
         requestQueue=volleySingleton.getRequestQueue();
 
+        if(getArguments().getInt(ARG_NUMERO_SECCION)==12) {
+          ArrayList<Materia>  listUserMateriaAUX = MiAplicativo.getWritableDatabase().getAllUserMateria();
+            for(int i=0;i<listUserMateriaAUX.size();i++){
+                if(listUserMateriaAUX.get(i).getU_materia().equals("1")){
+                    listUserMateria.add(listUserMateriaAUX.get(i));
+                }
+            }
+            listHV=MiAplicativo.getWritableDatabase().getAllHorarioVirtual();
+        }
         setHasOptionsMenu(true);
 
 
@@ -133,11 +149,86 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.act_base_fr_sec_menu, menu);
+        if(getArguments().getInt(ARG_NUMERO_SECCION)==12) {
+            menu.findItem(R.id.action_pensum).setVisible(true);
+
+            if(!listUserMateria.isEmpty()) {
+                boolean sis = false, telc = false;
+                for (int i = 0; i < listUserMateria.size(); i++) {
+                    if (listUserMateria.get(i).getModulo().equals("ingSis")) {
+                        sis = true;
+                    } else if (listUserMateria.get(i).getModulo().equals("telecom")) {
+                        telc = true;
+                    }
+                }
+
+                if(!sis){menu.findItem(R.id.action_sis).setVisible(false);}
+                if(!telc){menu.findItem(R.id.action_telc).setVisible(false);}
+
+                if (listUserMateria.get(0).getModulo().equals("ingSis")) {
+                    menu.findItem(R.id.action_sis).setChecked(true);
+                } else if (listUserMateria.get(0).getModulo().equals("telecom")) {
+                    menu.findItem(R.id.action_telc).setChecked(true);
+                }
+
+            }
+
+
+
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id==R.id.action_sis){
+            item.setChecked(!item.isChecked());
+            listUMLoad = new ArrayList<>();
+            listHVLoad= new ArrayList<>();
+
+            for (int i = 0; i < listUserMateria.size(); i++) {
+                if(listUserMateria.get(i).getModulo().equals("ingSis")){
+                    listUMLoad.add(listUserMateria.get(i));
+                }
+            }
+
+            for(int i=0; i<listUMLoad.size();i++){
+                for(int j=0;j<listHV.size();j++){
+                    if(listUMLoad.get(i).getCod().equals(listHV.get(j).getCod())){
+                        listHVLoad.add(listHV.get(j));
+                    }
+                }
+            }
+
+            adapterRecyclerHorarioV.setListHorarioV(listHVLoad);
+
+        }
+        if (id == R.id.action_telc){
+            item.setChecked(!item.isChecked());
+            listUMLoad = new ArrayList<>();
+            listHVLoad = new ArrayList<>();
+
+            for (int i = 0; i < listUserMateria.size(); i++) {
+                if(listUserMateria.get(i).getModulo().equals("telecom")){
+                    listUMLoad.add(listUserMateria.get(i));
+                }
+            }
+
+            for(int i=0; i<listUMLoad.size();i++){
+                for(int j=0;j<listHV.size();j++){
+                    if(listUMLoad.get(i).getCod().equals(listHV.get(j).getCod())){
+                        listHVLoad.add(listHV.get(j));
+                    }
+                }
+            }
+
+            adapterRecyclerHorarioV.setListHorarioV(listHVLoad);
+
+        }
+
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -186,6 +277,25 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         }
         ///El argumento == 12 indica Horario Virtual/////////////////
         if(getArguments().getInt(ARG_NUMERO_SECCION)==12){
+
+            if(!listUserMateria.isEmpty()) {
+                for (int i = 0; i < listUserMateria.size(); i++) {
+                    if (listUserMateria.get(i).getModulo().equals(listUserMateria.get(0).getModulo())) {
+                        listUMLoad.add(listUserMateria.get(i));
+                    }
+                }
+            }
+            if(!listHV.isEmpty()){
+                for(int i=0; i<listUMLoad.size();i++){
+                    for(int j=0;j<listHV.size();j++){
+                        if(listUMLoad.get(i).getCod().equals(listHV.get(j).getCod())){
+                            listHVLoad.add(listHV.get(j));
+                        }
+                    }
+                }
+            }
+
+
             rootView = inflater.inflate(R.layout.fragment_base_00, container,false);
 
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
@@ -196,6 +306,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
 
             adapterRecyclerHorarioV=new AdapterRecyclerHorarioV(getContext());
             adapterRecyclerHorarioV.setClickCallBack(clickCallBack);
+            adapterRecyclerHorarioV.setListHorarioV(listHVLoad);
             rcListHorarioVirtual.setSoundEffectsEnabled(true);
             rcListHorarioVirtual.setAdapter(adapterRecyclerHorarioV);
 

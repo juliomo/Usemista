@@ -1,10 +1,12 @@
 package com.usm.jyd.usemista.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,6 +47,14 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
 
     private ClickCallBack clickCallBack;
     private ArrayList<Materia> listUserMateria = new ArrayList<>();
+    private ArrayList<Materia> listUMLoad = new ArrayList<>();
+    private Spinner spinnerMateria;
+    private ArrayList<String> categories ;
+    private ArrayAdapter<String> adapterSpinner;
+
+
+
+
 
     private Materia materiaInEd;
     private HorarioVirtual hvInEd;
@@ -54,7 +64,7 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
      * Varibles de On dialog Time Seter
      */
 
-    private int colorHV=0xff000000;
+    private int colorHV=0xff1976D2;
     private int positionListSpinnerAux=0;
     private EditText editTextTitulo;
     private Calendar calIni= Calendar.getInstance();
@@ -181,6 +191,29 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.act_base_fr_hvadd_menu, menu);
+        if(getArguments().getInt(ARG_NUMERO_SECCION)==121){
+            menu.findItem(R.id.action_delete).setVisible(false);
+
+            if(!listUserMateria.isEmpty()) {
+                boolean sis=false,telc=false;
+                for(int i =0;i<listUserMateria.size();i++){
+                    if(listUserMateria.get(i).getModulo().equals("ingSis")){sis=true;}
+                    else if(listUserMateria.get(i).getModulo().equals("telecom")){telc=true;}
+                }
+
+                if(!sis){menu.findItem(R.id.action_sistema).setVisible(false);}
+                if(!telc){menu.findItem(R.id.action_telecom).setVisible(false);}
+
+                if (listUserMateria.get(0).getModulo().equals("ingSis")) {
+                    menu.findItem(R.id.action_sistema).setChecked(true);
+                } else if (listUserMateria.get(0).getModulo().equals("telecom")) {
+                    menu.findItem(R.id.action_telecom).setChecked(true);
+                }
+            }
+        }else if(getArguments().getInt(ARG_NUMERO_SECCION)==122){
+            menu.findItem(R.id.action_usm).setVisible(false);
+        }
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -188,12 +221,13 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
             String auxCodMateria="";
             if(getArguments().getInt(ARG_NUMERO_SECCION)==121){
-                MiAplicativo.getWritableDatabase().updateUserMateriaHvPic("1",listUserMateria.get(positionListSpinnerAux).getCod());
-                auxCodMateria=listUserMateria.get(positionListSpinnerAux).getCod();
+                MiAplicativo.getWritableDatabase().updateUserMateriaHvPic("1",listUMLoad.get(positionListSpinnerAux).getCod());
+                auxCodMateria=listUMLoad.get(positionListSpinnerAux).getCod();
             }else if(getArguments().getInt(ARG_NUMERO_SECCION)==122){
                 MiAplicativo.getWritableDatabase().deleteHorarioVirtual(materiaInEd.getCod());
                 MiAplicativo.getWritableDatabase().deleteHorarioVirtualWeek(materiaInEd.getCod());
@@ -261,37 +295,46 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
             }
 
             MiAplicativo.getWritableDatabase().insertHorarioVirtual(horarioVirtual);
+            L.t(getContext(),"Clase Guardada");
             clickCallBack.onRSCItemSelected(12);
             return true;
         }
         if (id == R.id.action_delete) {
-            MiAplicativo.getWritableDatabase().updateUserMateriaHvPic("0", materiaInEd.getCod());
-            MiAplicativo.getWritableDatabase().deleteHorarioVirtual(materiaInEd.getCod());
-            MiAplicativo.getWritableDatabase().deleteHorarioVirtualWeek(materiaInEd.getCod());
-            clickCallBack.onRSCItemSelected(12);
+
+            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setTitle("Alerta");
+            alertDialog.setMessage("Desea Borrar esta Clase?");
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    MiAplicativo.getWritableDatabase().updateUserMateriaHvPic("0", materiaInEd.getCod());
+                    MiAplicativo.getWritableDatabase().deleteHorarioVirtual(materiaInEd.getCod());
+                    MiAplicativo.getWritableDatabase().deleteHorarioVirtualWeek(materiaInEd.getCod());
+                    L.t(getContext(), "Clase Borrada");
+                    clickCallBack.onRSCItemSelected(12);
+                }
+            });alertDialog.show();
+
+
             return true;
         }
-        return super.onOptionsItemSelected(item);
-    }
+        if(id==R.id.action_sistema){
+            item.setChecked(!item.isChecked());
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)  {
-
-        View rootView = inflater.inflate(R.layout.fragment_base_hv, container, false);
-
-
-        imageViewIconMateria=(ImageView)rootView.findViewById(R.id.imageViewIconMateria);
-        editTextTitulo=(EditText)rootView.findViewById(R.id.editTextTitulo);
-
-        final TextView textViewNombMateria=(TextView)rootView.findViewById(R.id.textNombMateria);
-        final Spinner spinnerMateria=(Spinner)rootView.findViewById(R.id.spinnerMaterias);
-
-        ArrayList<String> categories = new ArrayList<>();
-        ArrayAdapter<String> adapterSpinner;
-        if(!listUserMateria.isEmpty()) {
-
+            listUMLoad = new ArrayList<>();
+            categories= new ArrayList<>();
             for (int i = 0; i < listUserMateria.size(); i++) {
-                categories.add(listUserMateria.get(i).getTitulo());
+                if(listUserMateria.get(i).getModulo().equals("ingSis")){
+                    listUMLoad.add(listUserMateria.get(i));
+                    categories.add(listUserMateria.get(i).getTitulo());
+                }
+
             }
             adapterSpinner = new
                     ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, categories);
@@ -309,6 +352,94 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
 
                 }
             });
+
+            return true;
+        }
+        if(id==R.id.action_telecom){
+            item.setChecked(!item.isChecked());
+
+            listUMLoad = new ArrayList<>();
+            categories= new ArrayList<>();
+            for (int i = 0; i < listUserMateria.size(); i++) {
+                if(listUserMateria.get(i).getModulo().equals("telecom")){
+                    listUMLoad.add(listUserMateria.get(i));
+                    categories.add(listUserMateria.get(i).getTitulo());
+                }
+
+            }
+            adapterSpinner = new
+                    ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, categories);
+
+            adapterSpinner.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+            spinnerMateria.setAdapter(adapterSpinner);
+            spinnerMateria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    positionListSpinnerAux = position;
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)  {
+
+        View rootView = inflater.inflate(R.layout.fragment_base_hv, container, false);
+
+
+        imageViewIconMateria=(ImageView)rootView.findViewById(R.id.imageViewIconMateria);
+        editTextTitulo=(EditText)rootView.findViewById(R.id.editTextTitulo);
+
+        final TextView textViewNombMateria=(TextView)rootView.findViewById(R.id.textNombMateria);
+
+         spinnerMateria=(Spinner)rootView.findViewById(R.id.spinnerMaterias);
+         categories = new ArrayList<>();
+
+        if(!listUserMateria.isEmpty()) {
+
+            for (int i = 0; i < listUserMateria.size(); i++) {
+                if(listUserMateria.get(i).getModulo().equals(listUserMateria.get(0).getModulo())) {
+                    listUMLoad.add(listUserMateria.get(i));
+                    categories.add(listUserMateria.get(i).getTitulo());
+                }
+            }
+            adapterSpinner = new
+                    ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, categories);
+
+            adapterSpinner.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+            spinnerMateria.setAdapter(adapterSpinner);
+            spinnerMateria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    positionListSpinnerAux = position;
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }else if(getArguments().getInt(ARG_NUMERO_SECCION)==121){
+            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setTitle("Notify Info");
+            alertDialog.setMessage("Actualmente no hay mas materias que registrar en Horario Virtual");
+            alertDialog.setCancelable(false);
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    L.t(getContext(), "De Vuela a Horario Virtual");
+                    clickCallBack.onRSCItemSelected(12);
+                }
+            });  alertDialog.show();
         }
         switchCalendar =(Switch)rootView.findViewById(R.id.switchCalendar);
         textViewCalendarIni=(TextView)rootView.findViewById(R.id.textViewCalendarIni);
@@ -491,7 +622,7 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
         buttonColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickCallBack.onHVColorSelected();
+                clickCallBack.onHVColorSelected(colorHV);
             }
         });
          imageViewIconColor=(ImageView)rootView.findViewById(R.id.imageViewColorPalette);
@@ -500,6 +631,8 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
         if(getArguments().getInt(ARG_NUMERO_SECCION)==121){
 
             textViewNombMateria.setVisibility(View.GONE);
+            imageViewIconColor.setColorFilter(colorHV);
+            imageViewIconMateria.setColorFilter(colorHV);
 
         }else if(getArguments().getInt(ARG_NUMERO_SECCION)==122){
 

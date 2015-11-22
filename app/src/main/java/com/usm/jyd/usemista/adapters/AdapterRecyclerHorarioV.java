@@ -36,7 +36,7 @@ public class AdapterRecyclerHorarioV extends RecyclerView.Adapter<AdapterRecycle
 
     public AdapterRecyclerHorarioV(Context context){
         inflater = LayoutInflater.from(context);
-        listHV = MiAplicativo.getWritableDatabase().getAllHorarioVirtual();
+        //listHV = MiAplicativo.getWritableDatabase().getAllHorarioVirtual();
         listHVWeek = MiAplicativo.getWritableDatabase().getAllHorarioVirtualWeek();
         this.context=context;
         listTitulo.add("Clase X ");
@@ -51,6 +51,7 @@ public class AdapterRecyclerHorarioV extends RecyclerView.Adapter<AdapterRecycle
     public void setClickCallBack(ClickCallBack clickCallBack){
         this.clickCallBack=clickCallBack;
     }
+    public void setListHorarioV(ArrayList<HorarioVirtual> listHV){this.listHV=listHV; notifyDataSetChanged();}
     @Override
     public RHVViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View root=inflater.inflate(R.layout.row_rc_fr_base_hv, parent, false);

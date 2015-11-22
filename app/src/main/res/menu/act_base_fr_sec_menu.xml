@@ -2,10 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_home"
-        android:icon="@drawable/ic_home_white_24dp"
+    <item android:id="@+id/action_pensum"
+        android:icon="@drawable/ic_pensum_white_24dp_01"
         android:orderInCategory="200"
-        android:title="Home"
-        />
+        android:visible="false"
+        app:showAsAction="always"
+        android:title="USM" >
+        <menu>
+            <group android:checkableBehavior="single" >
+                <item
+                    android:id="@+id/action_sis"
+                    android:icon="@drawable/ic_gear_white_24dp_01"
+                    android:title="Sistema"
+                    android:orderInCategory="100"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_telc"
+                    android:icon="@drawable/ic_search_white_24dp"
+                    android:title="Telecom"
+                    android:orderInCategory="200"
+                    app:showAsAction="never" />
+            </group>
+        </menu>
+    </item>
 
 </menu>

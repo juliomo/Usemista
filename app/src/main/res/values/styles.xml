@@ -14,6 +14,18 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppToolBar" parent="Widget.AppCompat.Toolbar">
+        <item name="actionMenuTextColor">#1bff3a</item>
+        <item name="colorControlNormal">#FFF</item>
+        <item name="colorControlActivated">#FFF</item>
+        <item name="android:textColorPrimary">#FFF</item>
+        <item name="actionButtonStyle">@style/Widget.AppCompat.ActionButton</item>
+        <item name="selectableItemBackground">?android:selectableItemBackground</item>
+        <item name="selectableItemBackgroundBorderless">?android:selectableItemBackground</item>
+        <item name="colorControlHighlight">@color/colorPrimaryLight</item>
+    </style>
 
   <!--   <style name="AppTheme.FullScreen" >
         <item name="android:windowNoTitle">true</item>
@@ -32,8 +44,6 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
 
