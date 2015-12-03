@@ -83,6 +83,7 @@ public class AdapterRecyclerHorarioV extends RecyclerView.Adapter<AdapterRecycle
             }
         }
 
+
        /* if(listBoolean.get(position).equals("1")){
             holder.imageViewTest.setVisibility(View.VISIBLE);
         }else if(listBoolean.get(position).equals("0")){

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/bodyRelative"
+    android:layout_marginBottom="20dp"
+    android:clickable="true">
+
+
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/tableLayout">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/actionEdit"
+                android:clickable="true"
+                android:src="@drawable/ic_home_black_24dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/actionSave"
+                android:clickable="true"
+                android:src="@drawable/ic_save_white_24dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/actionDelete"
+                android:clickable="true"
+                android:src="@drawable/ic_delete_white_24dp"/>
+        </TableRow>
+    </TableLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tableLayout">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home_black_24dp"
+                android:id="@+id/icMateriaNor" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Materia"
+                android:id="@+id/textMateria" />
+
+        </TableRow>
+        <TableRow>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home_black_24dp"
+                android:id="@+id/icMateriaEdit" />
+            <Spinner
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinnerMateria"
+                android:layout_column="1"
+                android:spinnerMode="dropdown" />
+        </TableRow>
+        <TableRow>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home_black_24dp"
+                android:id="@+id/icTypeActNor" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Tipo de Actividad"
+                android:id="@+id/textTypeAct"
+                android:layout_column="1"/>
+        </TableRow>
+        <TableRow>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home_black_24dp"
+                android:id="@+id/icTypeActEdit" />
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinnerTypeAct"
+                android:layout_column="1"
+                android:spinnerMode="dropdown" />
+
+            <EditText
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:selectAllOnFocus="true"
+                android:ems="10"
+                android:id="@+id/editTextNumAct"
+                android:layout_column="2"
+                android:text="#Act" />
+        </TableRow>
+        <TableRow>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home_black_24dp"
+                android:id="@+id/icSalonNor" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Salon"
+                android:id="@+id/textSalon"
+                android:layout_column="1"/>
+        </TableRow>
+        <TableRow>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home_black_24dp"
+                android:id="@+id/icSalonEdit" />
+            <EditText
+                android:layout_width="15dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/editTextSalon"
+                android:selectAllOnFocus="true"
+                android:inputType="number"
+                android:text="#Salon"
+                android:layout_column="1"/>
+        </TableRow>
+        <TableRow>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home_black_24dp"
+                android:id="@+id/icDayTime" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Dia de la Actividad"
+                android:id="@+id/textDayTime"
+                android:layout_column="1"/>
+        </TableRow>
+        <TableRow>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home_black_24dp"
+                android:id="@+id/icClock" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="  Hora Ini"
+                android:id="@+id/textClockIni"
+                android:layout_column="1"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="  Hora End"
+                android:id="@+id/textClockEnd"
+                android:layout_column="2"/>
+        </TableRow>
+
+        <TableRow>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home_black_24dp"
+                android:id="@+id/icComplete" />
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Completado"
+                android:id="@+id/checkBoxCmplt"
+                android:checked="false"
+                android:layout_column="1"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="      Nota"
+                android:id="@+id/textNota"
+                android:layout_column="2"/>
+        </TableRow>
+
+    </TableLayout>
+
+</RelativeLayout>

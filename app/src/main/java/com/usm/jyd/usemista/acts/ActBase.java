@@ -41,8 +41,11 @@ import com.usm.jyd.usemista.dialogs.MateriaDialog;
 import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.events.HVTimeToSet;
 import com.usm.jyd.usemista.fragments.FragmentBase;
+import com.usm.jyd.usemista.fragments.FragmentBaseCalendar;
 import com.usm.jyd.usemista.fragments.FragmentBaseHVAdd;
+import com.usm.jyd.usemista.fragments.FragmentBaseMMTask;
 import com.usm.jyd.usemista.fragments.FragmentBaseMateriaSelector;
+import com.usm.jyd.usemista.fragments.FragmentBaseMisMaterias;
 import com.usm.jyd.usemista.fragments.FragmentBaseSemestreSelector;
 import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.network.notification.RegisterApp;
@@ -175,9 +178,16 @@ public class ActBase extends AppCompatActivity
                     .commit();
 
         }else if(pos==11){
-
+            mAppBarLayout.setExpanded(false,true);
+            mCollapsingToolbarLayout.setTitle("Mis Materias");
+            mFab.setVisibility(View.GONE);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contenedor_base, FragmentBase.newInstance(pos))
+                    .commit();
         }else if(pos==12){
            // setColorThemeByMenu(ContextCompat.getColor(ActBase.this,R.color.colorTextMenuYellow));
+            mAppBarLayout.setExpanded(false,true);
             mCollapsingToolbarLayout.setTitle("Horario");
             mFab.setVisibility(View.VISIBLE);
             mFab.setImageResource(R.drawable.ic_add_white_48dp);
@@ -208,6 +218,14 @@ public class ActBase extends AppCompatActivity
         }else if(pos==13){
 
         }else if(pos==14){
+            mAppBarLayout.setExpanded(false,true);
+            mCollapsingToolbarLayout.setTitle("Calendar");
+            mFab.setVisibility(View.GONE);
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contenedor_base, FragmentBaseCalendar.newInstance())
+                    .commit();
 
         }else if(pos==15){
 
@@ -237,7 +255,7 @@ public class ActBase extends AppCompatActivity
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        }else if(stateBackPress==10 || stateBackPress==12){
+        }else if(stateBackPress==10 ||stateBackPress==11|| stateBackPress==12||stateBackPress==14){
             setFragmentBase(0);
             stateBackPress=0;
         }else if(stateBackPress==100 || stateBackPress==200){
@@ -406,6 +424,11 @@ public class ActBase extends AppCompatActivity
     }
 
     @Override
+    public void setFrMMTAux(FragmentBaseMMTask frMMT) {
+        hvTimeToSet=(HVTimeToSet)frMMT;
+    }
+
+    @Override
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
         hvTimeToSet.seteoDeTiempo(hourOfDay, minute, HVweekDay, HVposition);
     }
@@ -477,6 +500,7 @@ private boolean checkPlayServices(){
             hvTimeToSet=(HVTimeToSet)fragment;
         }
     }
+
 
 
 }

@@ -1,6 +1,7 @@
 package com.usm.jyd.usemista.events;
 
 import com.usm.jyd.usemista.aplicativo.MiAplicativo;
+import com.usm.jyd.usemista.fragments.FragmentBaseMMTask;
 import com.usm.jyd.usemista.objects.HVWeek;
 import com.usm.jyd.usemista.objects.HorarioVirtual;
 import com.usm.jyd.usemista.objects.Materia;
@@ -19,5 +20,6 @@ public interface ClickCallBack {
     void onHVTimeSelected(int HVposition, String weekDay);
     void onHVCalendarSelected(int HVposition);
     void onHVColorSelected(int prevColor);
+    void setFrMMTAux(FragmentBaseMMTask frMMT);
 
 }

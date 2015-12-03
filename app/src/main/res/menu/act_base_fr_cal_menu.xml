@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item android:id="@+id/action_today"
+        android:title="Hoy"
+        android:icon="@drawable/ic_home_white_24dp"
+        android:orderInCategory="100"
+        app:showAsAction="always"/>
+    <item android:id="@+id/actionTypeView"
+        android:title="selector"
+        android:icon="@drawable/ic_format_list_numbered_white_24dp"
+        android:orderInCategory="200"
+        app:showAsAction="always">
+        <menu>
+          <group android:checkableBehavior="single">
+            <item android:id="@+id/action_day_view"
+                android:title="Un Dia"
+                android:orderInCategory="100"
+                app:showAsAction="never"/>
+            <item android:id="@+id/action_three_day_view"
+                android:title="Tres Dias"
+                android:orderInCategory="100"
+                app:showAsAction="never"
+                android:checked="true"/>
+            <item android:id="@+id/action_week_view"
+                android:title="Semana"
+                android:orderInCategory="100"
+                app:showAsAction="never"/>
+          </group>
+        </menu>
+    </item>
+
+</menu>

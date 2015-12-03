@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/action_usm"
-        android:icon="@drawable/ic_pensum_white_24dp_01"
+        android:icon="@drawable/ic_pensum_white_slc_24dp"
         android:title="Carrera"
         android:orderInCategory="100"
         app:showAsAction="always">

@@ -16,6 +16,7 @@ import com.usm.jyd.usemista.objects.HVWeek;
 import com.usm.jyd.usemista.objects.HorarioVirtual;
 import com.usm.jyd.usemista.objects.Materia;
 import com.usm.jyd.usemista.objects.MenuStatus;
+import com.usm.jyd.usemista.objects.UserTask;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -32,6 +33,140 @@ public class DBPensum {
         mHelper = new PensumHelper(context);
         mDatabase = mHelper.getWritableDatabase();
     }
+
+    public void insertUserTask(UserTask userTask){
+
+        String sql = "INSERT INTO " + PensumHelper.TABLE_USER_TASK + " VALUES (?,?,?,?,?,?,?,?,?,?);";
+        //compile the statement and start a transaction
+        SQLiteStatement statement = mDatabase.compileStatement(sql);
+        mDatabase.beginTransaction();
+        statement.clearBindings();
+        //for a given column index, simply bind the data to be put inside that index
+        statement.bindString(2, userTask.getCod());
+        statement.bindString(3, userTask.getType());
+        statement.bindLong(4, userTask.getDayTime() == null
+                ? -1 : userTask.getDayTime().getTime());
+        statement.bindLong(5, userTask.getHrIni()==null
+                ?-1 : userTask.getHrIni().getTime());
+        statement.bindLong(6, userTask.getHrEnd()==null
+                ?-1 : userTask.getHrEnd().getTime());
+        statement.bindString(7, userTask.getCmplt());
+        statement.bindLong(8, userTask.getNota());
+        statement.bindString(9, userTask.getMtName());
+        statement.bindString(10,userTask.getSalon());
+
+        statement.execute();
+
+        //set the transaction as successful and end the transaction
+
+        mDatabase.setTransactionSuccessful();
+        mDatabase.endTransaction();
+    }
+    public int getLastUserTaskId(){
+        UserTask userTask = new UserTask();
+        String[] column={PensumHelper.COLUMN_USER_TASK_UID};
+
+        Cursor cursor = mDatabase.query(PensumHelper.TABLE_USER_TASK,column,null,null,null,null,null);
+        cursor.moveToLast();
+
+        userTask.setId(cursor.getInt(cursor.getColumnIndex(PensumHelper.COLUMN_USER_TASK_UID)));
+
+        return userTask.getId();
+     }
+    public  ArrayList<UserTask> getAllUserTask(){
+        ArrayList<UserTask> listUserTask = new ArrayList<>();
+
+        String[] columns = {PensumHelper.COLUMN_USER_TASK_UID,
+                PensumHelper.COLUMN_USER_TASK_COD,
+                PensumHelper.COLUMN_USER_TASK_TYPE,
+                PensumHelper.COLUMN_USER_TASK_DAYTIME,
+                PensumHelper.COLUMN_USER_TASK_HRINI,
+                PensumHelper.COLUMN_USER_TASK_HREND,
+                PensumHelper.COLUMN_USER_TASK_CMPLT,
+                PensumHelper.COLUMN_USER_TASK_NOTA,
+                PensumHelper.COLUMN_USER_TASK_MTNAME,
+                PensumHelper.COLUMN_USER_TASK_SALON
+        };
+        Cursor cursor = mDatabase.query(PensumHelper.TABLE_USER_TASK, columns, null, null, null, null, null);//parametros no estudiados
+        if (cursor != null && cursor.moveToFirst()) {
+            L.m("loading entries " + cursor.getCount() + new Date(System.currentTimeMillis()));
+            do {
+
+                //create a new materia object and retrieve the data from the cursor to be stored in this materia object
+                UserTask userTask = new UserTask();
+                //each step is a 2 part process, find the index of the column first, find the data of that column using
+                //that index and finally set our blank materia object to contain our data
+                userTask.setId(cursor.getInt(cursor.getColumnIndex(PensumHelper.COLUMN_USER_TASK_UID)));
+                userTask.setCod(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_USER_TASK_COD)));
+                userTask.setType(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_USER_TASK_TYPE)));
+
+                long calDayTime = cursor.getLong(cursor.getColumnIndex(PensumHelper.COLUMN_USER_TASK_DAYTIME));
+                userTask.setDayTime(calDayTime != -1 ? new Date(calDayTime) : null);
+
+                long hrIni = cursor.getLong(cursor.getColumnIndex(PensumHelper.COLUMN_USER_TASK_HRINI));
+                userTask.setHrIni(hrIni != -1 ? new Date(hrIni) : null);
+
+                long hrEnd = cursor.getLong(cursor.getColumnIndex(PensumHelper.COLUMN_USER_TASK_HREND));
+                userTask.setHrEnd(hrEnd != -1 ? new Date(hrEnd) : null);
+
+                userTask.setCmplt(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_USER_TASK_CMPLT)));
+                userTask.setNota(cursor.getInt(cursor.getColumnIndex(PensumHelper.COLUMN_USER_TASK_NOTA)));
+
+                userTask.setMtName(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_USER_TASK_MTNAME)));
+                userTask.setSalon(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_USER_TASK_SALON)));
+
+                //add the materia to the list of materia objects which we plan to return
+                listUserTask.add(userTask);
+            }
+            while (cursor.moveToNext());
+        }
+        return listUserTask;
+    }
+    public void deleteUserMateriaTask(String u_ma_cod) {
+        String selection = PensumHelper.COLUMN_USER_TASK_COD + " LIKE ?";
+        String[] selectionArgs = { String.valueOf(u_ma_cod) };
+        mDatabase.delete(PensumHelper.TABLE_USER_TASK, selection, selectionArgs);
+    }
+    public void deleteSigleUserMateriaTask(int ut_uid) {
+        String selection = " CAST ("+PensumHelper.COLUMN_USER_TASK_UID + " AS TEXT) LIKE ?";
+        String[] selectionArgs = { String.valueOf(ut_uid) };
+        mDatabase.delete(PensumHelper.TABLE_USER_TASK, selection, selectionArgs);
+    }
+    public void updateSingleUserTask(UserTask userTask){
+        String sql = "UPDATE " + PensumHelper.TABLE_USER_TASK + " SET " +
+                PensumHelper.COLUMN_USER_TASK_TYPE+    " = ?," +
+                PensumHelper.COLUMN_USER_TASK_SALON+   " = ?," +
+                PensumHelper.COLUMN_USER_TASK_DAYTIME+ " = ?," +
+                PensumHelper.COLUMN_USER_TASK_HRINI+ " = ?," +
+                PensumHelper.COLUMN_USER_TASK_HREND+ " = ?," +
+                PensumHelper.COLUMN_USER_TASK_CMPLT+ " = ?," +
+                PensumHelper.COLUMN_USER_TASK_NOTA+  " = ?" +
+                " WHERE "+PensumHelper.COLUMN_USER_TASK_UID+" = ?;";
+        //compile the statement and start a transaction
+        SQLiteStatement statement = mDatabase.compileStatement(sql);
+        mDatabase.beginTransaction();
+        //for a given column index, simply bind the data to be put inside that index
+        statement.bindString(1, userTask.getType());
+        statement.bindString(2, userTask.getSalon());
+        statement.bindLong(3, userTask.getDayTime() == null
+                ? -1 : userTask.getDayTime().getTime());
+        statement.bindLong(4, userTask.getHrIni()==null
+                ?-1 : userTask.getHrIni().getTime());
+        statement.bindLong(5, userTask.getHrEnd() == null
+                ? -1 : userTask.getHrEnd().getTime());
+        statement.bindString(6, userTask.getCmplt());
+        statement.bindLong(7, userTask.getNota());
+        statement.bindLong(8,userTask.getId());
+
+        statement.execute();
+
+        //set the transaction as successful and end the transaction
+
+        mDatabase.setTransactionSuccessful();
+        mDatabase.endTransaction();
+    }
+
+
     public void insertHorarioVirtual(HorarioVirtual horarioVirtual){
 
         String sql = "INSERT INTO " + PensumHelper.TABLE_HORARIO_VIRTUAL + " VALUES (?,?,?,?,?,?,?);";
@@ -611,6 +746,34 @@ public class DBPensum {
                 ");";
 
 
+        /***********************************************************************
+         * ////////// TABLA DE USER TASK ////////////////////////////////////////
+         ***********************************************************************/
+        public static final String TABLE_USER_TASK = "user_task";
+        public static final String COLUMN_USER_TASK_UID = "ut_id";
+        public static final String COLUMN_USER_TASK_COD = "ut_ma_cod";
+        public static final String COLUMN_USER_TASK_TYPE = "ut_type";
+        public static final String COLUMN_USER_TASK_DAYTIME = "ut_daytime";
+        public static final String COLUMN_USER_TASK_HRINI = "ut_hrini";
+        public static final String COLUMN_USER_TASK_HREND = "ut_hrend";
+        public static final String COLUMN_USER_TASK_CMPLT = "ut_cmplt";
+        public static final String COLUMN_USER_TASK_NOTA = "ut_nota";
+        public static final String COLUMN_USER_TASK_MTNAME = "ut_mtname";
+        public static final String COLUMN_USER_TASK_SALON = "ut_salon";
+
+        private static final String CREATE_TABLE_USER_TASK = "CREATE TABLE " + TABLE_USER_TASK + " (" +
+                COLUMN_USER_TASK_UID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                COLUMN_USER_TASK_COD + " TEXT, " +
+                COLUMN_USER_TASK_TYPE + " TEXT," +
+                COLUMN_USER_TASK_DAYTIME + " DATETIME," +
+                COLUMN_USER_TASK_HRINI + " DATETIME," +
+                COLUMN_USER_TASK_HREND + " DATETIME," +
+                COLUMN_USER_TASK_CMPLT + " TEXT DEFAULT 0," +
+                COLUMN_USER_TASK_NOTA + " INTEGER DEFAULT 0," +
+                COLUMN_USER_TASK_MTNAME+" TEXT,"+
+                COLUMN_USER_TASK_SALON+" TEXT"+
+                ");";
+
 
         private Context mContext;
         public PensumHelper(Context context) {
@@ -627,6 +790,7 @@ public class DBPensum {
                 db.execSQL(INSERT_MENU_STATUS);
                 db.execSQL(CREATE_TABLE_HORARIO_VIRTUAL);
                 db.execSQL(CREATE_TABLE_HORARIO_VIRTUAL_WEEK);
+                db.execSQL(CREATE_TABLE_USER_TASK);
                 L.m("create table box office executed");
             } catch (SQLiteException exception) {
                 L.t(mContext, exception + "");

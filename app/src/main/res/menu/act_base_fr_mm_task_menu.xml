@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_usm_fr_mmt"
+        android:icon="@drawable/ic_pensum_white_slc_24dp"
+        android:title="Carrera"
+        android:orderInCategory="100"
+        app:showAsAction="always">
+        <menu>
+            <group
+                android:id="@+id/groupByPensum"
+                android:checkableBehavior="single" >
+                <item
+                    android:id="@+id/action_sistema_fr_mmt"
+                    android:icon="@drawable/ic_gear_white_24dp_01"
+                    android:title="Sistema"
+                    android:orderInCategory="100"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_telecom_fr_mmt"
+                    android:icon="@drawable/ic_search_white_24dp"
+                    android:title="Telecom"
+                    android:orderInCategory="200"
+                    app:showAsAction="never" />
+            </group>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_fill_fr_mmt"
+        android:icon="@drawable/ic_format_list_numbered_white_24dp"
+        android:title="Filtro"
+        android:orderInCategory="200"
+        app:showAsAction="always">
+        <menu>
+            <group
+                android:id="@+id/groupByFill"
+                android:checkableBehavior="single" >
+                <item
+                    android:id="@+id/action_seAll"
+                    android:icon="@drawable/ic_polymer_white_24dp"
+                    android:title="All"
+                    android:orderInCategory="100"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_seNoCmplt"
+                    android:icon="@drawable/ic_polymer_white_24dp"
+                    android:title="No Completados"
+                    android:orderInCategory="100"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_seCmplt"
+                    android:icon="@drawable/ic_polymer_white_24dp"
+                    android:title="Completados"
+                    android:orderInCategory="200"
+                    app:showAsAction="never" />
+
+
+            </group>
+        </menu>
+    </item>
+
+</menu>

@@ -35,4 +35,5 @@ public class AdapterViewPagerSeccionUno extends FragmentStatePagerAdapter{
     public CharSequence getPageTitle(int position) {
         return "Tab " + (position + 1);
     }
+
 }

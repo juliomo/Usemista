@@ -4,6 +4,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:dialogTheme">@style/Theme.Dialog</item>
     </style>
     <style name="AppToolBar" parent="Widget.AppCompat.Toolbar">
         <item name="actionMenuTextColor">#1bff3a</item>
@@ -15,5 +16,17 @@
         <item name="selectableItemBackgroundBorderless">?android:selectableItemBackground</item>
         <item name="colorControlHighlight">@color/colorPrimaryLight</item>
     </style>
+
+
+    <style name="Theme.Dialog"
+        parent="android:Theme.Material.Light.Dialog">
+
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:colorPrimary">@color/colorAccent</item>
+        <item name="android:colorPrimaryDark">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColorSecondary">#000000</item>
+    </style>
+
 
 </resources>

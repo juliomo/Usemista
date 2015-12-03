@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/action_pensum"
-        android:icon="@drawable/ic_pensum_white_24dp_01"
+        android:icon="@drawable/ic_pensum_white_slc_24dp"
         android:orderInCategory="200"
         android:visible="false"
         app:showAsAction="always"

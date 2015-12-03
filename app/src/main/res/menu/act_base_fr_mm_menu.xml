@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_usm_fr_mm"
+        android:icon="@drawable/ic_pensum_white_slc_24dp"
+        android:title="Carrera"
+        android:orderInCategory="100"
+        app:showAsAction="always">
+        <menu>
+            <group android:checkableBehavior="single" >
+                <item
+                    android:id="@+id/action_sistema_fr_mm"
+                    android:icon="@drawable/ic_gear_white_24dp_01"
+                    android:title="Sistema"
+                    android:orderInCategory="100"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_telecom_fr_mm"
+                    android:icon="@drawable/ic_search_white_24dp"
+                    android:title="Telecom"
+                    android:orderInCategory="200"
+                    app:showAsAction="never" />
+            </group>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_sem_fr_mm"
+        android:icon="@drawable/ic_format_list_numbered_white_24dp"
+        android:title="Semestre"
+        android:orderInCategory="200"
+        app:showAsAction="always">
+        <menu>
+            <group android:checkableBehavior="single" >
+                <item
+                    android:id="@+id/action_seAll"
+                    android:icon="@drawable/ic_polymer_white_24dp"
+                    android:title="All"
+                    android:orderInCategory="100"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_se1"
+                    android:icon="@drawable/ic_polymer_white_24dp"
+                    android:title="1Er Semestre"
+                    android:orderInCategory="100"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_se2"
+                    android:icon="@drawable/ic_polymer_white_24dp"
+                    android:title="2Do Semestre"
+                    android:orderInCategory="200"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_se3"
+                    android:icon="@drawable/ic_polymer_white_24dp"
+                    android:title="3Er Semestre"
+                    android:orderInCategory="300"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_se4"
+                    android:icon="@drawable/ic_polymer_white_24dp"
+                    android:title="4To Semestre"
+                    android:orderInCategory="400"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_se5"
+                    android:icon="@drawable/ic_polymer_white_24dp"
+                    android:title="5To Semestre"
+                    android:orderInCategory="500"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_se6"
+                    android:icon="@drawable/ic_polymer_white_24dp"
+                    android:title="6To Semestre"
+                    android:orderInCategory="600"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_se7"
+                    android:icon="@drawable/ic_polymer_white_24dp"
+                    android:title="7Mo Semestre"
+                    android:orderInCategory="700"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_se8"
+                    android:icon="@drawable/ic_polymer_white_24dp"
+                    android:title="8Vo Semestre"
+                    android:orderInCategory="800"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_se9"
+                    android:icon="@drawable/ic_polymer_white_24dp"
+                    android:title="9No Semestre"
+                    android:orderInCategory="900"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_se10"
+                    android:icon="@drawable/ic_polymer_white_24dp"
+                    android:title="10Mo Semestre"
+                    android:orderInCategory="1000"
+                    app:showAsAction="never" />
+
+            </group>
+        </menu>
+    </item>
+
+
+
+</menu>

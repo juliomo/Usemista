@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -395,7 +396,8 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
 
         View rootView = inflater.inflate(R.layout.fragment_base_hv, container, false);
 
-
+        NestedScrollView nestedScrollView=(NestedScrollView)rootView.findViewById(R.id.scrollViewHVADD);
+        nestedScrollView.setNestedScrollingEnabled(false);
         imageViewIconMateria=(ImageView)rootView.findViewById(R.id.imageViewIconMateria);
         editTextTitulo=(EditText)rootView.findViewById(R.id.editTextTitulo);
 

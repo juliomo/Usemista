@@ -2,6 +2,7 @@ package com.usm.jyd.usemista.fragments;
 
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -25,6 +26,7 @@ import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerHorarioV;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerMenu;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerPensum;
+import com.usm.jyd.usemista.adapters.AdapterViewPagerMisMaterias;
 import com.usm.jyd.usemista.adapters.AdapterViewPagerSeccionUno;
 import com.usm.jyd.usemista.adapters.SimpleSectionedRecyclerViewAdapter;
 import com.usm.jyd.usemista.aplicativo.MiAplicativo;
@@ -63,6 +65,9 @@ public class FragmentBase extends android.support.v4.app.Fragment {
 
     private String mParam1;
     private OnFragmentInteractionListener mListener;
+
+    //Grupo Mis materias
+    private AdapterViewPagerMisMaterias adapterViewPagerMisMaterias;
 
     //Grupo de Fragment Test
     private ViewPager viewPager;
@@ -148,7 +153,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.act_base_fr_sec_menu, menu);
+        inflater.inflate(R.menu.act_base_fr_menu_menu, menu);
         if(getArguments().getInt(ARG_NUMERO_SECCION)==12) {
             menu.findItem(R.id.action_pensum).setVisible(true);
 
@@ -172,6 +177,10 @@ public class FragmentBase extends android.support.v4.app.Fragment {
                 }
 
             }
+
+            ArrayList<HorarioVirtual> hvCheck=new ArrayList<>();
+            hvCheck=MiAplicativo.getWritableDatabase().getAllHorarioVirtual();
+            if (hvCheck.isEmpty()){menu.findItem(R.id.action_pensum).setVisible(false);}
 
 
 
@@ -275,6 +284,33 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             PensumCallCero(); //simple funcion Void para aligerar a la vista
 
         }
+        ///El argumento == 11 indica Mis Materias ////////////////////
+        if(getArguments().getInt(ARG_NUMERO_SECCION)==11) {
+            rootView = inflater.inflate(R.layout.fragment_base_01, container, false);
+
+            viewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
+            tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
+
+            adapterViewPagerMisMaterias = new AdapterViewPagerMisMaterias(getChildFragmentManager(),getContext());
+            viewPager.setAdapter(adapterViewPagerMisMaterias);
+            //link between  tabs an pager adapter
+            tabLayout.setTabsFromPagerAdapter(adapterViewPagerMisMaterias);
+            //link tab & viewpager object
+            tabLayout.setupWithViewPager(viewPager);
+
+            tabLayout.getTabAt(0).setIcon(R.drawable.ic_book_white_24dp);
+            tabLayout.getTabAt(1).setIcon(R.drawable.ic_school_white_24dp);
+           // tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
+           // tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+
+
+
+            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+            //viewPager.setCurrentItem();
+
+
+        }
         ///El argumento == 12 indica Horario Virtual/////////////////
         if(getArguments().getInt(ARG_NUMERO_SECCION)==12){
 
@@ -303,14 +339,29 @@ public class FragmentBase extends android.support.v4.app.Fragment {
 
             rcListHorarioVirtual=(RecyclerView)rootView.findViewById(R.id.recycleView);
             rcListHorarioVirtual.setLayoutManager(new LinearLayoutManager(getActivity()));
+            rcListHorarioVirtual.setNestedScrollingEnabled(false);
 
             adapterRecyclerHorarioV=new AdapterRecyclerHorarioV(getContext());
             adapterRecyclerHorarioV.setClickCallBack(clickCallBack);
             adapterRecyclerHorarioV.setListHorarioV(listHVLoad);
+
+            //Agrega Espacio al final del RC
+            BottomOffsetDecoration bottomOffsetDecoration =
+                    new BottomOffsetDecoration(75,getContext().getResources().getDisplayMetrics().density);
+            rcListHorarioVirtual.addItemDecoration(bottomOffsetDecoration);
+
             rcListHorarioVirtual.setSoundEffectsEnabled(true);
             rcListHorarioVirtual.setAdapter(adapterRecyclerHorarioV);
 
 
+
+        }
+        ///El argumento == 13 indica Notify/////////////////
+        if(getArguments().getInt(ARG_NUMERO_SECCION)==13){
+
+        }
+        ///El argumento == 14 indica Calendario/////////////////
+        if(getArguments().getInt(ARG_NUMERO_SECCION)==14){
 
         }
         /////////////////////////////////FIN DEL TRAMO MENU PRICIPAL/////////////////////////
@@ -328,6 +379,12 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         rcListMenu.setLayoutManager(manager);
         adapterRecyclerMenu= new AdapterRecyclerMenu(getContext());
         adapterRecyclerMenu.setClickListener(getContext(), clickCallBack);
+
+        //Espacio al final de la Vista de menu (RC)
+        BottomOffsetDecorationMenu bottomOffsetDecorationMenu =
+                new BottomOffsetDecorationMenu(75,getContext().getResources().getDisplayMetrics().density);
+        rcListMenu.addItemDecoration(bottomOffsetDecorationMenu);
+
         //Agregamos GEstos Touch a nuestro recycler
         rcListMenu.setSoundEffectsEnabled(true);
         rcListMenu.setAdapter(adapterRecyclerMenu);
@@ -394,6 +451,48 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     }
 
 
+    //CLass DECORADOR PARA LINEAR RC ESPACIO AL FINAL
+    static class BottomOffsetDecoration extends RecyclerView.ItemDecoration {
+        private int mBottomOffset;
+
+        public BottomOffsetDecoration(int bottomOffset,float density) {
+            mBottomOffset =(int)(bottomOffset * density);
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            int dataSize = state.getItemCount();
+            int position =  parent.getChildAdapterPosition(view);
+            if (dataSize > 0 && position == dataSize - 1) {
+                outRect.set(0, 0, 0, mBottomOffset);
+            } else {
+                outRect.set(0, 0, 0, 0);
+            }
+
+        }
+    }
+    static class BottomOffsetDecorationMenu extends RecyclerView.ItemDecoration {
+        private int mBottomOffset;
+
+        public BottomOffsetDecorationMenu(int bottomOffset, float density) {
+            mBottomOffset =(int)(bottomOffset * density);
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            int dataSize = state.getItemCount();
+            int position = parent.getChildAdapterPosition(view);
+            GridLayoutManager grid = (GridLayoutManager)parent.getLayoutManager();
+            if ((dataSize - position) <= grid.getSpanCount()) {
+                outRect.set(0, 0, 0, mBottomOffset);
+            } else {
+                outRect.set(0, 0, 0, 0);
+            }
+
+        }
+    }
 
 
     // TODO: Rename method, update argument and hook method into UI event

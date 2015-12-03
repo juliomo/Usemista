@@ -34,7 +34,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/scrollView2"
+        android:id="@+id/scrollViewHVADD"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
@@ -558,7 +558,8 @@
             </TableLayout>
             <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="80dp">
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">

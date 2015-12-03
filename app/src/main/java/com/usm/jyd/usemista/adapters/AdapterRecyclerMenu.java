@@ -147,7 +147,8 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
 
             if(v==v.findViewById(R.id.bodyRelative)){
                 L.t(context,"Este es el body: "+getAdapterPosition());
-                if (clickCallBack != null && (getAdapterPosition()==0 || getAdapterPosition()==2)) {
+                if (clickCallBack != null && (getAdapterPosition()==0 ||
+                        getAdapterPosition()==1|| getAdapterPosition()==2 ||getAdapterPosition()==4)) {
                     clickCallBack.onRSCItemSelected(10+getAdapterPosition());
                 }
                 if(getAdapterPosition()==3){

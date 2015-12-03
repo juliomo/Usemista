@@ -27,6 +27,8 @@
         <item name="colorControlHighlight">@color/colorPrimaryLight</item>
     </style>
 
+
+
   <!--   <style name="AppTheme.FullScreen" >
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
