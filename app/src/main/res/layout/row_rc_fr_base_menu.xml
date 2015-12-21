@@ -22,14 +22,13 @@
         android:id="@+id/itemTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:alpha="0.87"
         android:gravity="center"
         android:padding="4dp"
         android:text="Ingenieria Sistemas"
         android:textSize="16sp"
         android:textColor="@color/colorTextMenuGreen"
-        android:layout_below="@+id/imageView3"
+        android:layout_below="@+id/linearLayout"
         android:layout_centerHorizontal="true" />
 
     <Button
@@ -42,30 +41,38 @@
         android:layout_below="@+id/itemTitulo"
         android:layout_centerHorizontal="true" />
 
-    <ImageView
+
+
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:clickable="true"
-        android:background="@drawable/tiny_icon_onclic_bg"
-        android:id="@+id/imageView3"
-        android:src="@drawable/ic_pensum_24dp_01"
         android:layout_below="@+id/itemImagen"
-        android:layout_alignLeft="@+id/itemImagen"
-        android:layout_alignStart="@+id/itemImagen"
-        android:visibility="gone"/>
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:clickable="true"
-        android:background="@drawable/tiny_icon_onclic_bg"
-        android:id="@+id/imageView4"
-        android:src="@drawable/ic_gear_24dp_01"
-        android:visibility="gone"
-        android:layout_below="@+id/itemImagen"
-        android:layout_toRightOf="@+id/itemImagen"
-        android:layout_toEndOf="@+id/itemImagen" />
+        android:layout_centerHorizontal="true"
+        android:id="@+id/linearLayout">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="30dp"
+            android:clickable="true"
+            android:background="@drawable/tiny_icon_onclic_bg"
+            android:id="@+id/imageView3"
+            android:src="@drawable/ic_pensum_24dp_01"
+            android:visibility="gone"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="30dp"
+            android:clickable="true"
+            android:background="@drawable/tiny_icon_onclic_bg"
+            android:id="@+id/imageView4"
+            android:src="@drawable/ic_gear_24dp_01"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 
 
 </RelativeLayout>

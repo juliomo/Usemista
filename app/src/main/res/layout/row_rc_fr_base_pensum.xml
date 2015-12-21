@@ -45,18 +45,9 @@
         android:textColor="@color/colorTextPrimary"
         android:layout_below="@+id/penusmTitulo"
         android:layout_alignLeft="@+id/penusmTitulo"
-        android:layout_alignStart="@+id/penusmTitulo"
-        android:layout_toLeftOf="@+id/imageView2"
-        android:layout_toStartOf="@+id/imageView2" />
+        android:layout_alignStart="@+id/penusmTitulo" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
-        android:id="@+id/imageView2"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+
 
 
 

@@ -1,14 +1,17 @@
 package com.usm.jyd.usemista.fragments;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.usm.jyd.usemista.R;
@@ -76,6 +79,7 @@ public class FragmentBaseMateriaSelector extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
 
 
+
             ImageView imageViewIcon = (ImageView) rootView.findViewById(R.id.seccionCeroImageView);
             imageViewIcon.setImageResource(R.drawable.ic_gear_white_24dp_01);
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
@@ -87,6 +91,10 @@ public class FragmentBaseMateriaSelector extends Fragment {
             adapterRecyclerMateria.setMateriaList(listMateria);
             adapterRecyclerMateria.setClickListener(getContext(), clickCallBack);
 
+
+        OffsetDecorationRC offsetDecorationRC=
+                new OffsetDecorationRC(75,35,getContext().getResources().getDisplayMetrics().density);
+        recyclerViewListMateria.addItemDecoration(offsetDecorationRC);
             recyclerViewListMateria.setAdapter(adapterRecyclerMateria);
 
 
@@ -106,6 +114,35 @@ public class FragmentBaseMateriaSelector extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+
+    //CLass DECORADOR PARA LINEAR RC ESPACIO AL FINAL
+    static class OffsetDecorationRC extends RecyclerView.ItemDecoration {
+        private int mBottomOffset;
+        private int mTopOffset;
+
+        public OffsetDecorationRC(int bottomOffset,int topOffset, float density) {
+            mBottomOffset =(int)(bottomOffset * density);
+            mTopOffset = (int)(topOffset * density);
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            int dataSize = state.getItemCount();
+            int position =  parent.getChildAdapterPosition(view);
+            if (dataSize > 0 && position == dataSize - 1) {
+                outRect.set(0, 0, 0, mBottomOffset);
+            }else {
+                outRect.set(0, 0, 0, 0);
+            }
+
+            if(parent.getChildAdapterPosition(view)==0){
+                outRect.set(0, mTopOffset, 0, 0);
+            }
+
         }
     }
 

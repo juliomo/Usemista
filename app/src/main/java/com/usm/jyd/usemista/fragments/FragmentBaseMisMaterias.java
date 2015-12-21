@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerMisMaterias;
@@ -308,6 +309,9 @@ public class FragmentBaseMisMaterias extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
+
+        LinearLayout linearLayout= (LinearLayout)rootView.findViewById(R.id.seccionCeroHead);
+        linearLayout.setVisibility(View.GONE);
 
         rcListUserMateria=(RecyclerView)rootView.findViewById(R.id.recycleView);
         rcListUserMateria.setNestedScrollingEnabled(false);

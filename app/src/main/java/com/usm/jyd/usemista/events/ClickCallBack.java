@@ -22,4 +22,6 @@ public interface ClickCallBack {
     void onHVColorSelected(int prevColor);
     void setFrMMTAux(FragmentBaseMMTask frMMT);
 
+    void onRSCItemProfClassSelected(String profCod, String accesCod);
+
 }

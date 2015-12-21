@@ -110,7 +110,7 @@ public class AdapterRecyclerSemestre extends RecyclerView.Adapter<AdapterRecycle
                 if (clickCallBack != null ) {
                     listMateriaSemestre=SelectorSemestre(getAdapterPosition()+1);
                     if(listMateriaSemestre.isEmpty()){
-                        L.t(context,"Un segundo, Cargando listas");
+                        L.t(context,"No Hay Datos, Verifique su conexion");
                     }else {
                         clickCallBack.onRSCSemestreSelected(1000 + getAdapterPosition(), listMateriaSemestre);
                     }

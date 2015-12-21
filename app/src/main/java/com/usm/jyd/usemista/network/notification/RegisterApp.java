@@ -18,6 +18,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.games.request.Requests;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.usm.jyd.usemista.acts.ActBase;
+import com.usm.jyd.usemista.aplicativo.MiAplicativo;
 import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.network.Key;
 import com.usm.jyd.usemista.network.VolleySingleton;
@@ -28,6 +29,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by der_w on 10/15/2015.
@@ -43,6 +46,7 @@ public class RegisterApp extends AsyncTask<Void, Void, String> {
 
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
+
 
     public  RegisterApp(Context context, GoogleCloudMessaging gcm, int appVersion){
         this.context=context;
@@ -63,6 +67,7 @@ public class RegisterApp extends AsyncTask<Void, Void, String> {
             if(gcm ==null){
                 gcm =GoogleCloudMessaging.getInstance(context);
             }
+
             regid = gcm.register(SENDER_ID);
             msg="Device Registrado, Reg ID= "+regid;
 
@@ -70,6 +75,7 @@ public class RegisterApp extends AsyncTask<Void, Void, String> {
             // so it can use GCM/HTTP or CCS to send messages to your app.
             // The request to your server should be authenticated if your app
             // is using accounts.
+            MiAplicativo.getWritableDatabase().updateUserRegistroGCM(regid);
             sendRegistrationIdToBackend();
 
             // For this demo: we don't need to send it because the device
@@ -93,21 +99,38 @@ public class RegisterApp extends AsyncTask<Void, Void, String> {
         volleySingleton=VolleySingleton.getInstance();
         requestQueue=volleySingleton.getRequestQueue();
 
-       String url = "http://usmpemsun.esy.es/register?regId="+regid;
+    //   String url = "http://usmpemsun.esy.es/register?regId="+regid;
+        String url = "http://usmpemsun.esy.es/register";
 
-        JsonObjectRequest request= new JsonObjectRequest(Request.Method.GET,
-                url, new Response.Listener<JSONObject>() {
+
+        Map<String, String> map = new HashMap<>();
+        map.put("regId", regid);
+
+        JsonObjectRequest request= new JsonObjectRequest(Request.Method.POST,
+                url,new JSONObject(map), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
                 if(response==null || response.length()>0){
                     try{
                         String estado="NA";
+                        String mensaje="NA";
                         if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
                                 !response.isNull(Key.EndPointMateria.KEY_ESTADO)){
                             estado = response.getString(Key.EndPointMateria.KEY_ESTADO);
-                            L.t(context,"Estado: "+estado+" Registrado ");
+
                         }
+                        if(response.has(Key.EndPointMateria.KEY_MENSAJE)&&
+                                !response.isNull(Key.EndPointMateria.KEY_MENSAJE)){
+                            mensaje = response.getString(Key.EndPointMateria.KEY_MENSAJE);
+
+                        }
+                        if(estado.equals("1")){
+                            //L.t(context,"Estado: "+estado+" "+mensaje);
+                        }else if(estado.equals("2")){
+                          //  L.t(context,"Estado: "+estado+" "+mensaje);
+                        }
+
 
                     }catch (JSONException e){
                         e.printStackTrace();
@@ -144,6 +167,7 @@ public class RegisterApp extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
+
         Toast.makeText(context,
                 "Registration Completed. Now you can see the notifications",
                 Toast.LENGTH_SHORT).show();

@@ -6,6 +6,7 @@ package com.usm.jyd.usemista.network;
 public interface Key {
     interface EndPointMateria{
         String KEY_ESTADO="estado";
+        String KEY_MENSAJE="mensaje";
         String KEY_MATERIA="materia";
 
         String KEY_ID="ma_id";

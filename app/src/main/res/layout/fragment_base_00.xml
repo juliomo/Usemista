@@ -7,41 +7,13 @@
 
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:orientation="horizontal"
-        android:id="@+id/seccionCeroHead"
-        android:background="@drawable/curver_fill_02">
-        <ImageView
-            android:id="@+id/seccionCeroImageView"
-            android:src="@drawable/ic_home_white_24dp"
-            android:padding="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="center" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Topicos"
-            android:id="@+id/seccionCeroTitulo"
-            android:textColor="@color/colorWhite"
-            android:padding="5dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-    </LinearLayout>
-
-
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/seccionCeroHead">
+        android:layout_alignParentTop="true">
 
 
 
@@ -70,6 +42,37 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:paddingRight="10dp"
+        android:id="@+id/seccionCeroHead"
+        android:layout_height="35dp"
+        android:clickable="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/fragment_base_00_bg"
+        >
+        <ImageView
+            android:id="@+id/seccionCeroImageView"
+            android:src="@drawable/ic_home_white_24dp"
+            android:padding="5dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Topicos"
+            android:id="@+id/seccionCeroTitulo"
+            android:textColor="@color/colorWhite"
+            android:padding="5dp" />
+
+    </LinearLayout>
 
 
 </RelativeLayout>

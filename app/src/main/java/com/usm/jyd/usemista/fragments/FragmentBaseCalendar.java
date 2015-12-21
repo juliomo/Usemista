@@ -158,6 +158,7 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
         setupDateTimeInterpreter(true);
 
 
+
         return rootView; //super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -167,19 +168,22 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
             public String interpretDate(Calendar date) {
                 SimpleDateFormat weekdayNameFormat = new SimpleDateFormat("EEE", Locale.getDefault());
                 String weekday = weekdayNameFormat.format(date.getTime());
-                 SimpleDateFormat format = new SimpleDateFormat(" M/d", Locale.getDefault());
+                 SimpleDateFormat format = new SimpleDateFormat(" d/M", Locale.getDefault());
 
                 // All android api level do not have a standard way of getting the first letter of
                 // the week day name. Hence we get the first char programmatically.
                 // Details: http://stackoverflow.com/questions/16959502/get-one-letter-abbreviation-of-week-day-of-a-date-in-java#answer-16959657
                 if (shortDate)
                     weekday = String.valueOf(weekday.charAt(0));
-                return weekday.toUpperCase() + format.format(date.getTime());
+
+                return weekday.toUpperCase() +"\n"+ format.format(date.getTime());
             }
 
             @Override
             public String interpretTime(int hour) {
-                return hour > 11 ? hour  + " PM" : (hour == 0 ? "0 AM" : hour + " AM");
+               // return hour > 11 ? (hour>12?hour-12:hour)  + " PM" : (hour == 0 ? "0 AM" : hour + " AM");
+
+                return hour > 11 ? hour-12  + " AM" : (hour == 0 ? "12 PM" : hour + " PM");
 
             }
         });
@@ -200,7 +204,7 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-        L.t(getContext(), "Clicked "+event.getName());
+        L.t(getContext(), ""+event.getName());
     }
 
     @Override
@@ -239,9 +243,39 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
             hrEnd.set(Calendar.HOUR_OF_DAY, auxEnd.get(Calendar.HOUR_OF_DAY));
             hrEnd.set(Calendar.MINUTE, auxEnd.get(Calendar.MINUTE));
 
+            if(hrIni.get(Calendar.HOUR_OF_DAY)>11){
+                int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
+                int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
+
+                hrIni.set(Calendar.HOUR_OF_DAY, hrAux-12);
+                hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2-12);
+            }
+            else if(hrIni.get(Calendar.HOUR_OF_DAY)<12){
+                int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
+                int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
+
+                hrIni.set(Calendar.HOUR_OF_DAY, hrAux+12);
+                hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2+12);
+            }
+
             if(newMonth==hrIni.get(Calendar.MONTH)) {
-                event = new WeekViewEvent(1, listUT.get(i).getMtName()+"\n"+listUT.get(i).getType(), hrIni, hrEnd);
-                event.setColor(ContextCompat.getColor(getContext(), R.color.event_color_02));
+                event = new WeekViewEvent(1,  (listUT.get(i).getMtName().length()>=11
+                            ?listUT.get(i).getMtName().substring(0,11)
+                            :listUT.get(i).getMtName())
+                        +"\n"+listUT.get(i).getType()
+                        +" - "+listUT.get(i).getSalon()
+                        +"\n"+listUT.get(i).getHrIniToText()
+                        +" - "+listUT.get(i).getHrEndToText(), hrIni, hrEnd);
+
+                if(listUT.get(i).getType().substring(0,3).equals("Exa")){
+                    event.setColor(ContextCompat.getColor(getContext(), R.color.ut_examen_color));
+                }else if(listUT.get(i).getType().substring(0,3).equals("Exp")){
+                    event.setColor(ContextCompat.getColor(getContext(), R.color.ut_expo_color));
+                }else if(listUT.get(i).getType().substring(0,3).equals("Tal")){
+                    event.setColor(ContextCompat.getColor(getContext(), R.color.ut_taller_color));
+                }else
+                event.setColor(ContextCompat.getColor(getContext(), R.color.ut_otro_color));
+
                 events.add(event);
             }
 
@@ -284,12 +318,28 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
                                         hrEnd.set(Calendar.HOUR_OF_DAY, auxEnd.get(Calendar.HOUR_OF_DAY));
                                         hrEnd.set(Calendar.MINUTE, auxEnd.get(Calendar.MINUTE));
 
+                                        if(hrIni.get(Calendar.HOUR_OF_DAY)>11){
+                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
+                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
+
+                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux-12);
+                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2-12);
+                                        }
+                                        else if(hrIni.get(Calendar.HOUR_OF_DAY)<12){
+                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
+                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
+
+                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux+12);
+                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2+12);
+                                        }
+
                                         boolean paseHV=true;
                                         for(int m=0; m<listUT.size();m++) {
                                             Calendar auxDayTime = Calendar.getInstance();
                                             auxDayTime.setTime(listUT.get(m).getDayTime());
 
-                                            if(hrIni.get(Calendar.DAY_OF_YEAR)==auxDayTime.get(Calendar.DAY_OF_YEAR)){
+                                            if(hrIni.get(Calendar.DAY_OF_YEAR)==auxDayTime.get(Calendar.DAY_OF_YEAR)
+                                                    && listUT.get(m).getType().substring(0,3).equals("Exa")){
                                                 paseHV=false; m=listUT.size();
                                             }
                                         }
@@ -346,12 +396,28 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
                                         hrEnd.set(Calendar.MINUTE, auxEnd.get(Calendar.MINUTE));
 
 
+                                        if(hrIni.get(Calendar.HOUR_OF_DAY)>11){
+                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
+                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
+
+                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux-12);
+                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2-12);
+                                        }
+                                        else if(hrIni.get(Calendar.HOUR_OF_DAY)<12){
+                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
+                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
+
+                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux+12);
+                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2+12);
+                                        }
+
                                         boolean paseHV=true;
                                         for(int m=0; m<listUT.size();m++) {
                                             Calendar auxDayTime = Calendar.getInstance();
                                             auxDayTime.setTime(listUT.get(m).getDayTime());
 
-                                            if(hrIni.get(Calendar.DAY_OF_YEAR)==auxDayTime.get(Calendar.DAY_OF_YEAR)){
+                                            if(hrIni.get(Calendar.DAY_OF_YEAR)==auxDayTime.get(Calendar.DAY_OF_YEAR)
+                                                    && listUT.get(m).getType().substring(0,3).equals("Exa")){
                                                 paseHV=false; m=listUT.size();
                                             }
                                         }
@@ -405,12 +471,29 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
                                         hrEnd.set(Calendar.HOUR_OF_DAY, auxEnd.get(Calendar.HOUR_OF_DAY));
                                         hrEnd.set(Calendar.MINUTE, auxEnd.get(Calendar.MINUTE));
 
+
+                                        if(hrIni.get(Calendar.HOUR_OF_DAY)>11){
+                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
+                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
+
+                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux-12);
+                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2-12);
+                                        }
+                                        else if(hrIni.get(Calendar.HOUR_OF_DAY)<12){
+                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
+                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
+
+                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux+12);
+                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2+12);
+                                        }
+
                                         boolean paseHV=true;
                                         for(int m=0; m<listUT.size();m++) {
                                             Calendar auxDayTime = Calendar.getInstance();
                                             auxDayTime.setTime(listUT.get(m).getDayTime());
 
-                                            if(hrIni.get(Calendar.DAY_OF_YEAR)==auxDayTime.get(Calendar.DAY_OF_YEAR)){
+                                            if(hrIni.get(Calendar.DAY_OF_YEAR)==auxDayTime.get(Calendar.DAY_OF_YEAR)
+                                                    && listUT.get(m).getType().substring(0,3).equals("Exa")){
                                                 paseHV=false; m=listUT.size();
                                             }
                                         }
@@ -465,12 +548,28 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
                                         hrEnd.set(Calendar.HOUR_OF_DAY, auxEnd.get(Calendar.HOUR_OF_DAY));
                                         hrEnd.set(Calendar.MINUTE, auxEnd.get(Calendar.MINUTE));
 
+                                        if(hrIni.get(Calendar.HOUR_OF_DAY)>11){
+                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
+                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
+
+                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux-12);
+                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2-12);
+                                        }
+                                        else if(hrIni.get(Calendar.HOUR_OF_DAY)<12){
+                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
+                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
+
+                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux+12);
+                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2+12);
+                                        }
+
                                         boolean paseHV=true;
                                         for(int m=0; m<listUT.size();m++) {
                                             Calendar auxDayTime = Calendar.getInstance();
                                             auxDayTime.setTime(listUT.get(m).getDayTime());
 
-                                            if(hrIni.get(Calendar.DAY_OF_YEAR)==auxDayTime.get(Calendar.DAY_OF_YEAR)){
+                                            if(hrIni.get(Calendar.DAY_OF_YEAR)==auxDayTime.get(Calendar.DAY_OF_YEAR)
+                                                    && listUT.get(m).getType().substring(0,3).equals("Exa")){
                                                 paseHV=false; m=listUT.size();
                                             }
                                         }
@@ -525,12 +624,30 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
                                         hrEnd.set(Calendar.HOUR_OF_DAY, auxEnd.get(Calendar.HOUR_OF_DAY));
                                         hrEnd.set(Calendar.MINUTE, auxEnd.get(Calendar.MINUTE));
 
+
+                                        if(hrIni.get(Calendar.HOUR_OF_DAY)>11){
+                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
+                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
+
+                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux-12);
+                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2-12);
+                                        }
+                                        else if(hrIni.get(Calendar.HOUR_OF_DAY)<12){
+                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
+                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
+
+                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux+12);
+                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2+12);
+                                        }
+
+
                                         boolean paseHV=true;
                                         for(int m=0; m<listUT.size();m++) {
                                             Calendar auxDayTime = Calendar.getInstance();
                                             auxDayTime.setTime(listUT.get(m).getDayTime());
 
-                                            if(hrIni.get(Calendar.DAY_OF_YEAR)==auxDayTime.get(Calendar.DAY_OF_YEAR)){
+                                            if(hrIni.get(Calendar.DAY_OF_YEAR)==auxDayTime.get(Calendar.DAY_OF_YEAR)
+                                                    && listUT.get(m).getType().substring(0,3).equals("Exa")){
                                                 paseHV=false; m=listUT.size();
                                             }
                                         }

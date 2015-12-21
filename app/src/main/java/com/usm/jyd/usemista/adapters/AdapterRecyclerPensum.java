@@ -24,6 +24,7 @@ import java.util.ArrayList;
 public class AdapterRecyclerPensum extends RecyclerView.Adapter<AdapterRecyclerPensum.SCViewHolder> {
 
     private ArrayList<String> list = new ArrayList<>();
+    private ArrayList<String> listPInfo = new ArrayList<>();
     private ArrayList<MenuStatus> listMenuStatus =  new ArrayList<>();
     private int[] listImage = new int[5];
     private LayoutInflater inflater;
@@ -40,6 +41,12 @@ public class AdapterRecyclerPensum extends RecyclerView.Adapter<AdapterRecyclerP
         list.add("Ingenieria Industrial");listImage[2]=R.drawable.ic_industrial_01;
         list.add("Ingenieria Civil");listImage[3]=R.drawable.ic_civil_01;
         list.add("Arquitectura");listImage[4]=R.drawable.ic_arq_01;
+
+        listPInfo.add("Formacion profesional para prestar servicios como ingeniero de sistemas de información, sistemas de control y ciencias gerenciales, haciendo énfasis en el uso de tecnologías y técnicas de los sistemas.");
+        listPInfo.add("Especialista preparado para prestar servicios con suficiencia y capacidad en electrónica analógica y digital, líneas de trasmisión y señalización, antenas, redes, trasmisión por cable e inalámbrica, tecnología celular, protocolos de comunicación, controles de transmisión, redes móviles e inalámbricas y, en general, en sistemas de trasmisión de voz, video y datos.");
+        listPInfo.add("Su formacion toma el estudio de sistemas estructurales y de servicio a fin de utilizar los diversos recursos (mano de obra, capital, equipos, materia prima e información) en forma efectiva para obtener como resultado productos y servicios de óptima calidad.");
+        listPInfo.add("Su formación se cumplirá principalmente en las áreas de Diseño Estructural, Planificación de Proyectos, Saneamiento Ambiental y Evaluación de Proyectos.");
+        listPInfo.add("Profesional capaz de prestar sus servicios tanto en el sector institucional como en el de servicios. Poseerá una formación básica que le permita adaptarse a los cambios que ocurran en el plano profesional y en la participación en proyectos interdisciplinarios.");
 
         listMenuStatus= MiAplicativo.getWritableDatabase().getAllMenuStatus();
         boolean flag=false;
@@ -65,6 +72,7 @@ public class AdapterRecyclerPensum extends RecyclerView.Adapter<AdapterRecyclerP
     public void onBindViewHolder(AdapterRecyclerPensum.SCViewHolder holder, int position) {
         holder.textViewPensumTitulo.setText(list.get(position));
         holder.imageViewPensumImagen.setImageResource(listImage[position]);
+        holder.textViewPensumInfo.setText(listPInfo.get(position));
 
         //Sistema de animacion Gracias a la clase AnimUtilis
         if(position>previousPosition) {

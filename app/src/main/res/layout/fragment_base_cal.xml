@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         app:eventTextColor="@android:color/white"
         app:textSize="12sp"
-        app:hourHeight="40dp"
+        app:hourHeight="30dp"
         app:hourSeparatorColor="#05000000"
         app:headerColumnPadding="8dp"
         app:headerColumnTextColor="#f5f5f5"
@@ -20,7 +20,7 @@
         app:columnGap="8dp"
         app:noOfVisibleDays="3"
         app:headerRowBackgroundColor="#616161"
-        app:dayBackgroundColor="#05000000"
+        app:dayBackgroundColor="#10000000"
         app:todayBackgroundColor="#5048adff"
         app:headerColumnBackground="#616161"
         app:todayHeaderTextColor="@color/colorAccent"/>

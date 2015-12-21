@@ -11,7 +11,9 @@
   <color name="colorTextPrimary">#212121</color>
     <color name="colorTextSecondary">#727272</color>
 
-  <color name="colorBackground">#E8EAF6</color>
+  <color name="colorBackground">#E0E0E0</color>
+<color name="coloGrisClaro">#F5F5F5</color>
+  <!--E8EAF6 previus background -->
 
 
 
@@ -26,6 +28,11 @@
   <color name="event_color_02">#f57f68</color>
   <color name="event_color_03">#87d288</color>
   <color name="event_color_04">#f8b552</color>
+
+  <color name="ut_examen_color">#3F51B5</color>
+  <color name="ut_expo_color">#5C6BC0</color>
+  <color name="ut_taller_color">#7986CB</color>
+  <color name="ut_otro_color">#9FA8DA</color>
 
 
 

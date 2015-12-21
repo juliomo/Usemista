@@ -8,11 +8,7 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
 
-    <item android:id="@+id/action_person"
-        android:icon="@mipmap/ic_person_white_24dp"
-        android:orderInCategory="200"
-        android:title="@string/action_person"
-        />
+
 
 
 </menu>

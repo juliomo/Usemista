@@ -89,6 +89,7 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
     private TextView textViewCalendarIni; private TextView textViewCalendarEnd;
     private ImageView imageViewIconColor;
     private ImageView imageViewIconMateria;
+    private ImageView imageViewIconClock, imageViewIconCal;
 
 
     private EditText editTextLunMod, editTextMarMod,editTextMieMod,editTextJueMod,editTextVieMod ;
@@ -180,6 +181,8 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
         colorHV=color;
         imageViewIconColor.setColorFilter(color);
         imageViewIconMateria.setColorFilter(color);
+        imageViewIconClock.setColorFilter(color);
+        imageViewIconCal.setColorFilter(color);
     }
 
 
@@ -399,6 +402,8 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
         NestedScrollView nestedScrollView=(NestedScrollView)rootView.findViewById(R.id.scrollViewHVADD);
         nestedScrollView.setNestedScrollingEnabled(false);
         imageViewIconMateria=(ImageView)rootView.findViewById(R.id.imageViewIconMateria);
+        imageViewIconClock=(ImageView)rootView.findViewById(R.id.imageViewClock);
+        imageViewIconCal=(ImageView)rootView.findViewById(R.id.imageViewCalendar);
         editTextTitulo=(EditText)rootView.findViewById(R.id.editTextTitulo);
 
         final TextView textViewNombMateria=(TextView)rootView.findViewById(R.id.textNombMateria);
@@ -607,11 +612,13 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
                     textViewCalendarEnd.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
                     textViewCalendarIni.setVisibility(View.VISIBLE);
                     textViewCalendarEnd.setVisibility(View.VISIBLE);
+                    imageViewIconCal.setImageResource(R.drawable.ic_event_available_black_24dp);
                 } else {
                     textViewCalendarIni.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
                     textViewCalendarEnd.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
                     textViewCalendarIni.setVisibility(View.GONE);
                     textViewCalendarEnd.setVisibility(View.GONE);
+                    imageViewIconCal.setImageResource(R.drawable.ic_event_busy_black_24dp);
                 }
             }
         });
@@ -635,6 +642,8 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
             textViewNombMateria.setVisibility(View.GONE);
             imageViewIconColor.setColorFilter(colorHV);
             imageViewIconMateria.setColorFilter(colorHV);
+            imageViewIconClock.setColorFilter(colorHV);
+            imageViewIconCal.setColorFilter(colorHV);
 
         }else if(getArguments().getInt(ARG_NUMERO_SECCION)==122){
 
@@ -644,6 +653,8 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
 
             imageViewIconColor.setColorFilter(colorHV);
             imageViewIconMateria.setColorFilter(colorHV);
+            imageViewIconClock.setColorFilter(colorHV);
+            imageViewIconCal.setColorFilter(colorHV);
 
             if(hvInEd.getCalendar().equals("1")){
                 switchCalendar.setChecked(true);

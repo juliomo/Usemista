@@ -1,6 +1,8 @@
 package com.usm.jyd.usemista.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +48,9 @@ public class AdapterRecyclerMateria extends RecyclerView.Adapter<AdapterRecycler
     public void setMateriaList(ArrayList<Materia> listMateria){
         this.listMateria=listMateria;
         notifyItemChanged(0, listMateria.size());
+    }
+    public void itemReBind(int pos){
+        notifyItemChanged(pos);
     }
 
     @Override
@@ -112,14 +117,48 @@ public class AdapterRecyclerMateria extends RecyclerView.Adapter<AdapterRecycler
                             MiAplicativo.getWritableDatabase()
                                     .insertUserMateria(listMateria.get(getAdapterPosition()));
                             listMateria.get(getAdapterPosition()).setU_materia("1");
+                            itemReBind(getAdapterPosition());
                         }
                     } else {
-                        MiAplicativo.getWritableDatabase()
-                                .updateMateriaUserPic("0",
-                                        listMateria.get(getAdapterPosition()).getCod());
-                        MiAplicativo.getWritableDatabase()
-                                .deleteUserMateria(listMateria.get(getAdapterPosition()).getCod());
-                        listMateria.get(getAdapterPosition()).setU_materia("0");
+
+                        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                        alertDialog.setTitle("Notify Info");
+                        alertDialog.setMessage("Borrara Todos los datos asociados. " +
+                                "\n\n - Mis Materias." +
+                                "\n - Eventos de Materias." +
+                                "\n - Horario virtual.");
+                        alertDialog.setCancelable(false);
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                itemReBind(getAdapterPosition());
+                            }
+                        });
+                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                MiAplicativo.getWritableDatabase()
+                                        .updateMateriaUserPic("0",
+                                                listMateria.get(getAdapterPosition()).getCod());
+                                MiAplicativo.getWritableDatabase()
+                                        .deleteUserMateria(listMateria.get(getAdapterPosition()).getCod());
+
+                                MiAplicativo.getWritableDatabase()
+                                        .deleteUserMateriaTask(listMateria.get(getAdapterPosition()).getCod());
+
+                                MiAplicativo.getWritableDatabase()
+                                        .deleteHorarioVirtualWeek(listMateria.get(getAdapterPosition()).getCod());
+
+                                MiAplicativo.getWritableDatabase()
+                                        .deleteHorarioVirtual(listMateria.get(getAdapterPosition()).getCod());
+
+                                listMateria.get(getAdapterPosition()).setU_materia("0");
+
+                                itemReBind(getAdapterPosition());
+
+                            }
+                        });  alertDialog.show();
+
                     }
                 }
             });

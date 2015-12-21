@@ -16,6 +16,7 @@ import com.usm.jyd.usemista.objects.HVWeek;
 import com.usm.jyd.usemista.objects.HorarioVirtual;
 import com.usm.jyd.usemista.objects.Materia;
 import com.usm.jyd.usemista.objects.MenuStatus;
+import com.usm.jyd.usemista.objects.UserRegistro;
 import com.usm.jyd.usemista.objects.UserTask;
 
 import java.text.DateFormat;
@@ -33,6 +34,107 @@ public class DBPensum {
         mHelper = new PensumHelper(context);
         mDatabase = mHelper.getWritableDatabase();
     }
+
+    public void updateUserRegistroAlumno(String status, String nomb, String ci){
+        String sql = "UPDATE " + PensumHelper.TABLE_USER_REGISTRO + " SET " +
+                PensumHelper.COLUMN_UR_STATUS+    " = ?," +
+                PensumHelper.COLUMN_UR_NOMB+   " = ?," +
+                PensumHelper.COLUMN_UR_CI+ " = ?;";
+
+        //compile the statement and start a transaction
+        SQLiteStatement statement = mDatabase.compileStatement(sql);
+        mDatabase.beginTransaction();
+        //for a given column index, simply bind the data to be put inside that index
+        statement.bindString(1,status);
+        statement.bindString(2,nomb);
+        statement.bindString(3,ci);
+        statement.execute();
+
+        //set the transaction as successful and end the transaction
+
+        mDatabase.setTransactionSuccessful();
+        mDatabase.endTransaction();
+    }
+    public void updateUserRegistroProfesor(String status, String nomb){
+        String sql = "UPDATE " + PensumHelper.TABLE_USER_REGISTRO + " SET " +
+                PensumHelper.COLUMN_UR_STATUS+    " = ?," +
+                PensumHelper.COLUMN_UR_NOMB+   " = ?;";
+
+        //compile the statement and start a transaction
+        SQLiteStatement statement = mDatabase.compileStatement(sql);
+        mDatabase.beginTransaction();
+        //for a given column index, simply bind the data to be put inside that index
+        statement.bindString(1,status);
+        statement.bindString(2, nomb);
+        statement.execute();
+
+        //set the transaction as successful and end the transaction
+
+        mDatabase.setTransactionSuccessful();
+        mDatabase.endTransaction();
+    }
+    public void updateUserRegistroFailProf(String status, Date dayTime){
+        String sql = "UPDATE " + PensumHelper.TABLE_USER_REGISTRO + " SET " +
+                PensumHelper.COLUMN_UR_STATUS+    " = ?," +
+                PensumHelper.COLUMN_UR_DAYTIME+   " = ?;";
+
+        //compile the statement and start a transaction
+        SQLiteStatement statement = mDatabase.compileStatement(sql);
+        mDatabase.beginTransaction();
+        //for a given column index, simply bind the data to be put inside that index
+        statement.bindString(1,status);
+        statement.bindLong(2, dayTime.getTime());
+        statement.execute();
+
+        //set the transaction as successful and end the transaction
+
+        mDatabase.setTransactionSuccessful();
+        mDatabase.endTransaction();
+    }
+    public void updateUserRegistroGCM(String notiGCM){
+        String sql = "UPDATE " + PensumHelper.TABLE_USER_REGISTRO + " SET " +
+                PensumHelper.COLUMN_UR_NOTI_GCM+    " = ? "+
+                " WHERE "+PensumHelper.COLUMN_UR_UID+" = ?;" ;
+
+        //compile the statement and start a transaction
+        SQLiteStatement statement = mDatabase.compileStatement(sql);
+        mDatabase.beginTransaction();
+        //for a given column index, simply bind the data to be put inside that index
+        statement.bindString(1,notiGCM);
+        statement.bindLong(2, 1);
+        statement.execute();
+
+        //set the transaction as successful and end the transaction
+
+        mDatabase.setTransactionSuccessful();
+        mDatabase.endTransaction();
+    }
+    public UserRegistro getUserRegistro(){
+        UserRegistro userRegistro = new UserRegistro();
+        String[] columns = {PensumHelper.COLUMN_UR_NOTI_GCM,
+                PensumHelper.COLUMN_UR_STATUS,
+                PensumHelper.COLUMN_UR_NOMB,
+                PensumHelper.COLUMN_UR_CI,
+                PensumHelper.COLUMN_UR_DAYTIME
+        };
+        Cursor cursor = mDatabase.query(PensumHelper.TABLE_USER_REGISTRO, columns, null, null, null, null, null);//parametros no estudiados
+        if (cursor != null && cursor.moveToFirst()) {
+            L.m("loading entries " + cursor.getCount() + new Date(System.currentTimeMillis()));
+
+            userRegistro.setNotiGCM(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_UR_NOTI_GCM)));
+            userRegistro.setStatus(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_UR_STATUS)));
+            userRegistro.setNomb(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_UR_NOMB)));
+            userRegistro.setCi(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_UR_CI)));
+
+            long calDayTime = cursor.getLong(cursor.getColumnIndex(PensumHelper.COLUMN_UR_DAYTIME));
+            userRegistro.setDayTime(calDayTime != -1 ? new Date(calDayTime) : null);
+
+
+        }
+        return userRegistro;
+    }
+
+
 
     public void insertUserTask(UserTask userTask){
 
@@ -775,6 +877,30 @@ public class DBPensum {
                 ");";
 
 
+        /***********************************************************************
+         * ////////// TABLA DE USER REGISTRO ////////////////////////////////////////
+         ***********************************************************************/
+        public static final String TABLE_USER_REGISTRO = "user_registro";
+        public static final String COLUMN_UR_UID = "ur_uid";
+        public static final String COLUMN_UR_NOTI_GCM = "ur_noti_gcm";
+        public static final String COLUMN_UR_STATUS = "ur_status";
+        public static final String COLUMN_UR_NOMB = "ur_nomb";
+        public static final String COLUMN_UR_CI = "ur_ci";
+        public static final String COLUMN_UR_DAYTIME = "ur_daytime";
+
+        private static final String CREATE_TABLE_USER_REGISTRO = "CREATE TABLE " + TABLE_USER_REGISTRO + " (" +
+                COLUMN_UR_UID + " INTEGER DEFAULT 1," +
+                COLUMN_UR_NOTI_GCM + " TEXT DEFAULT noAsig," +
+                COLUMN_UR_STATUS + " TEXT DEFAULT 0, " +
+                COLUMN_UR_NOMB + " TEXT DEFAULT noAsig," +
+                COLUMN_UR_CI + " TEXT DEFAULT noAsig," +
+                COLUMN_UR_DAYTIME + " DATETIME DEFAULT CURRENT_TIMESTAMP" +
+                ");";
+
+        private static final String INSERT_USER_REGISTRO ="INSERT INTO "+TABLE_USER_REGISTRO+" ("+
+                COLUMN_UR_NOTI_GCM+") VALUES"+
+                "('noAsig');" ;
+
         private Context mContext;
         public PensumHelper(Context context) {
             super(context, DB_NAME, null, DB_VERSION);
@@ -791,6 +917,9 @@ public class DBPensum {
                 db.execSQL(CREATE_TABLE_HORARIO_VIRTUAL);
                 db.execSQL(CREATE_TABLE_HORARIO_VIRTUAL_WEEK);
                 db.execSQL(CREATE_TABLE_USER_TASK);
+
+                db.execSQL(CREATE_TABLE_USER_REGISTRO);
+                db.execSQL(INSERT_USER_REGISTRO);
                 L.m("create table box office executed");
             } catch (SQLiteException exception) {
                 L.t(mContext, exception + "");

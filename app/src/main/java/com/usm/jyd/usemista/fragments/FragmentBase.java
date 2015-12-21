@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -275,10 +277,12 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         if(getArguments().getInt(ARG_NUMERO_SECCION)==10) {
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
 
+
             ImageView imageViewIcon= (ImageView)rootView.findViewById(R.id.seccionCeroImageView);
             imageViewIcon.setImageResource(R.drawable.ic_pensum_white_24dp_01);
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
             textViewTituloFragment.setText("P&P");
+
 
             rcListPensums = (RecyclerView) rootView.findViewById(R.id.recycleView);
             PensumCallCero(); //simple funcion Void para aligerar a la vista
@@ -346,9 +350,9 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             adapterRecyclerHorarioV.setListHorarioV(listHVLoad);
 
             //Agrega Espacio al final del RC
-            BottomOffsetDecoration bottomOffsetDecoration =
-                    new BottomOffsetDecoration(75,getContext().getResources().getDisplayMetrics().density);
-            rcListHorarioVirtual.addItemDecoration(bottomOffsetDecoration);
+            OffsetDecorationRC offsetDecorationRC =
+                    new OffsetDecorationRC(75,35,getContext().getResources().getDisplayMetrics().density);
+            rcListHorarioVirtual.addItemDecoration(offsetDecorationRC);
 
             rcListHorarioVirtual.setSoundEffectsEnabled(true);
             rcListHorarioVirtual.setAdapter(adapterRecyclerHorarioV);
@@ -381,9 +385,9 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         adapterRecyclerMenu.setClickListener(getContext(), clickCallBack);
 
         //Espacio al final de la Vista de menu (RC)
-        BottomOffsetDecorationMenu bottomOffsetDecorationMenu =
-                new BottomOffsetDecorationMenu(75,getContext().getResources().getDisplayMetrics().density);
-        rcListMenu.addItemDecoration(bottomOffsetDecorationMenu);
+        OffsetDecorationMenu offsetDecorationMenu =
+                new OffsetDecorationMenu(75,35,getContext().getResources().getDisplayMetrics().density);
+        rcListMenu.addItemDecoration(offsetDecorationMenu);
 
         //Agregamos GEstos Touch a nuestro recycler
         rcListMenu.setSoundEffectsEnabled(true);
@@ -403,6 +407,8 @@ public class FragmentBase extends android.support.v4.app.Fragment {
 
     //Llamados Menu Principal
     public void PensumCallCero(){
+
+
         rcListPensums.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         //Nuestro Adaptador de Data
@@ -428,6 +434,9 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         //finalmente podemos adaptar al Recycler
         rcListPensums.setAdapter(mSectionedAdapter);
 
+        OffsetDecorationPyP OffsetDecorationPyP =
+                new OffsetDecorationPyP(75,100,getContext().getResources().getDisplayMetrics().density);
+        rcListPensums.addItemDecoration(OffsetDecorationPyP);
 
         //Agregamos GEstos Touch a nuestro recycler
         rcListPensums.setSoundEffectsEnabled(true);
@@ -451,12 +460,18 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     }
 
 
-    //CLass DECORADOR PARA LINEAR RC ESPACIO AL FINAL
-    static class BottomOffsetDecoration extends RecyclerView.ItemDecoration {
-        private int mBottomOffset;
 
-        public BottomOffsetDecoration(int bottomOffset,float density) {
+
+
+
+    //Class Decorarod para linear RC PENSUM Selector
+    static class OffsetDecorationPyP extends RecyclerView.ItemDecoration {
+        private int mBottomOffset;
+        private int mRightOffset;
+
+        public OffsetDecorationPyP(int bottomOffset,int topOffset, float density) {
             mBottomOffset =(int)(bottomOffset * density);
+            mRightOffset = (int)(topOffset * density);
         }
 
         @Override
@@ -466,18 +481,53 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             int position =  parent.getChildAdapterPosition(view);
             if (dataSize > 0 && position == dataSize - 1) {
                 outRect.set(0, 0, 0, mBottomOffset);
-            } else {
+            }else {
                 outRect.set(0, 0, 0, 0);
+            }
+
+            if(parent.getChildAdapterPosition(view)==0){
+                outRect.set(mRightOffset, 0, 0, 0);
             }
 
         }
     }
-    static class BottomOffsetDecorationMenu extends RecyclerView.ItemDecoration {
-        private int mBottomOffset;
 
-        public BottomOffsetDecorationMenu(int bottomOffset, float density) {
+    //CLass DECORADOR PARA LINEAR RC ESPACIO AL FINAL
+    static class OffsetDecorationRC extends RecyclerView.ItemDecoration {
+        private int mBottomOffset;
+        private int mTopOffset;
+
+        public OffsetDecorationRC(int bottomOffset,int topOffset, float density) {
             mBottomOffset =(int)(bottomOffset * density);
+            mTopOffset = (int)(topOffset * density);
         }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            int dataSize = state.getItemCount();
+            int position =  parent.getChildAdapterPosition(view);
+            if (dataSize > 0 && position == dataSize - 1) {
+                outRect.set(0, 0, 0, mBottomOffset);
+            }else {
+                outRect.set(0, 0, 0, 0);
+            }
+
+             if(parent.getChildAdapterPosition(view)==0){
+                outRect.set(0, mTopOffset, 0, 0);
+            }
+
+        }
+    }
+    static class OffsetDecorationMenu extends RecyclerView.ItemDecoration {
+        private int mBottomOffset;
+        private int mTopOffset;
+
+        public OffsetDecorationMenu(int bottomOffset, int topOffset, float density) {
+            mBottomOffset =(int)(bottomOffset * density);
+            mTopOffset = (int)(topOffset * density);
+        }
+
 
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
@@ -489,6 +539,10 @@ public class FragmentBase extends android.support.v4.app.Fragment {
                 outRect.set(0, 0, 0, mBottomOffset);
             } else {
                 outRect.set(0, 0, 0, 0);
+            }
+
+             if(parent.getChildAdapterPosition(view)==0){
+                outRect.set(0, mTopOffset, 0, 0);
             }
 
         }

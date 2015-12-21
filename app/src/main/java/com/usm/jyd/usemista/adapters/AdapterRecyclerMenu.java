@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.usm.jyd.usemista.R;
@@ -20,7 +21,9 @@ import com.usm.jyd.usemista.anim.AnimUtils;
 import com.usm.jyd.usemista.aplicativo.MiAplicativo;
 import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.logs.L;
+import com.usm.jyd.usemista.network.VolleySingleton;
 import com.usm.jyd.usemista.objects.MenuStatus;
+import com.usm.jyd.usemista.objects.UserRegistro;
 
 import java.util.ArrayList;
 
@@ -28,6 +31,7 @@ import java.util.ArrayList;
  * Created by der_w on 10/17/2015.
  */
 public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMenu.RMViewHolder> {
+
 
     private ArrayList<String> listTitulo = new ArrayList<>();
     private ArrayList<MenuStatus> listMenuStatus =  new ArrayList<>();
@@ -148,7 +152,8 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
             if(v==v.findViewById(R.id.bodyRelative)){
                 L.t(context,"Este es el body: "+getAdapterPosition());
                 if (clickCallBack != null && (getAdapterPosition()==0 ||
-                        getAdapterPosition()==1|| getAdapterPosition()==2 ||getAdapterPosition()==4)) {
+                        getAdapterPosition()==1|| getAdapterPosition()==2 ||
+                        getAdapterPosition()==4|| getAdapterPosition()==5)) {
                     clickCallBack.onRSCItemSelected(10+getAdapterPosition());
                 }
                 if(getAdapterPosition()==3){
@@ -156,6 +161,8 @@ public class AdapterRecyclerMenu extends RecyclerView.Adapter<AdapterRecyclerMen
                             .duration(1000)
                             .playOn(v.findViewById(R.id.itemImagen));       //(findViewById(R.id.imageView));
                 }
+
+
             }else if(v==v.findViewById(R.id.imageView3)){
                 if(getAdapterPosition()==0){
                     String selector="";

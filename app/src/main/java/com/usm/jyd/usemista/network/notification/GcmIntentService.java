@@ -89,7 +89,8 @@ public class GcmIntentService extends IntentService {
         .setContentTitle("Usemista Informa")
         .setSmallIcon(R.mipmap.ic_launcher)
         .setStyle(new NotificationCompat.BigTextStyle())
-        .setContentText(msg);
+        .setContentText(msg)
+                ;
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(

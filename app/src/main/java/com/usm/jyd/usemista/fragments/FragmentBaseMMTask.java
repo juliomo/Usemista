@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TimePicker;
 
 import com.usm.jyd.usemista.R;
@@ -285,6 +286,9 @@ public class FragmentBaseMMTask extends Fragment implements HVTimeToSet {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
+
+        LinearLayout linearLayout= (LinearLayout)rootView.findViewById(R.id.seccionCeroHead);
+        linearLayout.setVisibility(View.GONE);
 
         FabMMT=(FloatingActionButton)rootView.findViewById(R.id.fabMM);
         FabMMT.setVisibility(View.VISIBLE);

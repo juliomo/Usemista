@@ -5,29 +5,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
         android:orientation="horizontal"
         android:id="@+id/seccionCeroHead"
-        android:background="@drawable/curver_fill_02">
+        android:background="@drawable/fragment_base_00_bg">
         <ImageView
             android:id="@+id/seccionCeroImageView"
-            android:src="@drawable/ic_home_white_24dp"
+            android:src="@drawable/ic_mode_edit_white_24dp"
             android:padding="5dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="center" />
+            android:layout_height="wrap_content" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="To Add"
+            android:layout_marginRight="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Editor HV"
             android:id="@+id/seccionCeroTitulo"
             android:textColor="@color/colorWhite"
-            android:padding="5dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:padding="5dp" />
     </LinearLayout>
 
 
@@ -109,7 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/imageViewClock"
-                    android:src="@drawable/ic_access_time_black_24dp"
+                    android:src="@drawable/ic_horario_gris_24dp"
                     android:layout_column="0" />
 
                 <Switch
@@ -513,7 +510,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_home_black_24dp"
+                        android:src="@drawable/ic_event_busy_black_24dp"
                         android:id="@+id/imageViewCalendar" />
                     <Switch
                         android:layout_width="wrap_content"

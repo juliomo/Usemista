@@ -22,7 +22,9 @@ public class HorarioVDialog extends DialogFragment {
 
     private HVTimeToSet hvTimeToSet;
     private int prevColor;
-    public void setHVCallBack(HVTimeToSet hvTimeToSet, int prevColor){this.hvTimeToSet=hvTimeToSet; this.prevColor=prevColor;}
+    public void setHVCallBack(HVTimeToSet hvTimeToSet, int prevColor){
+        this.hvTimeToSet=hvTimeToSet; this.prevColor=prevColor;
+    }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

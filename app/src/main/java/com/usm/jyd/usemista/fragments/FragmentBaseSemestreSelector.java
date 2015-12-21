@@ -1,14 +1,19 @@
 package com.usm.jyd.usemista.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -98,6 +103,14 @@ public class FragmentBaseSemestreSelector extends Fragment {
 
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
 
+            LinearLayout linearLayout=(LinearLayout)rootView.findViewById(R.id.seccionCeroHead);
+            linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_BACK));
+                }
+            });
+
             ImageView imageViewIcon= (ImageView)rootView.findViewById(R.id.seccionCeroImageView);
             imageViewIcon.setImageResource(R.drawable.ic_gear_white_24dp_01);
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
@@ -106,8 +119,11 @@ public class FragmentBaseSemestreSelector extends Fragment {
             recyclerViewListSemestre=(RecyclerView)rootView.findViewById(R.id.recycleView);
             recyclerViewListSemestre.setLayoutManager(new LinearLayoutManager(getContext()));
             adapterRecyclerSemestre=new AdapterRecyclerSemestre(getContext());
-            adapterRecyclerSemestre.setClickListener(getContext(),clickCallBack);
+            adapterRecyclerSemestre.setClickListener(getContext(), clickCallBack);
 
+            OffsetDecorationRC offsetDecorationRC=
+                    new OffsetDecorationRC(75,35,getContext().getResources().getDisplayMetrics().density);
+            recyclerViewListSemestre.addItemDecoration(offsetDecorationRC);
             recyclerViewListSemestre.setAdapter(adapterRecyclerSemestre);
 
 
@@ -133,6 +149,8 @@ public class FragmentBaseSemestreSelector extends Fragment {
 
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
 
+
+
             ImageView imageViewIcon= (ImageView)rootView.findViewById(R.id.seccionCeroImageView);
             imageViewIcon.setImageResource(R.drawable.ic_gear_white_24dp_01);
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
@@ -143,6 +161,10 @@ public class FragmentBaseSemestreSelector extends Fragment {
             adapterRecyclerSemestre=new AdapterRecyclerSemestre(getContext());
             adapterRecyclerSemestre.setClickListener(getContext(),clickCallBack);
 
+
+            OffsetDecorationRC offsetDecorationRC=
+                    new OffsetDecorationRC(75,35,getContext().getResources().getDisplayMetrics().density);
+            recyclerViewListSemestre.addItemDecoration(offsetDecorationRC);
             recyclerViewListSemestre.setAdapter(adapterRecyclerSemestre);
 
 
@@ -169,6 +191,36 @@ public class FragmentBaseSemestreSelector extends Fragment {
 
 
 
+    //CLass DECORADOR PARA LINEAR RC ESPACIO AL FINAL
+    static class OffsetDecorationRC extends RecyclerView.ItemDecoration {
+        private int mBottomOffset;
+        private int mTopOffset;
+
+        public OffsetDecorationRC(int bottomOffset,int topOffset, float density) {
+            mBottomOffset =(int)(bottomOffset * density);
+            mTopOffset = (int)(topOffset * density);
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            int dataSize = state.getItemCount();
+            int position =  parent.getChildAdapterPosition(view);
+            if (dataSize > 0 && position == dataSize - 1) {
+                outRect.set(0, 0, 0, mBottomOffset);
+            }else {
+                outRect.set(0, 0, 0, 0);
+            }
+
+            if(parent.getChildAdapterPosition(view)==0){
+                outRect.set(0, mTopOffset, 0, 0);
+            }
+
+        }
+    }
+
+
+
     ///Llamados Pensum////
     public void enviarPeticionJson(final String ma_modulo){
 
@@ -189,24 +241,45 @@ public class FragmentBaseSemestreSelector extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                textViewVolleyError.setVisibility(View.VISIBLE);
-
+                String auxError="";
                 if (error instanceof TimeoutError || error instanceof NoConnectionError){
                     textViewVolleyError.setText(R.string.error_timeOut);
-
+                    auxError=getString( R.string.error_timeOut);
                 }else if(error instanceof AuthFailureError){
                     textViewVolleyError.setText(R.string.error_AuthFail);
-
+                    auxError=getString( R.string.error_AuthFail);
                 }else if (error instanceof ServerError){
                     textViewVolleyError.setText(R.string.error_Server);
-
+                    auxError=getString( R.string.error_Server);
                 }else if (error instanceof NetworkError){
                     textViewVolleyError.setText(R.string.error_NetWork);
-
+                    auxError=getString( R.string.error_NetWork);
                 }else if (error instanceof ParseError){
                     textViewVolleyError.setText(R.string.error_Parse);
-
+                    auxError=getString( R.string.error_NetWork);
                 }
+
+              //  textViewVolleyError.setVisibility(View.VISIBLE);
+                AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                alertDialog.setTitle("Notify Info");
+                alertDialog.setMessage("Error: " + auxError + "\n\n"
+                        + "Reintentar Conexion?");
+                alertDialog.setCancelable(false);
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        enviarPeticionJson(ma_modulo);
+                    }
+                });  alertDialog.show();
+
+
             }
         });
 
