@@ -3,31 +3,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/bodyRelative"
+    android:layout_marginBottom="2dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="5dp"
+    android:background="@drawable/row_fr_base_pensum_materia_bg"
     android:clickable="true"
     >
-
-    <ImageView
-        android:id="@+id/materiaImagenFRMM"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:src="@drawable/ic_pensum_01" />
 
     <TextView
         android:id="@+id/materiaTituFRMM"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingTop="12dp"
         android:alpha="0.87"
         android:gravity="left"
-        android:padding="4dp"
         android:text="Ingenieria Sistemas"
-        android:textSize="22sp"
+        android:textSize="18sp"
         android:textColor="@color/colorTextPrimary"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/materiaImagenFRMM"
-        android:layout_toRightOf="@+id/materiaImagenFRMM"
-        android:layout_toEndOf="@+id/materiaImagenFRMM" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/tableLayout4"
+        android:layout_toStartOf="@+id/tableLayout4" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -35,8 +33,43 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
         android:id="@+id/materiaSubTituloFRMM"
-        android:layout_below="@+id/materiaTituFRMM"
-        android:layout_toRightOf="@+id/materiaImagenFRMM"
-        android:layout_toEndOf="@+id/materiaImagenFRMM" />
+        android:layout_below="@+id/materiaTituFRMM" />
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/tableLayout4">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="12dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_horario_gris_36dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/tiny_icon_onclic_bg"
+                android:clickable="true"
+                android:visibility="gone"
+                android:id="@+id/imgClock" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:visibility="gone"
+                android:clickable="true"
+                android:src="@drawable/ic_insert_invitation_black_36dp"
+                android:background="@drawable/tiny_icon_onclic_bg"
+                android:id="@+id/imgEvent" />
+        </TableRow>
+    </TableLayout>
 
 </RelativeLayout>

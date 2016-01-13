@@ -47,6 +47,7 @@ public class HorarioVDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         ((ActBase)getActivity()).HVColorToSet=picker.getColor();
                         hvTimeToSet.seteoDeColor(picker.getColor());
+                        ((ActBase)getActivity()).setColorThemeByMenu(picker.getColor());
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

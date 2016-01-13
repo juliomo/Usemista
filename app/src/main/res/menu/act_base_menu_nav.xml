@@ -20,11 +20,11 @@
             <item
                 android:id="@+id/nav_share"
                 android:icon="@android:drawable/ic_menu_share"
-                android:title="Share" />
+                android:title="@string/comparte_item_1" />
             <item
                 android:id="@+id/nav_send"
                 android:icon="@android:drawable/ic_menu_send"
-                android:title="Send" />
+                android:title="@string/comparte_item_2" />
         </menu>
     </item>
 

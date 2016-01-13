@@ -36,6 +36,8 @@ public class AdapterRecyclerMateria extends RecyclerView.Adapter<AdapterRecycler
     private ClickCallBack clickCallBack;
     private Context context;
 
+    private boolean onBindChecker=false;
+
 
     public AdapterRecyclerMateria(Context context){
         layoutInflater=LayoutInflater.from(context);
@@ -62,15 +64,19 @@ public class AdapterRecyclerMateria extends RecyclerView.Adapter<AdapterRecycler
 
     @Override
     public void onBindViewHolder(RCMViewHolder holder, int position) {
+
+
+
         Materia currentMateria= listMateria.get(position);
         holder.textViewTitulo.setText(currentMateria.getTitulo());
         holder.textViewSemestre.setText(currentMateria.getSemestre());
 
+        onBindChecker=true;
         if(currentMateria.getU_materia().equals("0")){
             holder.checkBoxMateria.setChecked(false);}
         else if(currentMateria.getU_materia().equals("1")){
             holder.checkBoxMateria.setChecked(true);
-        }
+        }onBindChecker=false;
 
 
         if(position>previousPosition)
@@ -121,6 +127,7 @@ public class AdapterRecyclerMateria extends RecyclerView.Adapter<AdapterRecycler
                         }
                     } else {
 
+                        if(listMateria.get(getAdapterPosition()).getU_materia().equals("1")){
                         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
                         alertDialog.setTitle("Notify Info");
                         alertDialog.setMessage("Borrara Todos los datos asociados. " +
@@ -157,8 +164,9 @@ public class AdapterRecyclerMateria extends RecyclerView.Adapter<AdapterRecycler
                                 itemReBind(getAdapterPosition());
 
                             }
-                        });  alertDialog.show();
-
+                        });
+                        alertDialog.show();
+                    }
                     }
                 }
             });

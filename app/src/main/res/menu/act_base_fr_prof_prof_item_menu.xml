@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_update_list"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_update_white_24dp"
+        android:title="Save"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/action_filter_list"
+        android:orderInCategory="200"
+        android:icon="@drawable/ic_filter_list_white_24dp"
+        android:title="Borrar"
+        app:showAsAction="always">
+        <menu>
+            <group
+                android:id="@+id/groupByFiler"
+                android:checkableBehavior="single" >
+                <item
+                    android:id="@+id/action_filter_aprobados"
+                    android:icon="@drawable/ic_polymer_white_24dp"
+                    android:title="Comprobados"
+                    android:orderInCategory="100"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_filter_esperando"
+                    android:icon="@drawable/ic_polymer_white_24dp"
+                    android:title="En Espera"
+                    android:orderInCategory="200"
+                    app:showAsAction="never" />
+            </group>
+        </menu>
+    </item>
+
+</menu>

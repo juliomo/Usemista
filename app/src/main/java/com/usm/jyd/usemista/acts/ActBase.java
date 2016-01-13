@@ -3,6 +3,7 @@ package com.usm.jyd.usemista.acts;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -20,6 +21,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
@@ -28,6 +30,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -54,6 +57,7 @@ import com.usm.jyd.usemista.fragments.FragmentBaseCalendar;
 import com.usm.jyd.usemista.fragments.FragmentBaseHVAdd;
 import com.usm.jyd.usemista.fragments.FragmentBaseMMTask;
 import com.usm.jyd.usemista.fragments.FragmentBaseMateriaSelector;
+import com.usm.jyd.usemista.fragments.FragmentBaseNotify;
 import com.usm.jyd.usemista.fragments.FragmentBasePPyPAItem;
 import com.usm.jyd.usemista.fragments.FragmentBaseProfAlum;
 import com.usm.jyd.usemista.fragments.FragmentBaseProfPorf;
@@ -64,6 +68,7 @@ import com.usm.jyd.usemista.network.VolleySingleton;
 import com.usm.jyd.usemista.objects.HVWeek;
 import com.usm.jyd.usemista.objects.HorarioVirtual;
 import com.usm.jyd.usemista.objects.Materia;
+import com.usm.jyd.usemista.objects.ProfAlum;
 import com.usm.jyd.usemista.objects.UserRegistro;
 import com.usm.jyd.usemista.objects.UserTask;
 import com.usm.jyd.usemista.services.ClassService;
@@ -78,6 +83,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import me.tatarka.support.job.JobInfo;
@@ -93,7 +100,7 @@ public class ActBase extends AppCompatActivity
     private RequestQueue requestQueue;
 
     UserRegistro userRegistro;
-    private String codProfesor="";
+    public String codProfesor="";
     public FragmentBaseProfPorf frBsPrPr;
     public FragmentBaseProfAlum frBsPrAl;
 
@@ -131,6 +138,8 @@ public class ActBase extends AppCompatActivity
 
     //VARIABLES SERVICE CLASES en HORARIO Y EVENTOS
     private JobScheduler mJobScheduler;
+    int varViewChanger=0;
+    private ImageView imgViewChanger;
 
     private void jobClasesEventos(){
         ArrayList<HorarioVirtual> listHorario=MiAplicativo.getWritableDatabase().getAllHorarioVirtual();
@@ -154,6 +163,7 @@ public class ActBase extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_base);
 
@@ -172,13 +182,38 @@ public class ActBase extends AppCompatActivity
         iniToolBar();
         iniNavDrawer();
         iniFab();
+
+        imgViewChanger=(ImageView)findViewById(R.id.imgViewChanger);
+      //  viewChanger();
         //Notice how the title is set on the Collapsing Toolbar Layout instead of the Toolbar
         mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.app_name));
 
         //Transaction del fragmento
         setFragmentBase(0);
     }
+    public void viewChanger(){
 
+        Timer t = new Timer();
+
+        t.scheduleAtFixedRate(new TimerTask() {
+                                  @Override
+                                  public void run() {
+                                      if(varViewChanger==0){
+                                          varViewChanger=1;
+                                          imgViewChanger.setImageResource(R.drawable.main_view_lg1);
+                                      }else{
+                                          varViewChanger=0;
+                                          imgViewChanger.setImageResource(R.drawable.main_view_lg4);
+                                      }
+
+                                      //Called each time when 1000 milliseconds (1 second) (the period parameter)
+                                  }
+                              },
+//Set how long before to start calling the TimerTask (in milliseconds)
+                0,
+//Set the amount of time between each execution (in milliseconds)
+                3000);
+    }
     public void iniToolBar(){
         mToolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(mToolbar);
@@ -191,6 +226,164 @@ public class ActBase extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_drawer);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setBackgroundColor(ContextCompat.getColor(this,R.color.colorWhite));
+        View view = navigationView.getHeaderView(0);
+        ImageView imgNav=(ImageView)view.findViewById(R.id.imgNavHeader);
+        TextView text1=(TextView)view.findViewById(R.id.textNavHeader1);
+        TextView text2=(TextView)view.findViewById(R.id.textNavHeader2);
+
+        if(userRegistro.getStatus().equals("1")){
+            text1.setText(userRegistro.getNomb());
+            text2.setText(userRegistro.getCi());
+        }else if(userRegistro.getStatus().equals("2")){
+            text1.setText(userRegistro.getNomb());
+            text2.setText("Funcion de Tutor Activa");
+        }
+
+        LinearLayout boxUser=(LinearLayout)view.findViewById(R.id.boxUser);
+        boxUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userEdition(userRegistro.getStatus());
+            }
+        });
+
+
+    }
+    private void userEdition(final String estado){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        LayoutInflater inflater;
+        TextView textNomb, textCIoProfCod;
+        final EditText editTextNomb, editTextCIoProfCod;
+        ImageView imgCurrentType;
+
+        inflater  = this.getLayoutInflater();
+        View view= inflater.inflate(R.layout.dialog_user_regi,null);
+
+        textNomb=(TextView)view.findViewById(R.id.textNomb);
+        textCIoProfCod =(TextView)view.findViewById(R.id.textCIoProfCod);
+        editTextNomb=(EditText)view.findViewById(R.id.editTextNomb);
+        editTextCIoProfCod =(EditText)view.findViewById(R.id.editTextCIoProfCod);
+        imgCurrentType=(ImageView)view.findViewById(R.id.imgCurrentType);
+
+
+        if(estado.equals("1")){
+            imgCurrentType.setImageResource(R.drawable.ic_estudiante_launch);
+            textCIoProfCod.setText(getResources().getString(R.string.user_edit_ced));
+            editTextNomb.setText(userRegistro.getNomb());
+            editTextCIoProfCod.setText(userRegistro.getCi());
+            editTextCIoProfCod.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        }else if(estado.equals("2")){
+            imgCurrentType.setImageResource(R.drawable.ic_profesor_launch);
+            textCIoProfCod.setText(getResources().getString(R.string.user_edit_codProf));
+            editTextNomb.setText(userRegistro.getNomb());
+            editTextCIoProfCod.setText("");
+        }
+
+
+        imgCurrentType.setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary));
+
+        builder.setView(view)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (estado.equals("1")) {
+                            MiAplicativo.getWritableDatabase()
+                                    .updateUserRegistroAlumno("1", editTextNomb.getText().toString(),
+                                            editTextCIoProfCod.getText().toString());
+
+                            NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_drawer);
+                            View view = navigationView.getHeaderView(0);
+                            TextView text1=(TextView)view.findViewById(R.id.textNavHeader1);
+                            TextView text2=(TextView)view.findViewById(R.id.textNavHeader2);
+                            text1.setText(editTextNomb.getText());
+                            text2.setText(editTextCIoProfCod.getText());
+
+                        } else if (estado.equals("2")) {
+                            String auxPRCod="", auxNomb="";
+                            auxPRCod=editTextCIoProfCod.getText().toString();
+                            auxNomb=editTextNomb.getText().toString();
+
+                            sendRegistrationProfCodToBackend(auxPRCod,"2",auxNomb);
+                        }
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        builder.show();
+    }
+    private void sendRegistrationProfCodToBackend(String profCod,final String status,final String nomb) {
+
+        final Context context=this;
+        String url = "http://usmpemsun.esy.es/register";
+
+        Map<String, String> map = new HashMap<>();
+        map.put("profCod", profCod);
+
+        JsonObjectRequest request= new JsonObjectRequest(Request.Method.POST,
+                url,new JSONObject(map), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try{
+                    String estado="NA";
+                    if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
+                            !response.isNull(Key.EndPointMateria.KEY_ESTADO)){
+                        estado = response.getString(Key.EndPointMateria.KEY_ESTADO);
+                    }
+
+                    if(estado.equals("1")){
+                        MiAplicativo.getWritableDatabase().updateUserRegistroProfesor(status,nomb);
+                        iniNavDrawer();
+                        L.t(context, getResources().getString(R.string.user_edit_check1));
+
+                        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_drawer);
+                        View view = navigationView.getHeaderView(0);
+                        TextView text1=(TextView)view.findViewById(R.id.textNavHeader1);
+                        text1.setText(nomb);
+
+                    }else if(estado.equals("2")){
+                        L.t(context,getResources().getString(R.string.user_edit_check2));
+
+                    }
+
+
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                String auxMsj="";
+
+                error.printStackTrace();
+                if (error instanceof TimeoutError || error instanceof NoConnectionError){
+                    auxMsj="Fuera de Conexion \nFuera de Tiempo";
+                }else if(error instanceof AuthFailureError){
+                    auxMsj="Fallo de Ruta" ;
+                }else if (error instanceof ServerError){
+                    auxMsj="Fallo en el Servidor";
+                }else if (error instanceof NetworkError){
+                    auxMsj="Problemas de Conexion";
+                }else if (error instanceof ParseError){
+                    auxMsj="Problemas Internos";
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Error en la Nube")
+                        .setMessage("\n\nCode Error: "+auxMsj)
+                        .show();
+            }
+        });
+        requestQueue.add(request);
     }
     public void iniFab(){
         mFab = (FloatingActionButton) findViewById(R.id.fab);
@@ -210,15 +403,18 @@ public class ActBase extends AppCompatActivity
 
     public void setFragmentBase(int pos){
         if(pos==0||pos==1){
+
             mAppBarLayout.setExpanded(true,true);
-            mCollapsingToolbarLayout.setTitle("Usemista");
+            mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.tittle_toolbar_1));
             mFab.setVisibility(View.VISIBLE);
+
             mFab.setImageResource(R.drawable.ic_home_white_24dp);
             mFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.tittle_toolbar_1));
                     //Notice how the Coordinator Layout object is used here
-                    Snackbar.make(mCoordinator, "FAB in HOME",
+                    Snackbar.make(mCoordinator, getResources().getString(R.string.fab_text_1),
                             Snackbar.LENGTH_SHORT).setAction("DISMISS", null).show();
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction()
@@ -227,13 +423,22 @@ public class ActBase extends AppCompatActivity
                 }
             });
 
+            if(pos==1){
+                mAppBarLayout.setExpanded(false, true);
+                mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.tittle_toolbar_2));
+             //   mFab.setVisibility(View.GONE);
+            }
+
+
+
+
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.contenedor_base, FragmentBase.newInstance(pos))
                     .commit();
         }else if(pos==10){
            // setColorThemeByMenu(ContextCompat.getColor(ActBase.this,R.color.colorTextMenuGreen));
-            mCollapsingToolbarLayout.setTitle("Pensum");
+            mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.tittle_toolbar_10));
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.contenedor_base, FragmentBase.newInstance(pos))
@@ -241,27 +446,28 @@ public class ActBase extends AppCompatActivity
 
         }else if(pos==11){
             mAppBarLayout.setExpanded(false,true);
-            mCollapsingToolbarLayout.setTitle("Mis Materias");
+            mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.tittle_toolbar_11));
             mFab.setVisibility(View.GONE);
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.contenedor_base, FragmentBase.newInstance(pos))
                     .commit();
         }else if(pos==12){
+            setColorThemeByMenu(ContextCompat.getColor(this,R.color.colorPrimary));
            // setColorThemeByMenu(ContextCompat.getColor(ActBase.this,R.color.colorTextMenuYellow));
             mAppBarLayout.setExpanded(false,true);
-            mCollapsingToolbarLayout.setTitle("Horario");
+            mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.tittle_toolbar_12));
             mFab.setVisibility(View.VISIBLE);
             mFab.setImageResource(R.drawable.ic_add_white_48dp);
             mFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //Notice how the Coordinator Layout object is used here
-                    Snackbar.make(mCoordinator, "FAB To Add",
+                    Snackbar.make(mCoordinator, getResources().getString(R.string.fab_text_2),
                             Snackbar.LENGTH_SHORT).setAction("DISMISS", null).show();
 
                     stateBackPress = 121;
-                    mCollapsingToolbarLayout.setTitle("Add");
+                    mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.tittle_toolbar_12_1));
                     mFab.setVisibility(View.GONE);
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction()
@@ -278,10 +484,18 @@ public class ActBase extends AppCompatActivity
                     .commit();
 
         }else if(pos==13){
+            mAppBarLayout.setExpanded(false,true);
+            mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.tittle_toolbar_13));
+            mFab.setVisibility(View.GONE);
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contenedor_base, FragmentBaseNotify.newInstance())
+                    .commit();
 
         }else if(pos==14){
             mAppBarLayout.setExpanded(false,true);
-            mCollapsingToolbarLayout.setTitle("Calendar");
+            mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.tittle_toolbar_14));
             mFab.setVisibility(View.GONE);
 
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -293,7 +507,7 @@ public class ActBase extends AppCompatActivity
 
             if(userRegistro.getStatus().equals("1")){
                 mAppBarLayout.setExpanded(false, true);
-                mCollapsingToolbarLayout.setTitle("Tutores");
+                mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.tittle_toolbar_15_1));
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.contenedor_base, FragmentBaseProfAlum.newInstance())
@@ -306,29 +520,52 @@ public class ActBase extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         //Notice how the Coordinator Layout object is used here
-                        Snackbar.make(mCoordinator, "FAB To Add",
+                        Snackbar.make(mCoordinator, getResources().getString(R.string.fab_text_2),
                                 Snackbar.LENGTH_SHORT).setAction("DISMISS", null).show();
-                        NewProfAlumClassDialog newProfAlumClassDialog = new NewProfAlumClassDialog();
-                        newProfAlumClassDialog.show(getSupportFragmentManager(), "Class Maker");
-                        newProfAlumClassDialog.setFrProfAlum(frBsPrAl);
+
+                        ArrayList<Materia> listToCheck=MiAplicativo.getWritableDatabase().getAllUserMateria();
+                        if(!listToCheck.isEmpty()) {
+                            NewProfAlumClassDialog newProfAlumClassDialog = new NewProfAlumClassDialog();
+                            newProfAlumClassDialog.show(getSupportFragmentManager(), "Class Maker");
+                            newProfAlumClassDialog.setFrProfAlum(frBsPrAl);
+                        }else
+                            L.t(getApplicationContext(),getResources().getString(R.string.msj_sin_materias));
                     }
                 });
 
             }else if(userRegistro.getStatus().equals("2")){
                 ProfChecker();
             }else
-                L.t(this,"Funcion Inactiva");
+                L.t(this,getResources().getString(R.string.msj_sin_materias));
         }
 
         else if(pos==100){
-            mCollapsingToolbarLayout.setTitle("Sistema");
+            mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.tittle_toolbar_100));
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.contenedor_base, FragmentBaseSemestreSelector.newInstance(pos))
                     .commit();
 
         }else if(pos==200){
-            mCollapsingToolbarLayout.setTitle("Telecom");
+            mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.tittle_toolbar_200));
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contenedor_base, FragmentBaseSemestreSelector.newInstance(pos))
+                    .commit();
+        }else if(pos==300){
+            mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.tittle_toolbar_300));
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contenedor_base, FragmentBaseSemestreSelector.newInstance(pos))
+                    .commit();
+        }else if(pos==400){
+            mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.tittle_toolbar_400));
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contenedor_base, FragmentBaseSemestreSelector.newInstance(pos))
+                    .commit();
+        }else if(pos==500){
+            mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.tittle_toolbar_500));
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.contenedor_base, FragmentBaseSemestreSelector.newInstance(pos))
@@ -362,7 +599,7 @@ public class ActBase extends AppCompatActivity
 
 
         imgCurrentType.setImageResource(R.drawable.ic_profesor_launch);
-        textCIoProfCod.setText("Codigo de Profesor");
+        textCIoProfCod.setText(getResources().getString(R.string.user_edit_codProf));
         editTextCIoProfCod.setText("");
 
 
@@ -405,10 +642,10 @@ public class ActBase extends AppCompatActivity
                     }
 
                     if(estado.equals("1")){
-                        L.t(context,"profcod: "+profCod+ "\n\nValido");
+                       // L.t(context,"profcod: "+profCod+ "\n\nValido");
                         //tu FRagmento si es validado debe ir aqui
                         mAppBarLayout.setExpanded(false, true);
-                        mCollapsingToolbarLayout.setTitle("Clases");
+                        mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.tittle_toolbar_15_2));
 
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction()
@@ -422,18 +659,24 @@ public class ActBase extends AppCompatActivity
                             @Override
                             public void onClick(View v) {
                                 //Notice how the Coordinator Layout object is used here
-                                Snackbar.make(mCoordinator, "FAB To Add",
+                                Snackbar.make(mCoordinator, getResources().getString(R.string.fab_text_2),
                                         Snackbar.LENGTH_SHORT).setAction("DISMISS", null).show();
+
+                                ArrayList<Materia> listToCheck=MiAplicativo.getWritableDatabase().getAllUserMateria();
+                                if(!listToCheck.isEmpty()) {
+
+
                                 NewProfAlumClassDialog newProfAlumClassDialog = new NewProfAlumClassDialog();
                                 newProfAlumClassDialog.show(getSupportFragmentManager(), "Class Maker");
                                 newProfAlumClassDialog.setProfCod(codProfesor);
                                 newProfAlumClassDialog.setFrProfProf(frBsPrPr);
-
+                                 }else
+                                    L.t(getApplicationContext(),getResources().getString(R.string.msj_sin_materias));
                             }
                         });
 
                     }else if(estado.equals("2")){
-                        L.t(context,"profcod: "+profCod+ "\n\nNo Valido");
+                        L.t(context,"profcod: "+profCod+ "\n\n"+getResources().getString(R.string.user_edit_check2));
                         stateBackPress=0;
                     }
 
@@ -448,23 +691,26 @@ public class ActBase extends AppCompatActivity
             public void onErrorResponse(VolleyError error) {
 
 
+                String auxMsj="";
+
                 error.printStackTrace();
                 if (error instanceof TimeoutError || error instanceof NoConnectionError){
-
-
+                    auxMsj=getResources().getString(R.string.volley_error_time1)+"\n"
+                        +getResources().getString(R.string.volley_error_time2);
                 }else if(error instanceof AuthFailureError){
-
-
+                    auxMsj=getResources().getString(R.string.volley_error_aut) ;
                 }else if (error instanceof ServerError){
-
-
+                    auxMsj=getResources().getString(R.string.volley_error_serv);
                 }else if (error instanceof NetworkError){
-
-
+                    auxMsj=getResources().getString(R.string.volley_error_net);
                 }else if (error instanceof ParseError){
-
-
+                    auxMsj=getResources().getString(R.string.volley_error_par);
                 }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(getResources().getString(R.string.error_de_conexion))
+                        .setMessage( "\n\n"+getResources().getString(R.string.cod_error)+auxMsj)
+                        .show();
             }
         });
         requestQueue.add(request);
@@ -474,11 +720,12 @@ public class ActBase extends AppCompatActivity
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        }else if(stateBackPress==10 ||stateBackPress==11||
-                stateBackPress==12||stateBackPress==14 || stateBackPress==15){
+        }else if(stateBackPress==10 ||stateBackPress==11||stateBackPress==12||
+                stateBackPress==13||stateBackPress==14 || stateBackPress==15){
             setFragmentBase(0);
             stateBackPress=0;
-        }else if(stateBackPress==100 || stateBackPress==200){
+        }else if(stateBackPress==100 || stateBackPress==200 || stateBackPress==300
+                || stateBackPress==400 || stateBackPress==500){
             setFragmentBase(10);
             stateBackPress=10;
         }else if(stateBackPress==121){
@@ -492,7 +739,28 @@ public class ActBase extends AppCompatActivity
         }else if(stateBackPress==152){
             // la forma de retorno a ProfProf FRag es distinta por eso no
             // se utiliza setFragmentBase
+            mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.tittle_toolbar_15_2));
             mFab.setVisibility(View.VISIBLE);
+            mFab.setImageResource(R.drawable.ic_add_white_48dp);
+            mFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Notice how the Coordinator Layout object is used here
+                    Snackbar.make(mCoordinator, getResources().getString(R.string.fab_text_2),
+                            Snackbar.LENGTH_SHORT).setAction("DISMISS", null).show();
+
+                    ArrayList<Materia> listToCheck=MiAplicativo.getWritableDatabase().getAllUserMateria();
+                    if(!listToCheck.isEmpty()) {
+
+                        NewProfAlumClassDialog newProfAlumClassDialog = new NewProfAlumClassDialog();
+                        newProfAlumClassDialog.show(getSupportFragmentManager(), "Class Maker");
+                        newProfAlumClassDialog.setProfCod(codProfesor);
+                        newProfAlumClassDialog.setFrProfProf(frBsPrPr);
+                    }else
+                        L.t(getApplicationContext(),getResources().getString(R.string.msj_sin_materias));
+
+                }
+            });
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.contenedor_base,
@@ -505,6 +773,15 @@ public class ActBase extends AppCompatActivity
         }else if(stateBackPress==2000){
             setFragmentBase(200);
             stateBackPress=200;
+        }else if(stateBackPress==3000){
+            setFragmentBase(300);
+            stateBackPress=300;
+        }else if(stateBackPress==4000){
+            setFragmentBase(400);
+            stateBackPress=400;
+        }else if(stateBackPress==5000){
+            setFragmentBase(500);
+            stateBackPress=500;
         }
         else {
             super.onBackPressed();
@@ -562,6 +839,7 @@ public class ActBase extends AppCompatActivity
         if (id == R.id.navigation_item_1) {
             poss = 0;
         } else if (id == R.id.navigation_item_2) {
+
             poss = 1;
         }
         setFragmentBase(poss);
@@ -586,6 +864,12 @@ public class ActBase extends AppCompatActivity
             stateBackPress=1000;
         }else if(listMateria.get(0).getModulo().equals("telecom")){
             stateBackPress=2000;
+        }else if(listMateria.get(0).getModulo().equals("ingInd")){
+            stateBackPress=3000;
+        }else if(listMateria.get(0).getModulo().equals("ingCiv")){
+            stateBackPress=4000;
+        }else if(listMateria.get(0).getModulo().equals("arq")){
+            stateBackPress=5000;
         }
     }
 
@@ -665,7 +949,7 @@ public class ActBase extends AppCompatActivity
     }
 
     @Override
-    public void onRSCItemProfClassSelected(String profCod, String accesCod) {
+    public void onRSCItemProfClassSelected(final String profCod, final String accesCod, final ProfAlum profAlum, String auxName) {
         if(userRegistro.getStatus().equals("1")){
            // stateBackPress=151;
 
@@ -673,7 +957,22 @@ public class ActBase extends AppCompatActivity
 
         }else if(userRegistro.getStatus().equals("2")){
 
-            mFab.setVisibility(View.GONE);
+            mCollapsingToolbarLayout.setTitle(auxName);
+
+            mFab.setVisibility(View.VISIBLE);
+            mFab.setImageResource(R.drawable.ic_email_white_24dp);
+            mFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Notice how the Coordinator Layout object is used here
+                    Snackbar.make(mCoordinator, getResources().getString(R.string.fab_text_2),
+                            Snackbar.LENGTH_SHORT).setAction("DISMISS", null).show();
+
+                    dialogMsjSendProfToAlum(profCod,accesCod,profAlum);
+
+                }
+            });
+
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.contenedor_base,
@@ -684,6 +983,129 @@ public class ActBase extends AppCompatActivity
             stateBackPress=152;
         }
 
+    }
+
+    public void dialogMsjSendProfToAlum(final String profCod, final String accesCod, final ProfAlum profAlum){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        LayoutInflater inflater;
+        TextView textNomb, textCIoProfCod;
+        final EditText editTextNomb, editTextCIoProfCod;
+        ImageView imgCurrentType;
+
+        inflater  = this.getLayoutInflater();
+        View view= inflater.inflate(R.layout.dialog_user_regi,null);
+
+        textNomb=(TextView)view.findViewById(R.id.textNomb);
+        textCIoProfCod =(TextView)view.findViewById(R.id.textCIoProfCod);
+        editTextNomb=(EditText)view.findViewById(R.id.editTextNomb);
+        editTextCIoProfCod =(EditText)view.findViewById(R.id.editTextCIoProfCod);
+        imgCurrentType=(ImageView)view.findViewById(R.id.imgCurrentType);
+
+        textNomb.setVisibility(View.GONE);
+        editTextNomb.setVisibility(View.GONE);
+
+
+        imgCurrentType.setImageResource(R.drawable.ic_profesor_launch);
+        textCIoProfCod.setText(getResources().getString(R.string.msj_para_clase));
+        editTextCIoProfCod.setText("");
+
+
+        imgCurrentType.setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary));
+
+        builder.setView(view)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String MSJ=
+                        editTextCIoProfCod.getText().toString();
+                        sendMSJToBackend(profCod, accesCod, profAlum,MSJ);
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        builder.show();
+    }
+
+    public void sendMSJToBackend(final String profCod, final String accesCod,ProfAlum profAlum, final String MSJ) {
+
+        final Context context=this;
+        String url = "http://usmpemsun.esy.es/fr_prof_alum";
+
+       final   Materia currentMT=MiAplicativo.getWritableDatabase().getOneUserMateria(profAlum.getMa_cod());
+
+
+        Map<String, String> map = new HashMap<>();
+
+        map.put("msjProfAlmCls", "1");
+        map.put("prc_pro_cod", profCod);
+        map.put("prc_acces_cod", accesCod);
+        map.put("msj",MSJ );
+        map.put("mt", currentMT.getTitulo());
+        map.put("mod", currentMT.getModulo());
+
+        JsonObjectRequest request= new JsonObjectRequest(Request.Method.POST,
+                url,new JSONObject(map), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try{
+                    String estado="NA";
+                    if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
+                            !response.isNull(Key.EndPointMateria.KEY_ESTADO)){
+                        estado = response.getString(Key.EndPointMateria.KEY_ESTADO);
+                    }
+
+                    if(estado.equals("1")){
+
+                        L.t(context,getResources().getString(R.string.msj_para_clase_enviado));
+
+                    }else if(estado.equals("2")){
+
+                       L.t(context,getResources().getString(R.string.msj_para_clase_fallo));
+                    }
+
+
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                String auxMsj="";
+
+                error.printStackTrace();
+                if (error instanceof TimeoutError || error instanceof NoConnectionError){
+                    auxMsj=getResources().getString(R.string.volley_error_time1)+" \n"
+                        +getResources().getString(R.string.volley_error_time2);
+                }else if(error instanceof AuthFailureError){
+                    auxMsj=getResources().getString(R.string.volley_error_aut) ;
+                }else if (error instanceof ServerError){
+                    auxMsj=getResources().getString(R.string.volley_error_serv);
+                }else if (error instanceof NetworkError){
+                    auxMsj=getResources().getString(R.string.volley_error_net);
+                }else if (error instanceof ParseError){
+                    auxMsj=getResources().getString(R.string.volley_error_par);
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(getResources().getString(R.string.error_de_conexion))
+                        .setMessage("ProfCod: "+profCod+
+                                "\nAccesCod: "+accesCod+
+                                "\nMsj: "+MSJ+
+                                "\nMt:" + currentMT.getTitulo()+
+                                "\nMod:"+ currentMT.getModulo() + "\n\n"
+                                +getResources().getString(R.string.cod_error)+auxMsj)
+                        .show();
+            }
+        });
+        requestQueue.add(request);
     }
 
     @Override

@@ -157,9 +157,7 @@ public class ActApertura extends AppCompatActivity implements CCBackUserRegi {
             sendRegistrationProfCodToBackend(cIorProfCod, status, nomb);
 
         }
-    /*    L.t(this, "Status:      "+status+"\n"
-                +"Nomb:     "+nomb+"\n"
-                +"CI o Cod: "+cIorProfCod);*/
+
 
 
     }
@@ -205,7 +203,7 @@ public class ActApertura extends AppCompatActivity implements CCBackUserRegi {
                             MiAplicativo.getWritableDatabase().updateUserRegistroProfesor(status,nomb);
                             goToActBase(700);
                         }else if(estado.equals("2")){
-                            muestraMSJ2("Codigo Invalido");
+                            muestraMSJ2(getResources().getString( R.string.prof_invalid));
                             validadorProfCod++;
                         }
 
@@ -222,20 +220,19 @@ public class ActApertura extends AppCompatActivity implements CCBackUserRegi {
 
                 error.printStackTrace();
                 if (error instanceof TimeoutError || error instanceof NoConnectionError){
-                    muestraMSJ2("FUERA DE CONECCION o FIN DE TIEMPO ");
+                    muestraMSJ2(getResources().getString( R.string.volley_error_time));
 
                 }else if(error instanceof AuthFailureError){
-                    muestraMSJ2("FALLO DE RUTAAA");
+                    muestraMSJ2(getResources().getString( R.string.volley_error_aut));
 
                 }else if (error instanceof ServerError){
-                    muestraMSJ2("ERROR CON EL SERVER ");
+                    muestraMSJ2(getResources().getString( R.string.volley_error_serv));
 
                 }else if (error instanceof NetworkError){
-                    muestraMSJ2("NETWORK ERROR ");
+                    muestraMSJ2(getResources().getString( R.string.volley_error_net));
 
                 }else if (error instanceof ParseError){
-                    muestraMSJ2(" ERROR DE PARSEO");
-
+                    muestraMSJ2(getResources().getString( R.string.volley_error_par));
                 }
             }
         });

@@ -18,9 +18,27 @@
                     app:showAsAction="never" />
                 <item
                     android:id="@+id/action_telecom_fr_mm"
-                    android:icon="@drawable/ic_search_white_24dp"
+                    android:icon="@drawable/ic_telecom_white_24dp_01"
                     android:title="Telecom"
                     android:orderInCategory="200"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_industrial_fr_mm"
+                    android:icon="@drawable/ic_industrial_01_white_24dp"
+                    android:title="Industrial"
+                    android:orderInCategory="300"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_civil_fr_mm"
+                    android:icon="@drawable/ic_civil_01_white_24dp"
+                    android:title="Civil"
+                    android:orderInCategory="400"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_arq_fr_mm"
+                    android:icon="@drawable/ic_arq_01_white_24dp"
+                    android:title="Arquitectura"
+                    android:orderInCategory="500"
                     app:showAsAction="never" />
             </group>
         </menu>

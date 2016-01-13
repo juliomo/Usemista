@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -50,6 +51,7 @@ public class UserRegiDialog extends DialogFragment {
 
         if(statusUser.equals("1")) {
             imgCurrentType.setImageResource(R.drawable.ic_estudiante_launch);
+            editTextCIoProfCod.setInputType(InputType.TYPE_CLASS_NUMBER);
         }
         else if(statusUser.equals("2")) {
             imgCurrentType.setImageResource(R.drawable.ic_profesor_launch);

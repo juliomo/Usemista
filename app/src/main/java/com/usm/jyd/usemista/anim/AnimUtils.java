@@ -38,7 +38,7 @@ public class AnimUtils {
 
     public static void animate(RecyclerView.ViewHolder holder, boolean goesDown){
 
-        YoYo.with(Techniques.ZoomIn).duration(700).playOn(holder.itemView);
+        YoYo.with(Techniques.ZoomIn).duration(400).playOn(holder.itemView);
 
 //        AnimatorSet animatorSet = new AnimatorSet();
 //        ObjectAnimator animatorScaleX = ObjectAnimator.ofFloat(holder.itemView, "scaleX" ,0.5F, 0.8F, 1.0F);

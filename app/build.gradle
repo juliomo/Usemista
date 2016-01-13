@@ -36,4 +36,5 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'me.tatarka.support:jobscheduler:0.1.1'
+    compile 'com.thefinestartist:finestwebview:1.1.1'
 }

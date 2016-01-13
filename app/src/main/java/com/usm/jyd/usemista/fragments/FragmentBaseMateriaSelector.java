@@ -16,7 +16,10 @@ import android.widget.TextView;
 
 import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerMateria;
+import com.usm.jyd.usemista.aplicativo.MiAplicativo;
+import com.usm.jyd.usemista.dialogs.GuiaUsuario;
 import com.usm.jyd.usemista.events.ClickCallBack;
+import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.objects.Materia;
 
 import java.util.ArrayList;
@@ -33,10 +36,11 @@ public class FragmentBaseMateriaSelector extends Fragment {
     private String mParam1;
 
 
+    ImageView imageViewIcon;
     private ClickCallBack clickCallBack;
 
 
-    private ArrayList<Materia> listMateria = new ArrayList<>();
+    private ArrayList<Materia> listMateria ;
     private RecyclerView recyclerViewListMateria;
     private AdapterRecyclerMateria adapterRecyclerMateria;
 
@@ -50,7 +54,11 @@ public class FragmentBaseMateriaSelector extends Fragment {
         return fragment;
     }
     public void setListMateria(ArrayList<Materia> listMateria ){
+
         this.listMateria=listMateria;
+
+
+
     }
     public FragmentBaseMateriaSelector() {
         // Required empty public constructor
@@ -68,20 +76,32 @@ public class FragmentBaseMateriaSelector extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_NUMERO_SECCION);
         }
+        String auxGuiaUsuario = "";
+        auxGuiaUsuario = MiAplicativo.getWritableDatabase().getUserGuia("materia");
+        if (auxGuiaUsuario.equals("0")) {
+            GuiaUsuario guiaUsuario = new GuiaUsuario();
+            guiaUsuario.setGuiaUsuario("materia");
+            guiaUsuario.show(getChildFragmentManager(),"Dialog");
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
-        View rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
+        View rootView ;
 
         rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
 
+             imageViewIcon = (ImageView) rootView.findViewById(R.id.seccionCeroImageView);
 
 
-            ImageView imageViewIcon = (ImageView) rootView.findViewById(R.id.seccionCeroImageView);
-            imageViewIcon.setImageResource(R.drawable.ic_gear_white_24dp_01);
+
+
+
+
+
+
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
             textViewTituloFragment.setText((getArguments().getInt(ARG_NUMERO_SECCION) - 999) + " Semestre");
 
@@ -97,6 +117,19 @@ public class FragmentBaseMateriaSelector extends Fragment {
         recyclerViewListMateria.addItemDecoration(offsetDecorationRC);
             recyclerViewListMateria.setAdapter(adapterRecyclerMateria);
 
+
+
+        if(listMateria.get(0).getModulo().equals("ingSis")){
+            imageViewIcon.setImageResource(R.drawable.ic_gear_white_24dp_01);
+        }else if(listMateria.get(0).getModulo().equals("telecom")){
+            imageViewIcon.setImageResource(R.drawable.ic_telecom_white_24dp_01);
+        }else if(listMateria.get(0).getModulo().equals("ingInd")){
+            imageViewIcon.setImageResource(R.drawable.ic_industrial_01_white_24dp);
+        }else if(listMateria.get(0).getModulo().equals("ingCiv")){
+            imageViewIcon.setImageResource(R.drawable.ic_civil_01_white_24dp);
+        }else if(listMateria.get(0).getModulo().equals("arq")){
+            imageViewIcon.setImageResource(R.drawable.ic_arq_01_white_24dp);
+        }
 
 
         return rootView;

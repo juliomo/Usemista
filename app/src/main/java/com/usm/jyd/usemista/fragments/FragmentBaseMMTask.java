@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,12 +16,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerMMTask;
 import com.usm.jyd.usemista.aplicativo.MiAplicativo;
+import com.usm.jyd.usemista.dialogs.GuiaUsuario;
 import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.events.HVTimeToSet;
 import com.usm.jyd.usemista.objects.Materia;
@@ -38,7 +42,7 @@ public class FragmentBaseMMTask extends Fragment implements HVTimeToSet {
     public FragmentBaseMMTask fragmentBaseMMTask;
 
 
-    boolean sis=false,telc=false;
+    boolean sis=false,telc=false, ind=false, civ=false, arq=false;
     private int pensumValidator=0;
     private ArrayList<Materia> listUserMateria;
     private ArrayList<Materia> ListUserMateriaByPensum=new ArrayList<>();
@@ -52,6 +56,10 @@ public class FragmentBaseMMTask extends Fragment implements HVTimeToSet {
     private LinearLayoutManager manager;
 
     private FloatingActionButton FabMMT;
+
+    //Empty Handle
+    private ImageView imgEmptyList;
+    private TextView textEmptyList;
 
    public FragmentBaseMMTask (){}
 
@@ -74,6 +82,14 @@ public class FragmentBaseMMTask extends Fragment implements HVTimeToSet {
         setHasOptionsMenu(true);
         listUserMateria= MiAplicativo.getWritableDatabase().getAllUserMateria();
         listUserTask=MiAplicativo.getWritableDatabase().getAllUserTask();
+
+        String auxGuiaUsuario = "";
+        auxGuiaUsuario = MiAplicativo.getWritableDatabase().getUserGuia("mmt");
+        if (auxGuiaUsuario.equals("0")) {
+            GuiaUsuario guiaUsuario = new GuiaUsuario();
+            guiaUsuario.setGuiaUsuario("mmt");
+            guiaUsuario.show(getChildFragmentManager(),"Dialog");
+        }
     }
 
     @Override
@@ -86,10 +102,19 @@ public class FragmentBaseMMTask extends Fragment implements HVTimeToSet {
             for(int i =0;i<listUserMateria.size();i++){
                 if(listUserMateria.get(i).getModulo().equals("ingSis")){sis=true;}
                 else if(listUserMateria.get(i).getModulo().equals("telecom")){telc=true;}
+                else if(listUserMateria.get(i).getModulo().equals("ingInd")){ind=true;}
+                else if(listUserMateria.get(i).getModulo().equals("ingCiv")){civ=true;}
+                else if(listUserMateria.get(i).getModulo().equals("arq")){arq=true;}
+
             }
 
             if(!sis){menu.findItem(R.id.action_sistema_fr_mmt).setVisible(false);}
             if(!telc){menu.findItem(R.id.action_telecom_fr_mmt).setVisible(false);}
+            if(!ind){menu.findItem(R.id.action_industrial_fr_mmt).setVisible(false);}
+            if(!civ){menu.findItem(R.id.action_civil_fr_mmt).setVisible(false);}
+            if(!arq){menu.findItem(R.id.action_arq_fr_mmt).setVisible(false);}
+
+
 
 
             int seValidator=0;
@@ -97,6 +122,12 @@ public class FragmentBaseMMTask extends Fragment implements HVTimeToSet {
                 menu.findItem(R.id.action_sistema_fr_mmt).setChecked(true); seValidator=1;
             } else if (listUserMateria.get(0).getModulo().equals("telecom")) {
                 menu.findItem(R.id.action_telecom_fr_mmt).setChecked(true); seValidator=2;
+            } else if (listUserMateria.get(0).getModulo().equals("ingInd")) {
+                menu.findItem(R.id.action_industrial_fr_mmt).setChecked(true); seValidator=3;
+            } else if (listUserMateria.get(0).getModulo().equals("ingCiv")) {
+                menu.findItem(R.id.action_civil_fr_mmt).setChecked(true); seValidator=4;
+            } else if (listUserMateria.get(0).getModulo().equals("arq")) {
+                menu.findItem(R.id.action_arq_fr_mmt).setChecked(true); seValidator=5;
             }
 
             menu.findItem(R.id.action_seAll).setChecked(true);
@@ -127,6 +158,45 @@ public class FragmentBaseMMTask extends Fragment implements HVTimeToSet {
                         }
                     }
                     if (listUserMateria.get(i).getModulo().equals("telecom")){
+                        ListUserMateriaByPensum.add(listUserMateria.get(i));
+                    }
+                }
+            }else if(seValidator==3){
+                for(int i=0;i<listUserMateria.size();i++) {
+                    for(int j=0;j<listUserTask.size();j++) {
+
+                        if (listUserMateria.get(i).getModulo().equals("ingInd") &&
+                                listUserMateria.get(i).getCod().equals(listUserTask.get(j).getCod())) {
+                            listUserTaskCarrer.add(listUserTask.get(j));
+                        }
+                    }
+                    if (listUserMateria.get(i).getModulo().equals("ingInd")){
+                        ListUserMateriaByPensum.add(listUserMateria.get(i));
+                    }
+                }
+            }else if(seValidator==4){
+                for(int i=0;i<listUserMateria.size();i++) {
+                    for(int j=0;j<listUserTask.size();j++) {
+
+                        if (listUserMateria.get(i).getModulo().equals("ingCiv") &&
+                                listUserMateria.get(i).getCod().equals(listUserTask.get(j).getCod())) {
+                            listUserTaskCarrer.add(listUserTask.get(j));
+                        }
+                    }
+                    if (listUserMateria.get(i).getModulo().equals("ingCiv")){
+                        ListUserMateriaByPensum.add(listUserMateria.get(i));
+                    }
+                }
+            }else if(seValidator==5){
+                for(int i=0;i<listUserMateria.size();i++) {
+                    for(int j=0;j<listUserTask.size();j++) {
+
+                        if (listUserMateria.get(i).getModulo().equals("arq") &&
+                                listUserMateria.get(i).getCod().equals(listUserTask.get(j).getCod())) {
+                            listUserTaskCarrer.add(listUserTask.get(j));
+                        }
+                    }
+                    if (listUserMateria.get(i).getModulo().equals("arq")){
                         ListUserMateriaByPensum.add(listUserMateria.get(i));
                     }
                 }
@@ -186,7 +256,68 @@ public class FragmentBaseMMTask extends Fragment implements HVTimeToSet {
             adapterRecyclerMMTask.setListUser(listUserTaskCarrer,ListUserMateriaByPensum);
             menu.findItem(R.id.action_telecom_fr_mmt).setChecked(true);
 
-        } menu.findItem(R.id.action_seAll).setChecked(true);
+        }
+        else if(pensumValidator==3){
+            for(int i=0;i<listUserMateria.size();i++){
+                for(int j=0;j<listUserTask.size();j++) {
+
+                    if (listUserMateria.get(i).getModulo().equals("ingInd") &&
+                            listUserMateria.get(i).getCod().equals(listUserTask.get(j).getCod())) {
+                        listUserTaskCarrer.add(listUserTask.get(j));
+                    }
+                }
+                if (listUserMateria.get(i).getModulo().equals("ingInd")){
+                    ListUserMateriaByPensum.add(listUserMateria.get(i));
+                }
+            }
+
+
+            adapterRecyclerMMTask.setListUser(listUserTaskCarrer,ListUserMateriaByPensum);
+            menu.findItem(R.id.action_industrial_fr_mmt).setChecked(true);
+
+        }
+        else if(pensumValidator==4){
+            for(int i=0;i<listUserMateria.size();i++){
+                for(int j=0;j<listUserTask.size();j++) {
+
+                    if (listUserMateria.get(i).getModulo().equals("ingCiv") &&
+                            listUserMateria.get(i).getCod().equals(listUserTask.get(j).getCod())) {
+                        listUserTaskCarrer.add(listUserTask.get(j));
+                    }
+                }
+                if (listUserMateria.get(i).getModulo().equals("ingCiv")){
+                    ListUserMateriaByPensum.add(listUserMateria.get(i));
+                }
+            }
+
+
+            adapterRecyclerMMTask.setListUser(listUserTaskCarrer,ListUserMateriaByPensum);
+            menu.findItem(R.id.action_civil_fr_mmt).setChecked(true);
+
+        }
+        else if(pensumValidator==5){
+            for(int i=0;i<listUserMateria.size();i++){
+                for(int j=0;j<listUserTask.size();j++) {
+
+                    if (listUserMateria.get(i).getModulo().equals("arq") &&
+                            listUserMateria.get(i).getCod().equals(listUserTask.get(j).getCod())) {
+                        listUserTaskCarrer.add(listUserTask.get(j));
+                    }
+                }
+                if (listUserMateria.get(i).getModulo().equals("arq")){
+                    ListUserMateriaByPensum.add(listUserMateria.get(i));
+                }
+            }
+
+
+            adapterRecyclerMMTask.setListUser(listUserTaskCarrer,ListUserMateriaByPensum);
+            menu.findItem(R.id.action_arq_fr_mmt).setChecked(true);
+
+        }
+
+
+
+        menu.findItem(R.id.action_seAll).setChecked(true);
 
 
         super.onPrepareOptionsMenu(menu);
@@ -231,7 +362,10 @@ public class FragmentBaseMMTask extends Fragment implements HVTimeToSet {
                 if (id == R.id.action_usm_fr_mmt) {
                     if(sis){item.getSubMenu().findItem(R.id.action_sistema_fr_mmt).setVisible(true);}
                     if(telc){item.getSubMenu().findItem(R.id.action_telecom_fr_mmt).setVisible(true);}
-                  //  item.getSubMenu().setGroupVisible(R.id.groupByPensum, true);
+                    if(ind){item.getSubMenu().findItem(R.id.action_industrial_fr_mmt).setVisible(true);}
+                    if(civ){item.getSubMenu().findItem(R.id.action_civil_fr_mmt).setVisible(true);}
+                    if(arq){item.getSubMenu().findItem(R.id.action_arq_fr_mmt).setVisible(true);}
+                    //  item.getSubMenu().setGroupVisible(R.id.groupByPensum, true);
                 } else if (id == R.id.action_fill_fr_mmt) {
                     item.getSubMenu().setGroupVisible(R.id.groupByPensum, true);
                 }
@@ -247,6 +381,24 @@ public class FragmentBaseMMTask extends Fragment implements HVTimeToSet {
                     case R.id.action_telecom_fr_mmt: {
                         item.setChecked(!item.isChecked());
                         pensumValidator = 2;
+                        getActivity().invalidateOptionsMenu();
+                    }
+                    break;
+                    case R.id.action_industrial_fr_mmt: {
+                        item.setChecked(!item.isChecked());
+                        pensumValidator = 3;
+                        getActivity().invalidateOptionsMenu();
+                    }
+                    break;
+                    case R.id.action_civil_fr_mmt: {
+                        item.setChecked(!item.isChecked());
+                        pensumValidator = 4;
+                        getActivity().invalidateOptionsMenu();
+                    }
+                    break;
+                    case R.id.action_arq_fr_mmt: {
+                        item.setChecked(!item.isChecked());
+                        pensumValidator = 5;
                         getActivity().invalidateOptionsMenu();
                     }
                     break;
@@ -314,6 +466,8 @@ public class FragmentBaseMMTask extends Fragment implements HVTimeToSet {
 
                     adapterRecyclerMMTask.addUserTask();
                     manager.scrollToPosition(manager.getItemCount() - 1);
+                    imgEmptyList.setVisibility(View.GONE);textEmptyList.setVisibility(View.GONE);
+
 
                 } else {
                     AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
@@ -345,6 +499,16 @@ public class FragmentBaseMMTask extends Fragment implements HVTimeToSet {
         rcListTask.setLayoutManager(manager);
         rcListTask.setSoundEffectsEnabled(true);
         rcListTask.setAdapter(adapterRecyclerMMTask);
+
+        imgEmptyList=(ImageView)rootView.findViewById(R.id.imgEmptyList);
+        textEmptyList=(TextView)rootView.findViewById(R.id.textEmptyList);
+        if(listUserTask.isEmpty()){
+            imgEmptyList.setVisibility(View.VISIBLE);textEmptyList.setVisibility(View.VISIBLE);
+            imgEmptyList.setImageResource(R.drawable.ic_calendar_01);
+            imgEmptyList.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+            textEmptyList.setText("No hay Actividades Registradas");
+            textEmptyList.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+        }
 
         return rootView; //super.onCreateView(inflater, container, savedInstanceState);
     }

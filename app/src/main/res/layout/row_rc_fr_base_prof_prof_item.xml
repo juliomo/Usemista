@@ -3,15 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/bodyRelative"
-    android:clickable="true">
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/row_fr_base_pensum_materia_bg"
+    android:clickable="false">
 
 
     <TableLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp">
 
         <TableRow
             android:layout_width="match_parent"
@@ -25,15 +27,10 @@
                 android:layout_gravity="center"
                 android:visibility="gone"/>
 
-            <ImageView
-                android:id="@+id/alumImg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_pensum_01" />
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:orientation="vertical">
                 <TextView
                     android:id="@+id/alumName"
@@ -49,9 +46,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Medium Text"
+                    android:text="cedula"
                     android:id="@+id/alumCi"/>
             </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/imgCheckServer"
+                android:background="@drawable/tiny_icon_onclic_bg"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_panorama_fish_eye_black_48dp"
+                android:layout_column="3" />
 
         </TableRow>
 

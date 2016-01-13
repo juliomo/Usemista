@@ -5,6 +5,7 @@ import com.usm.jyd.usemista.fragments.FragmentBaseMMTask;
 import com.usm.jyd.usemista.objects.HVWeek;
 import com.usm.jyd.usemista.objects.HorarioVirtual;
 import com.usm.jyd.usemista.objects.Materia;
+import com.usm.jyd.usemista.objects.ProfAlum;
 
 import java.util.ArrayList;
 
@@ -22,6 +23,6 @@ public interface ClickCallBack {
     void onHVColorSelected(int prevColor);
     void setFrMMTAux(FragmentBaseMMTask frMMT);
 
-    void onRSCItemProfClassSelected(String profCod, String accesCod);
+    void onRSCItemProfClassSelected(String profCod, String accesCod, ProfAlum profAlum, String auxName);
 
 }

@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/hv_row_bg"
+    android:layout_marginBottom="5dp"
     android:id="@+id/bodyRelative"
     android:clickable="true">
 
@@ -9,94 +11,159 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Tu horario Virtual"
+        android:text="Nombre clss"
         android:id="@+id/textTitulo"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Tu horario Virtual"
-        android:id="@+id/textCalIni"
-        android:layout_below="@+id/textTitulo" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Tu horario Virtual"
-        android:id="@+id/textCalEnd"
-        android:layout_below="@+id/textCalIni" />
+        android:layout_alignParentStart="true"
+        android:padding="8dp" />
 
-    <ImageView
+
+    <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_add_box_black_36dp"
-        android:id="@+id/imageviewAdd"
-        android:clickable="true"
+        android:id="@+id/tableLayout2"
+        android:layout_below="@+id/textTitulo"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingLeft="10dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_horario_gris_24dp"
+                android:id="@+id/imgClock"
+                android:layout_column="0"
+                android:paddingRight="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Text Lun"
+                android:visibility="gone"
+                android:id="@+id/textViewLun"
+                android:layout_column="1" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Text Mar"
+                android:visibility="gone"
+                android:padding="3dp"
+                android:id="@+id/textViewMar"
+                android:layout_column="1" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Text Mie"
+                android:visibility="gone"
+                android:padding="3dp"
+                android:id="@+id/textViewMie"
+                android:layout_column="1" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Text Jue"
+                android:visibility="gone"
+                android:padding="3dp"
+                android:id="@+id/textViewJue"
+                android:layout_column="1" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Text Vie"
+                android:visibility="gone"
+                android:padding="3dp"
+                android:id="@+id/textViewVie"
+                android:layout_column="1" />
+        </TableRow>
+
+    </TableLayout>
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tableLayout3"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:padding="10dp">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_pensum_01"
-        android:id="@+id/imgTest"
-        android:visibility="visible"
-        android:layout_below="@+id/textCalEnd"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
-        android:id="@+id/textViewLun"
-        android:layout_below="@+id/imgTest"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imgCal"
+                android:src="@drawable/ic_event_available_black_24dp"
+                android:layout_column="0"
+                android:paddingRight="5dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
-        android:id="@+id/textViewMar"
-        android:layout_below="@+id/textViewLun"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Cal Ini"
+                android:visibility="gone"
+                android:id="@+id/textCalIni"
+                android:layout_below="@+id/textTitulo"
+                android:layout_column="1"
+                android:padding="3dp" />
+        </TableRow>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
-        android:id="@+id/textViewMie"
-        android:layout_below="@+id/textViewMar"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
-        android:id="@+id/textViewJue"
-        android:layout_below="@+id/textViewMie"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Cal End"
+                android:visibility="gone"
+                android:id="@+id/textCalEnd"
+                android:layout_below="@+id/textCalIni"
+                android:layout_column="1"
+                android:padding="3dp" />
+        </TableRow>
+    </TableLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
-        android:id="@+id/textViewVie"
-        android:layout_below="@+id/textViewJue"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:background="#1976D2"
+        android:visibility="gone"
+        android:layout_below="@+id/tableLayout2"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearColor"></LinearLayout>
 
 </RelativeLayout>

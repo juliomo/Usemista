@@ -4,18 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/bodyRelative"
-    android:layout_marginBottom="20dp"
-    android:clickable="true">
+    android:layout_marginTop="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/ut_row_bg"
+  >
 
 
 
     <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="30dp"
+        android:paddingRight="30dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:background="@drawable/ut_row_editor_bg"
         android:id="@+id/tableLayout">
 
         <TableRow
@@ -27,28 +32,39 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/actionEdit"
                 android:clickable="true"
-                android:src="@drawable/ic_home_black_24dp" />
+                android:background="@drawable/tiny_icon_onclic_bg"
+                android:src="@drawable/ic_mode_edit_white_24dp"
+                android:padding="5dp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/actionSave"
                 android:clickable="true"
-                android:src="@drawable/ic_save_white_24dp" />
+                android:background="@drawable/tiny_icon_onclic_bg"
+                android:src="@drawable/ic_save_white_24dp"
+                android:padding="5dp"
+                 />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/actionDelete"
                 android:clickable="true"
-                android:src="@drawable/ic_delete_white_24dp"/>
+                android:background="@drawable/tiny_icon_onclic_bg"
+                android:src="@drawable/ic_delete_white_24dp"
+                android:padding="5dp"
+                 />
         </TableRow>
     </TableLayout>
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/tableLayout">
+        android:layout_height="wrap_content"
+        android:id="@+id/tableLayout5"
+        android:layout_below="@+id/tableLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <TableRow
             android:layout_width="match_parent"
@@ -57,22 +73,27 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_home_black_24dp"
-                android:id="@+id/icMateriaNor" />
+                android:src="@drawable/ic_materia_grey_24dp_01"
+                android:id="@+id/icMateriaNor"
+                android:layout_gravity="center"
+                android:padding="5dp" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Materia"
                 android:id="@+id/textMateria" />
 
         </TableRow>
+
         <TableRow>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_home_black_24dp"
-                android:id="@+id/icMateriaEdit" />
+                android:src="@drawable/ic_materia_grey_24dp_01"
+                android:id="@+id/icMateriaEdit"
+                android:layout_gravity="center"
+                android:padding="5dp" />
             <Spinner
                 android:layout_width="180dp"
                 android:layout_height="wrap_content"
@@ -80,26 +101,60 @@
                 android:layout_column="1"
                 android:spinnerMode="dropdown" />
         </TableRow>
+    </TableLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tableLayout5"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
         <TableRow>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_home_black_24dp"
-                android:id="@+id/icTypeActNor" />
+                android:src="@drawable/ic_book_white_24dp"
+                android:id="@+id/icTypeActNor"
+                android:padding="5dp" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Tipo de Actividad"
+                android:layout_gravity="center"
                 android:id="@+id/textTypeAct"
                 android:layout_column="1"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_column="2">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_location_on_black_24dp"
+                    android:id="@+id/icSalonNor"
+                    android:padding="5dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Salon"
+                    android:layout_gravity="center"
+                    android:id="@+id/textSalon"
+                    android:layout_column="1"/>
+            </LinearLayout>
         </TableRow>
         <TableRow>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_home_black_24dp"
-                android:id="@+id/icTypeActEdit" />
+                android:src="@drawable/ic_book_white_24dp"
+                android:id="@+id/icTypeActEdit"
+                android:layout_gravity="center"
+                android:padding="5dp" />
             <Spinner
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -117,26 +172,15 @@
                 android:layout_column="2"
                 android:text="#Act" />
         </TableRow>
+
         <TableRow>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_home_black_24dp"
-                android:id="@+id/icSalonNor" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Salon"
-                android:id="@+id/textSalon"
-                android:layout_column="1"/>
-        </TableRow>
-        <TableRow>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_home_black_24dp"
-                android:id="@+id/icSalonEdit" />
+                android:src="@drawable/ic_location_on_black_24dp"
+                android:id="@+id/icSalonEdit"
+                android:layout_gravity="center"
+                android:padding="5dp" />
             <EditText
                 android:layout_width="15dp"
                 android:layout_height="wrap_content"
@@ -146,55 +190,75 @@
                 android:text="#Salon"
                 android:layout_column="1"/>
         </TableRow>
+
         <TableRow>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_home_black_24dp"
-                android:id="@+id/icDayTime" />
+                android:src="@drawable/ic_access_time_black_24dp"
+                android:id="@+id/icClock"
+                android:padding="5dp" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Dia de la Actividad"
-                android:id="@+id/textDayTime"
-                android:layout_column="1"/>
-        </TableRow>
-        <TableRow>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_home_black_24dp"
-                android:id="@+id/icClock" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_gravity="left"
                 android:text="  Hora Ini"
+                android:layout_marginBottom="3dp"
                 android:id="@+id/textClockIni"
-                android:layout_column="1"/>
+                android:layout_column="1"
+                android:padding="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="  Hora End"
+                android:layout_gravity="left"
                 android:id="@+id/textClockEnd"
-                android:layout_column="2"/>
+                android:layout_column="2"
+                android:padding="5dp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_insert_invitation_white_24dp"
+                android:id="@+id/icDayTime"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:layout_column="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Dia de la Actividad"
+                android:layout_marginBottom="3dp"
+                android:layout_gravity="center"
+                android:id="@+id/textDayTime"
+                android:layout_column="1"
+                android:padding="5dp" />
         </TableRow>
 
         <TableRow>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_home_black_24dp"
-                android:id="@+id/icComplete" />
+                android:src="@drawable/ic_event_available_black_24dp"
+                android:id="@+id/icComplete"
+                android:padding="5dp" />
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Completado"
+                android:layout_gravity="center"
                 android:id="@+id/checkBoxCmplt"
-                android:checked="false"
+                android:checked="true"
                 android:layout_column="1"/>
 
             <TextView
@@ -202,6 +266,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="      Nota"
+                android:layout_gravity="center"
                 android:id="@+id/textNota"
                 android:layout_column="2"/>
         </TableRow>

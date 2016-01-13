@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 
@@ -15,6 +16,7 @@ import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.objects.HVWeek;
 import com.usm.jyd.usemista.objects.HorarioVirtual;
 import com.usm.jyd.usemista.objects.Materia;
+import com.usm.jyd.usemista.objects.NotifyItem;
 import com.usm.jyd.usemista.objects.UserTask;
 
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ public class ClassService extends JobService {
     public static final int NOTIFICATION_ID = 2;
     private NotificationManager mNotificationManager;
 
-    public void sendNotification(String clase, String msg){
+    public void sendNotification(String clase, String msg, String mod){
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -42,17 +44,37 @@ public class ClassService extends JobService {
                 new NotificationCompat.Builder(this)
                         //. setSmallIcon(R.drawable.ic)
                         .setContentTitle(clase)
-                        .setSmallIcon(R.mipmap.ic_launcher)
                         .setStyle(new NotificationCompat.BigTextStyle())
                         .setContentText(msg)
                         .setAutoCancel(true)
-                .setColor(0xff5C6BC0)
-                ;
+                        .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                        .setLights(Color.BLUE, 3000, 3000);
+
+
+        if(mod.equals("base"))
+            mBuilder.setSmallIcon(R.drawable.ic_polymer_white_24dp);
+        else if(mod.equals("ingSis"))
+            mBuilder.setSmallIcon(R.drawable.ic_gear_white_24dp_01);
+        else if(mod.equals("telecom"))
+            mBuilder.setSmallIcon(R.drawable.ic_telecom_white_24dp_01);
+        else if(mod.equals("ingInd"))
+            mBuilder.setSmallIcon(R.drawable.ic_industrial_01_white_24dp);
+        else if(mod.equals("ingCiv"))
+            mBuilder.setSmallIcon(R.drawable.ic_civil_01_white_24dp);
+        else if(mod.equals("arq"))
+            mBuilder.setSmallIcon(R.drawable.ic_arq_01_white_24dp);
+
+
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(
                 NOTIFICATION_ID,mBuilder.build()
         );
+
+        NotifyItem notifyItem= new NotifyItem();
+        notifyItem.setClase(clase);notifyItem.setMsj(msg);
+        notifyItem.setMod(mod);
+        MiAplicativo.getWritableDatabase().insertNotiItem(notifyItem);
     }
     public  void setNotyIfHour(Calendar hrIni, Calendar currentCal, Materia materia, HVWeek hvWeek){
 
@@ -62,14 +84,14 @@ public class ClassService extends JobService {
             sendNotification(materia.getTitulo(),
                     (hvWeek.getAula()+" "+
                             hvWeek.getTimeIniToText()+" - "+
-                            hvWeek.getTimeEndToText()));
+                            hvWeek.getTimeEndToText()),materia.getModulo());
 
         }else if(hrIni.get(Calendar.HOUR_OF_DAY)==currentCal.get(Calendar.HOUR_OF_DAY) &&
                  hrIni.get(Calendar.MINUTE)<= currentCal.get(Calendar.MINUTE)  ){
             sendNotification(materia.getTitulo(),
                     (hvWeek.getAula()+" "+
                             hvWeek.getTimeIniToText()+" - "+
-                            hvWeek.getTimeEndToText()));
+                            hvWeek.getTimeEndToText()),materia.getModulo());
         }
     }
 
@@ -101,14 +123,14 @@ public class ClassService extends JobService {
                         sendNotification(userEvent.getType()+" "+userEvent.getMtName(),
                                 userEvent.getSalon()+" "+
                                 userEvent.getHrIniToText()+" - "+
-                                userEvent.getHrEndToText());
+                                userEvent.getHrEndToText(),listEventos.get(i).getCod());
 
                     }else if(hrIni.get(Calendar.HOUR_OF_DAY)==currentCal.get(Calendar.HOUR_OF_DAY) &&
                             hrIni.get(Calendar.MINUTE)<= currentCal.get(Calendar.MINUTE)  ){
                         sendNotification(userEvent.getType()+" "+userEvent.getMtName(),
                                 userEvent.getSalon()+" "+
                                         userEvent.getHrIniToText()+" - "+
-                                        userEvent.getHrEndToText());
+                                        userEvent.getHrEndToText(),listEventos.get(i).getCod());
                     }
                 }
             }

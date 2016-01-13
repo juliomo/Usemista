@@ -6,6 +6,7 @@
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:layout_marginTop="5dp"
+    android:gravity="center"
     android:id="@+id/bodyRelative"
     android:background="@drawable/row_fr_base_menu_bg"
     android:clickable="true">
@@ -20,27 +21,23 @@
 
     <TextView
         android:id="@+id/itemTitulo"
+        android:layout_marginTop="2dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:alpha="0.87"
         android:gravity="center"
         android:padding="4dp"
+        android:layout_marginBottom="10dp"
         android:text="Ingenieria Sistemas"
         android:textSize="16sp"
+        android:textStyle="bold"
+        android:shadowColor="@color/colorWhite"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="3"
         android:textColor="@color/colorTextMenuGreen"
         android:layout_below="@+id/linearLayout"
         android:layout_centerHorizontal="true" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorWhite"
-        android:text="Accion"
-        android:id="@+id/buttonAction"
-        android:layout_below="@+id/itemTitulo"
-        android:layout_centerHorizontal="true" />
-
 
 
     <LinearLayout

@@ -16,6 +16,7 @@ import com.usm.jyd.usemista.objects.HVWeek;
 import com.usm.jyd.usemista.objects.HorarioVirtual;
 import com.usm.jyd.usemista.objects.Materia;
 import com.usm.jyd.usemista.objects.MenuStatus;
+import com.usm.jyd.usemista.objects.NotifyItem;
 import com.usm.jyd.usemista.objects.UserRegistro;
 import com.usm.jyd.usemista.objects.UserTask;
 
@@ -34,6 +35,134 @@ public class DBPensum {
         mHelper = new PensumHelper(context);
         mDatabase = mHelper.getWritableDatabase();
     }
+
+
+    public  String getUserGuia(String type){
+
+        String auxValue="NA";
+
+        String[] columns = {PensumHelper.COLUMN_UG_VALUE,
+                PensumHelper.COLUMN_UG_TYPE
+        };
+        Cursor cursor = mDatabase.query(PensumHelper.TABLE_USER_GUIDE, columns, null, null, null, null,
+                null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+
+            do {
+
+                if( cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_UG_TYPE)).equals(type)){
+                    auxValue=cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_UG_VALUE));
+                    cursor.moveToLast();
+                }
+
+            }
+            while (cursor.moveToNext());
+        }
+        return auxValue;
+    }
+    public void updateUserGuia(String value, String type){
+        String sql = "UPDATE " + PensumHelper.TABLE_USER_GUIDE + " SET " +
+                PensumHelper.COLUMN_UG_VALUE+    " = ? "+
+                " WHERE "+PensumHelper.COLUMN_UG_TYPE+" = ?;" ;
+
+        //compile the statement and start a transaction
+        SQLiteStatement statement = mDatabase.compileStatement(sql);
+        mDatabase.beginTransaction();
+        //for a given column index, simply bind the data to be put inside that index
+        statement.bindString(1,value);
+        statement.bindString(2, type);
+        statement.execute();
+
+        //set the transaction as successful and end the transaction
+
+        mDatabase.setTransactionSuccessful();
+        mDatabase.endTransaction();
+    }
+
+
+
+    public void insertNotiItem(NotifyItem notifyItem){
+
+        String sql = "INSERT INTO " + PensumHelper.TABLE_NOTIFY + " VALUES (?,?,?,?);";
+        //compile the statement and start a transaction
+        SQLiteStatement statement = mDatabase.compileStatement(sql);
+        mDatabase.beginTransaction();
+        statement.clearBindings();
+        //for a given column index, simply bind the data to be put inside that index
+        statement.bindString(2, notifyItem.getClase());
+        statement.bindString(3, notifyItem.getMsj());
+        statement.bindString(4, notifyItem.getMod());
+        statement.execute();
+
+        //set the transaction as successful and end the transaction
+
+        mDatabase.setTransactionSuccessful();
+        mDatabase.endTransaction();
+    }
+    public  ArrayList<NotifyItem> getAllNotiItem(){
+        ArrayList<NotifyItem> listUserNoti = new ArrayList<>();
+
+        String[] columns = {PensumHelper.COLUMN_NT_UID,
+                PensumHelper.COLUMN_NT_CLASS,
+                PensumHelper.COLUMN_NT_MSJ,
+                PensumHelper.COLUMN_NT_MOD
+        };
+        Cursor cursor = mDatabase.query(PensumHelper.TABLE_NOTIFY, columns, null, null, null, null,
+                PensumHelper.COLUMN_NT_UID+" DESC");
+
+        if (cursor != null && cursor.moveToFirst()) {
+            L.m("loading entries " + cursor.getCount() + new Date(System.currentTimeMillis()));
+            do {
+
+                //create a new materia object and retrieve the data from the cursor to be stored in this materia object
+                NotifyItem notifyItem = new NotifyItem();
+                //each step is a 2 part process, find the index of the column first, find the data of that column using
+                //that index and finally set our blank materia object to contain our data
+                notifyItem.setId(cursor.getInt(cursor.getColumnIndex(PensumHelper.COLUMN_NT_UID)));
+                notifyItem.setClase(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_NT_CLASS)));
+                notifyItem.setMsj(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_NT_MSJ)));
+                notifyItem.setMod(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_NT_MOD)));
+
+
+                //add the materia to the list of materia objects which we plan to return
+                listUserNoti.add(notifyItem);
+            }
+            while (cursor.moveToNext());
+        }
+        return listUserNoti;
+    }
+    public void deleteNotiItem(int id){
+        String sql = "DELETE FROM " + PensumHelper.TABLE_NOTIFY +
+                " WHERE "+PensumHelper.COLUMN_NT_UID+" = ?;" ;
+
+        //compile the statement and start a transaction
+        SQLiteStatement statement = mDatabase.compileStatement(sql);
+        mDatabase.beginTransaction();
+        //for a given column index, simply bind the data to be put inside that index
+        statement.bindLong(1, id);
+        statement.execute();
+
+        //set the transaction as successful and end the transaction
+
+        mDatabase.setTransactionSuccessful();
+        mDatabase.endTransaction();
+    }
+    public void deleteAllNotiItem(){
+        String sql = "DELETE FROM " + PensumHelper.TABLE_NOTIFY +
+                " ;" ;
+
+        //compile the statement and start a transaction
+        SQLiteStatement statement = mDatabase.compileStatement(sql);
+        mDatabase.beginTransaction();
+        //for a given column index, simply bind the data to be put inside that index
+        statement.execute();
+        //set the transaction as successful and end the transaction
+        mDatabase.setTransactionSuccessful();
+        mDatabase.endTransaction();
+    }
+
+
 
     public void updateUserRegistroAlumno(String status, String nomb, String ci){
         String sql = "UPDATE " + PensumHelper.TABLE_USER_REGISTRO + " SET " +
@@ -268,6 +397,27 @@ public class DBPensum {
         mDatabase.endTransaction();
     }
 
+    public void updateCmpltUserTask(String cmplt,int nota,int ut_uid){
+        String sql = "UPDATE " + PensumHelper.TABLE_USER_TASK + " SET " +
+                PensumHelper.COLUMN_USER_TASK_CMPLT+" = ?, "+
+                PensumHelper.COLUMN_USER_TASK_NOTA+" = ? "+
+                " WHERE "+PensumHelper.COLUMN_USER_TASK_UID+" = ?;" ;
+
+        //compile the statement and start a transaction
+        SQLiteStatement statement = mDatabase.compileStatement(sql);
+        mDatabase.beginTransaction();
+        //for a given column index, simply bind the data to be put inside that index
+        statement.bindString(1, cmplt);
+        statement.bindLong(2, nota);
+        statement.bindLong(3, ut_uid);
+        statement.execute();
+
+        //set the transaction as successful and end the transaction
+
+        mDatabase.setTransactionSuccessful();
+        mDatabase.endTransaction();
+    }
+
 
     public void insertHorarioVirtual(HorarioVirtual horarioVirtual){
 
@@ -459,8 +609,8 @@ public class DBPensum {
                 materia.setCod(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_U_COD)));
                 materia.setTitulo(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_U_TITULO)));
                 materia.setSemestre(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_U_SEMESTRE)));
-                materia.setObjetivo(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_U_CONTENIDO)));
-                materia.setContenido(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_U_OBJETIVO)));
+                materia.setObjetivo(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_U_OBJETIVO)));
+                materia.setContenido(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_U_CONTENIDO)));
                 materia.setModulo(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_U_MODULO)));
                 materia.setU_materia(cursor.getString(cursor.getColumnIndex(PensumHelper.COLUMN_U_HV_ACTIVO)));
                 //add the materia to the list of materia objects which we plan to return
@@ -897,6 +1047,46 @@ public class DBPensum {
                 COLUMN_UR_DAYTIME + " DATETIME DEFAULT CURRENT_TIMESTAMP" +
                 ");";
 
+        /***********************************************************************
+         * ////////// TABLA DE NOTIFICACIONES ////////////////////////////////////////
+         ***********************************************************************/
+        public static final String TABLE_NOTIFY = "notify";
+        public static final String COLUMN_NT_UID = "nt_uid";
+        public static final String COLUMN_NT_CLASS = "nt_class";
+        public static final String COLUMN_NT_MSJ = "nt_msj";
+        public static final String COLUMN_NT_MOD = "nt_mod";
+
+
+        private static final String CREATE_TABLE_NOTIFY = "CREATE TABLE " + TABLE_NOTIFY + " (" +
+                COLUMN_NT_UID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                COLUMN_NT_CLASS +" TEXT ," +
+                COLUMN_NT_MSJ +  " TEXT,  " +
+                COLUMN_NT_MOD+   " TEXT "+
+
+                ");";
+
+        /***********************************************************************
+         * ////////// TABLA DE GUIA DE USUARIO ////////////////////////////////////////
+         ***********************************************************************/
+        public static final String TABLE_USER_GUIDE = "user_guide";
+        public static final String COLUMN_UG_UID = "ug_uid";
+        public static final String COLUMN_UG_TYPE = "ug_type";
+        public static final String COLUMN_UG_VALUE = "ug_value";
+
+        private static final String CREATE_TABLE_USER_GUIDE = "CREATE TABLE " + TABLE_USER_GUIDE + " (" +
+                COLUMN_UG_UID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                COLUMN_UG_TYPE +" TEXT , " +
+                COLUMN_UG_VALUE +" TEXT DEFAULT 0" +
+                ");";
+
+        private static final String INSERT_USER_GUIDE_STATUS ="INSERT INTO "+TABLE_USER_GUIDE+" ("+
+                COLUMN_UG_TYPE+") VALUES"+
+                "('menu')," +"('materia')," +"('mm')," +
+                "('mmt')," +"('hv')," +
+                "('hve')," +"('noti')," +"('cal')," +
+                "('prof1')," +"('prof2')," +
+                "('alum');";
+
         private static final String INSERT_USER_REGISTRO ="INSERT INTO "+TABLE_USER_REGISTRO+" ("+
                 COLUMN_UR_NOTI_GCM+") VALUES"+
                 "('noAsig');" ;
@@ -920,6 +1110,12 @@ public class DBPensum {
 
                 db.execSQL(CREATE_TABLE_USER_REGISTRO);
                 db.execSQL(INSERT_USER_REGISTRO);
+
+                db.execSQL(CREATE_TABLE_NOTIFY);
+
+                db.execSQL(CREATE_TABLE_USER_GUIDE);
+                db.execSQL(INSERT_USER_GUIDE_STATUS);
+
                 L.m("create table box office executed");
             } catch (SQLiteException exception) {
                 L.t(mContext, exception + "");

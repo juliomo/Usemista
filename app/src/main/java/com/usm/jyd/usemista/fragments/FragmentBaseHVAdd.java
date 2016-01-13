@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.aplicativo.MiAplicativo;
+import com.usm.jyd.usemista.dialogs.GuiaUsuario;
 import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.events.HVTimeToSet;
 import com.usm.jyd.usemista.logs.L;
@@ -95,6 +96,8 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
     private EditText editTextLunMod, editTextMarMod,editTextMieMod,editTextJueMod,editTextVieMod ;
     private EditText editTextLunSa, editTextMarSa,editTextMieSa,editTextJueSa,editTextVieSa ;
 
+    private Button buttonColor;
+
 
 
     public static FragmentBaseHVAdd newInstance(int num_seccion, Materia materia, HorarioVirtual horarioVirtual, ArrayList<HVWeek> listHVWeek) {
@@ -122,7 +125,7 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
             }
         }colorHV=hvInEd.getColor();
     }
-        public static FragmentBaseHVAdd newInstance(int num_seccion,ArrayList<Materia> listUserMateria) {
+    public static FragmentBaseHVAdd newInstance(int num_seccion,ArrayList<Materia> listUserMateria) {
         FragmentBaseHVAdd fragment = new FragmentBaseHVAdd();
         Bundle args = new Bundle();
         args.putInt(ARG_NUMERO_SECCION, num_seccion);
@@ -147,32 +150,32 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
 
         if(weekDay.equals("Lun")&& itemPoss==1){textViewlunIni.setText(hora + ":" + minuto);
         timeLunIni.set(Calendar.HOUR_OF_DAY,hora);timeLunIni.set(Calendar.MINUTE,minuto);}
-        else if(weekDay.equals("Lun")&& itemPoss==2){textViewlunEnd.setText(hora+":"+minuto);
+        else if(weekDay.equals("Lun")&& itemPoss==2){textViewlunEnd.setText(hora+" : "+minuto);
             timeLunEnd.set(Calendar.HOUR_OF_DAY,hora);timeLunEnd.set(Calendar.MINUTE, minuto);}
-        else if(weekDay.equals("Mar")&& itemPoss==1){textViewMarIni.setText(hora+":"+minuto);
+        else if(weekDay.equals("Mar")&& itemPoss==1){textViewMarIni.setText(hora+" : "+minuto);
             timeMarIni.set(Calendar.HOUR_OF_DAY,hora);timeMarIni.set(Calendar.MINUTE, minuto);}
-        else if(weekDay.equals("Mar")&& itemPoss==2){textViewMarEnd.setText(hora+":"+minuto);
+        else if(weekDay.equals("Mar")&& itemPoss==2){textViewMarEnd.setText(hora+" : "+minuto);
             timeMarEnd.set(Calendar.HOUR_OF_DAY,hora);timeMarEnd.set(Calendar.MINUTE, minuto);}
-        else if(weekDay.equals("Mie")&& itemPoss==1){textViewMieIni.setText(hora+":"+minuto);
+        else if(weekDay.equals("Mie")&& itemPoss==1){textViewMieIni.setText(hora+" : "+minuto);
             timeMieIni.set(Calendar.HOUR_OF_DAY,hora);timeMieIni.set(Calendar.MINUTE, minuto);}
-        else if(weekDay.equals("Mie")&& itemPoss==2){textViewMieEnd.setText(hora+":"+minuto);
+        else if(weekDay.equals("Mie")&& itemPoss==2){textViewMieEnd.setText(hora+" : "+minuto);
             timeMieEnd.set(Calendar.HOUR_OF_DAY,hora);timeMieEnd.set(Calendar.MINUTE, minuto);}
-        else if(weekDay.equals("Jue")&& itemPoss==1){textViewJueIni.setText(hora+":"+minuto);
+        else if(weekDay.equals("Jue")&& itemPoss==1){textViewJueIni.setText(hora+" : "+minuto);
             timeJueIni.set(Calendar.HOUR_OF_DAY,hora);timeJueIni.set(Calendar.MINUTE, minuto);}
-        else if(weekDay.equals("Jue")&& itemPoss==2){textViewJueEnd.setText(hora+":"+minuto);
+        else if(weekDay.equals("Jue")&& itemPoss==2){textViewJueEnd.setText(hora+" : "+minuto);
             timeJueEnd.set(Calendar.HOUR_OF_DAY,hora);timeJueEnd.set(Calendar.MINUTE, minuto);}
-        else if(weekDay.equals("Vie")&& itemPoss==1){textViewVieIni.setText(hora+":"+minuto);
+        else if(weekDay.equals("Vie")&& itemPoss==1){textViewVieIni.setText(hora+" : "+minuto);
             timeVieIni.set(Calendar.HOUR_OF_DAY,hora);timeVieIni.set(Calendar.MINUTE, minuto);}
-        else if(weekDay.equals("Vie")&& itemPoss==2){textViewVieEnd.setText(hora+":"+minuto);
+        else if(weekDay.equals("Vie")&& itemPoss==2){textViewVieEnd.setText(hora+" : "+minuto);
             timeVieEnd.set(Calendar.HOUR_OF_DAY,hora);timeVieEnd.set(Calendar.MINUTE, minuto);}
 
     }
 
     @Override
     public void seteoDeFecha(int year, int monthOfYear, int dayOfMonth, int itemPoss) {
-        if(itemPoss==1){textViewCalendarIni.setText(dayOfMonth+" / "+monthOfYear+" / "+year+" Hasta");
+        if(itemPoss==1){textViewCalendarIni.setText(dayOfMonth+" / "+(monthOfYear+1)+" / "+year+" Hasta");
         calIni.set(year,monthOfYear,dayOfMonth);}
-        else if(itemPoss==2){textViewCalendarEnd.setText(dayOfMonth+" / "+monthOfYear+" / "+year);
+        else if(itemPoss==2){textViewCalendarEnd.setText(dayOfMonth+" / "+(monthOfYear+1)+" / "+year);
         calEnd.set(year,monthOfYear,dayOfMonth);}
     }
 
@@ -183,6 +186,7 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
         imageViewIconMateria.setColorFilter(color);
         imageViewIconClock.setColorFilter(color);
         imageViewIconCal.setColorFilter(color);
+        buttonColor.setTextColor(colorHV);
     }
 
 
@@ -190,6 +194,13 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        String auxGuiaUsuario = "";
+        auxGuiaUsuario = MiAplicativo.getWritableDatabase().getUserGuia("hve");
+        if (auxGuiaUsuario.equals("0")) {
+            GuiaUsuario guiaUsuario = new GuiaUsuario();
+            guiaUsuario.setGuiaUsuario("hve");
+            guiaUsuario.show(getChildFragmentManager(),"Dialog");
+        }
     }
 
     @Override
@@ -199,19 +210,33 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
             menu.findItem(R.id.action_delete).setVisible(false);
 
             if(!listUserMateria.isEmpty()) {
-                boolean sis=false,telc=false;
+                boolean sis=false,telc=false, ind=false,civ=false,arq=false;
                 for(int i =0;i<listUserMateria.size();i++){
                     if(listUserMateria.get(i).getModulo().equals("ingSis")){sis=true;}
                     else if(listUserMateria.get(i).getModulo().equals("telecom")){telc=true;}
+                    else if(listUserMateria.get(i).getModulo().equals("ingInd")){ind=true;}
+                    else if(listUserMateria.get(i).getModulo().equals("ingCiv")){civ=true;}
+                    else if(listUserMateria.get(i).getModulo().equals("arq")){arq=true;}
+
                 }
 
                 if(!sis){menu.findItem(R.id.action_sistema).setVisible(false);}
                 if(!telc){menu.findItem(R.id.action_telecom).setVisible(false);}
+                if(!ind){menu.findItem(R.id.action_industrial).setVisible(false);}
+                if(!civ){menu.findItem(R.id.action_civil).setVisible(false);}
+                if(!arq){menu.findItem(R.id.action_arq).setVisible(false);}
+
 
                 if (listUserMateria.get(0).getModulo().equals("ingSis")) {
                     menu.findItem(R.id.action_sistema).setChecked(true);
                 } else if (listUserMateria.get(0).getModulo().equals("telecom")) {
                     menu.findItem(R.id.action_telecom).setChecked(true);
+                } else if (listUserMateria.get(0).getModulo().equals("ingInd")) {
+                    menu.findItem(R.id.action_industrial).setChecked(true);
+                } else if (listUserMateria.get(0).getModulo().equals("ingCiv")) {
+                    menu.findItem(R.id.action_civil).setChecked(true);
+                } else if (listUserMateria.get(0).getModulo().equals("arq")) {
+                    menu.findItem(R.id.action_arq).setChecked(true);
                 }
             }
         }else if(getArguments().getInt(ARG_NUMERO_SECCION)==122){
@@ -390,6 +415,99 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
 
             return true;
         }
+        if(id==R.id.action_industrial){
+            item.setChecked(!item.isChecked());
+
+            listUMLoad = new ArrayList<>();
+            categories= new ArrayList<>();
+            for (int i = 0; i < listUserMateria.size(); i++) {
+                if(listUserMateria.get(i).getModulo().equals("ingInd")){
+                    listUMLoad.add(listUserMateria.get(i));
+                    categories.add(listUserMateria.get(i).getTitulo());
+                }
+
+            }
+            adapterSpinner = new
+                    ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, categories);
+
+            adapterSpinner.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+            spinnerMateria.setAdapter(adapterSpinner);
+            spinnerMateria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    positionListSpinnerAux = position;
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+            return true;
+        }
+        if(id==R.id.action_civil){
+            item.setChecked(!item.isChecked());
+
+            listUMLoad = new ArrayList<>();
+            categories= new ArrayList<>();
+            for (int i = 0; i < listUserMateria.size(); i++) {
+                if(listUserMateria.get(i).getModulo().equals("ingCiv")){
+                    listUMLoad.add(listUserMateria.get(i));
+                    categories.add(listUserMateria.get(i).getTitulo());
+                }
+
+            }
+            adapterSpinner = new
+                    ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, categories);
+
+            adapterSpinner.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+            spinnerMateria.setAdapter(adapterSpinner);
+            spinnerMateria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    positionListSpinnerAux = position;
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+            return true;
+        }
+        if(id==R.id.action_arq){
+            item.setChecked(!item.isChecked());
+
+            listUMLoad = new ArrayList<>();
+            categories= new ArrayList<>();
+            for (int i = 0; i < listUserMateria.size(); i++) {
+                if(listUserMateria.get(i).getModulo().equals("arq")){
+                    listUMLoad.add(listUserMateria.get(i));
+                    categories.add(listUserMateria.get(i).getTitulo());
+                }
+
+            }
+            adapterSpinner = new
+                    ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, categories);
+
+            adapterSpinner.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+            spinnerMateria.setAdapter(adapterSpinner);
+            spinnerMateria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    positionListSpinnerAux = position;
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -493,21 +611,23 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
         editTextVieSa=(EditText)rootView.findViewById(R.id.editTextVieSalon);
 
 
+
+
         switchLun.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    textViewlunIni.setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
-                    textViewlunEnd.setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+                if (isChecked) {
+                    textViewlunIni.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+                    textViewlunEnd.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
 
-                   textViewLunMod.setVisibility(View.VISIBLE);
+                    textViewLunMod.setVisibility(View.VISIBLE);
                     editTextLunMod.setVisibility(View.VISIBLE);
                     textViewLunSa.setVisibility(View.VISIBLE);
                     editTextLunSa.setVisibility(View.VISIBLE);
 
-                }else {
-                    textViewlunIni.setTextColor(ContextCompat.getColor(getContext(),R.color.colorTextSecondary));
-                    textViewlunEnd.setTextColor(ContextCompat.getColor(getContext(),R.color.colorTextSecondary));
+                } else {
+                    textViewlunIni.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+                    textViewlunEnd.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
                     textViewLunMod.setVisibility(View.GONE);
                     editTextLunMod.setVisibility(View.GONE);
                     textViewLunSa.setVisibility(View.GONE);
@@ -515,6 +635,7 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
                 }
             }
         });
+
         switchMar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -627,7 +748,7 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
         textViewCalendarEnd.setOnClickListener(this);
 
 
-        Button buttonColor=(Button)rootView.findViewById(R.id.buttonColor);
+        buttonColor=(Button)rootView.findViewById(R.id.buttonColor);
         buttonColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -644,6 +765,7 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
             imageViewIconMateria.setColorFilter(colorHV);
             imageViewIconClock.setColorFilter(colorHV);
             imageViewIconCal.setColorFilter(colorHV);
+            buttonColor.setTextColor(colorHV);
 
         }else if(getArguments().getInt(ARG_NUMERO_SECCION)==122){
 
@@ -655,6 +777,7 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
             imageViewIconMateria.setColorFilter(colorHV);
             imageViewIconClock.setColorFilter(colorHV);
             imageViewIconCal.setColorFilter(colorHV);
+            buttonColor.setTextColor(colorHV);
 
             if(hvInEd.getCalendar().equals("1")){
                 switchCalendar.setChecked(true);

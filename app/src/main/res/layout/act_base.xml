@@ -33,6 +33,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">   <!-- exitUntilCollapsed -->
 
         <ImageView
+            android:id="@+id/imgViewChanger"
             android:layout_width="match_parent"
             android:layout_height="170dp"
             android:scaleType="centerCrop"
@@ -43,9 +44,9 @@
                 android:id="@+id/app_bar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/AppToolBar"
+
                 app:layout_collapseMode="pin" >
-              <!--  <Spinner
+              <!--  <Spinner    app:popupTheme="@style/AppToolBar"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/spinnerCarrera"

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,11 +13,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerMisMaterias;
 import com.usm.jyd.usemista.aplicativo.MiAplicativo;
+import com.usm.jyd.usemista.dialogs.GuiaUsuario;
 import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.objects.Materia;
 
@@ -37,6 +41,11 @@ public class FragmentBaseMisMaterias extends Fragment {
     private ArrayList<Materia> listUMbySe=new ArrayList<>();
     private int pensumValidator=0;
 
+    //Empty Handle
+    private ImageView imgEmptyList;
+    private TextView textEmptyList;
+
+
     public FragmentBaseMisMaterias(){}
 
     public static FragmentBaseMisMaterias newInstance(int num_seccion) {
@@ -53,6 +62,14 @@ public class FragmentBaseMisMaterias extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         listUserMateria= MiAplicativo.getWritableDatabase().getAllUserMateria();
+
+        String auxGuiaUsuario = "";
+        auxGuiaUsuario = MiAplicativo.getWritableDatabase().getUserGuia("mm");
+        if (auxGuiaUsuario.equals("0")) {
+            GuiaUsuario guiaUsuario = new GuiaUsuario();
+            guiaUsuario.setGuiaUsuario("mm");
+            guiaUsuario.show(getChildFragmentManager(),"Dialog");
+        }
     }
 
     @Override
@@ -61,14 +78,25 @@ public class FragmentBaseMisMaterias extends Fragment {
         inflater.inflate(R.menu.act_base_fr_mm_menu, menu);
         if(!listUserMateria.isEmpty()) {
             listUMLoad=new ArrayList<>();
-            boolean sis=false,telc=false;
+            boolean sis=false,telc=false,ind=false,civ=false,arq=false;
             for(int i =0;i<listUserMateria.size();i++){
                 if(listUserMateria.get(i).getModulo().equals("ingSis")){sis=true;}
                 else if(listUserMateria.get(i).getModulo().equals("telecom")){telc=true;}
+                else if(listUserMateria.get(i).getModulo().equals("ingInd")){ind=true;}
+                else if(listUserMateria.get(i).getModulo().equals("ingCiv")){civ=true;}
+                else if(listUserMateria.get(i).getModulo().equals("arq")){arq=true;}
+
+
             }
 
             if(!sis){menu.findItem(R.id.action_sistema_fr_mm).setVisible(false);}
             if(!telc){menu.findItem(R.id.action_telecom_fr_mm).setVisible(false);}
+            if(!ind){menu.findItem(R.id.action_industrial_fr_mm).setVisible(false);}
+            if(!civ){menu.findItem(R.id.action_civil_fr_mm).setVisible(false);}
+            if(!arq){menu.findItem(R.id.action_arq_fr_mm).setVisible(false);}
+
+
+
 
 
             int seValidator=0;
@@ -76,7 +104,15 @@ public class FragmentBaseMisMaterias extends Fragment {
                 menu.findItem(R.id.action_sistema_fr_mm).setChecked(true); seValidator=1;
             } else if (listUserMateria.get(0).getModulo().equals("telecom")) {
                 menu.findItem(R.id.action_telecom_fr_mm).setChecked(true); seValidator=2;
-            }menu.findItem(R.id.action_seAll).setChecked(true);
+            }else if (listUserMateria.get(0).getModulo().equals("ingInd")) {
+                menu.findItem(R.id.action_industrial_fr_mm).setChecked(true); seValidator=3;
+            }else if (listUserMateria.get(0).getModulo().equals("ingCiv")) {
+                menu.findItem(R.id.action_civil_fr_mm).setChecked(true); seValidator=4;
+            }else if (listUserMateria.get(0).getModulo().equals("arq")) {
+                menu.findItem(R.id.action_arq_fr_mm).setChecked(true); seValidator=5;
+            }
+
+            menu.findItem(R.id.action_seAll).setChecked(true);
 
 
 
@@ -89,6 +125,24 @@ public class FragmentBaseMisMaterias extends Fragment {
             }else if(seValidator==2){
                 for(int i=0;i<listUserMateria.size();i++) {
                     if (listUserMateria.get(i).getModulo().equals("telecom")) {
+                        listUMLoad.add(listUserMateria.get(i));
+                    }
+                }
+            }else if(seValidator==3){
+                for(int i=0;i<listUserMateria.size();i++) {
+                    if (listUserMateria.get(i).getModulo().equals("ingInd")) {
+                        listUMLoad.add(listUserMateria.get(i));
+                    }
+                }
+            }else if(seValidator==4){
+                for(int i=0;i<listUserMateria.size();i++) {
+                    if (listUserMateria.get(i).getModulo().equals("ingCiv")) {
+                        listUMLoad.add(listUserMateria.get(i));
+                    }
+                }
+            }else if(seValidator==5){
+                for(int i=0;i<listUserMateria.size();i++) {
+                    if (listUserMateria.get(i).getModulo().equals("arq")) {
                         listUMLoad.add(listUserMateria.get(i));
                     }
                 }
@@ -156,16 +210,17 @@ public class FragmentBaseMisMaterias extends Fragment {
                 else if(listUMLoad.get(i).getSemestre().equals("9")){se9=true;}
                 else if(listUMLoad.get(i).getSemestre().equals("10")){se10=true;}
             }
-            if(!se1){menu.findItem(R.id.action_se1).setVisible(false);}
-            if(!se2){menu.findItem(R.id.action_se2).setVisible(false);}
-            if(!se3){menu.findItem(R.id.action_se3).setVisible(false);}
-            if(!se4){menu.findItem(R.id.action_se4).setVisible(false);}
-            if(!se5){menu.findItem(R.id.action_se5).setVisible(false);}
-            if(!se6){menu.findItem(R.id.action_se6).setVisible(false);}
-            if(!se7){menu.findItem(R.id.action_se7).setVisible(false);}
-            if(!se8){menu.findItem(R.id.action_se8).setVisible(false);}
-            if(!se9){menu.findItem(R.id.action_se9).setVisible(false);}
-            if(!se10){menu.findItem(R.id.action_se10).setVisible(false);}
+            if(!se1){menu.findItem(R.id.action_se1).setVisible(false);}else menu.findItem(R.id.action_se1).setVisible(true);
+            if(!se2){menu.findItem(R.id.action_se2).setVisible(false);}else menu.findItem(R.id.action_se2).setVisible(true);
+            if(!se3){menu.findItem(R.id.action_se3).setVisible(false);}else menu.findItem(R.id.action_se3).setVisible(true);
+            if(!se4){menu.findItem(R.id.action_se4).setVisible(false);}else menu.findItem(R.id.action_se4).setVisible(true);
+            if(!se5){menu.findItem(R.id.action_se5).setVisible(false);}else menu.findItem(R.id.action_se5).setVisible(true);
+            if(!se6){menu.findItem(R.id.action_se6).setVisible(false);}else menu.findItem(R.id.action_se6).setVisible(true);
+            if(!se7){menu.findItem(R.id.action_se7).setVisible(false);}else menu.findItem(R.id.action_se7).setVisible(true);
+            if(!se8){menu.findItem(R.id.action_se8).setVisible(false);}else menu.findItem(R.id.action_se8).setVisible(true);
+            if(!se9){menu.findItem(R.id.action_se9).setVisible(false);}else menu.findItem(R.id.action_se9).setVisible(true);
+            if(!se10){menu.findItem(R.id.action_se10).setVisible(false);}else menu.findItem(R.id.action_se10).setVisible(true);
+
 
             adapterRecyclerMisMaterias.setListUserMateria(listUMLoad);
             menu.findItem(R.id.action_sistema_fr_mm).setChecked(true);
@@ -190,21 +245,125 @@ public class FragmentBaseMisMaterias extends Fragment {
                 else if(listUMLoad.get(i).getSemestre().equals("9")){se9=true;}
                 else if(listUMLoad.get(i).getSemestre().equals("10")){se10=true;}
             }
-            if(!se1){menu.findItem(R.id.action_se1).setVisible(false);}
-            if(!se2){menu.findItem(R.id.action_se2).setVisible(false);}
-            if(!se3){menu.findItem(R.id.action_se3).setVisible(false);}
-            if(!se4){menu.findItem(R.id.action_se4).setVisible(false);}
-            if(!se5){menu.findItem(R.id.action_se5).setVisible(false);}
-            if(!se6){menu.findItem(R.id.action_se6).setVisible(false);}
-            if(!se7){menu.findItem(R.id.action_se7).setVisible(false);}
-            if(!se8){menu.findItem(R.id.action_se8).setVisible(false);}
-            if(!se9){menu.findItem(R.id.action_se9).setVisible(false);}
-            if(!se10){menu.findItem(R.id.action_se10).setVisible(false);}
+            if(!se1){menu.findItem(R.id.action_se1).setVisible(false);}else menu.findItem(R.id.action_se1).setVisible(true);
+            if(!se2){menu.findItem(R.id.action_se2).setVisible(false);}else menu.findItem(R.id.action_se2).setVisible(true);
+            if(!se3){menu.findItem(R.id.action_se3).setVisible(false);}else menu.findItem(R.id.action_se3).setVisible(true);
+            if(!se4){menu.findItem(R.id.action_se4).setVisible(false);}else menu.findItem(R.id.action_se4).setVisible(true);
+            if(!se5){menu.findItem(R.id.action_se5).setVisible(false);}else menu.findItem(R.id.action_se5).setVisible(true);
+            if(!se6){menu.findItem(R.id.action_se6).setVisible(false);}else menu.findItem(R.id.action_se6).setVisible(true);
+            if(!se7){menu.findItem(R.id.action_se7).setVisible(false);}else menu.findItem(R.id.action_se7).setVisible(true);
+            if(!se8){menu.findItem(R.id.action_se8).setVisible(false);}else menu.findItem(R.id.action_se8).setVisible(true);
+            if(!se9){menu.findItem(R.id.action_se9).setVisible(false);}else menu.findItem(R.id.action_se9).setVisible(true);
+            if(!se10){menu.findItem(R.id.action_se10).setVisible(false);}else menu.findItem(R.id.action_se10).setVisible(true);
 
             adapterRecyclerMisMaterias.setListUserMateria(listUMLoad);
             menu.findItem(R.id.action_telecom_fr_mm).setChecked(true);
 
-        } menu.findItem(R.id.action_seAll).setChecked(true);
+        }else if(pensumValidator==3){
+            for(int i=0;i<listUserMateria.size();i++){
+                if(listUserMateria.get(i).getModulo().equals("ingInd")){
+                    listUMLoad.add(listUserMateria.get(i));
+                }
+            }
+
+            for(int i=0;i<listUMLoad.size();i++){
+                if(listUMLoad.get(i).getSemestre().equals("1")){se1=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("2")){se2=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("3")){se3=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("4")){se4=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("5")){se5=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("6")){se6=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("7")){se7=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("8")){se8=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("9")){se9=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("10")){se10=true;}
+            }
+            if(!se1){menu.findItem(R.id.action_se1).setVisible(false);}else menu.findItem(R.id.action_se1).setVisible(true);
+            if(!se2){menu.findItem(R.id.action_se2).setVisible(false);}else menu.findItem(R.id.action_se2).setVisible(true);
+            if(!se3){menu.findItem(R.id.action_se3).setVisible(false);}else menu.findItem(R.id.action_se3).setVisible(true);
+            if(!se4){menu.findItem(R.id.action_se4).setVisible(false);}else menu.findItem(R.id.action_se4).setVisible(true);
+            if(!se5){menu.findItem(R.id.action_se5).setVisible(false);}else menu.findItem(R.id.action_se5).setVisible(true);
+            if(!se6){menu.findItem(R.id.action_se6).setVisible(false);}else menu.findItem(R.id.action_se6).setVisible(true);
+            if(!se7){menu.findItem(R.id.action_se7).setVisible(false);}else menu.findItem(R.id.action_se7).setVisible(true);
+            if(!se8){menu.findItem(R.id.action_se8).setVisible(false);}else menu.findItem(R.id.action_se8).setVisible(true);
+            if(!se9){menu.findItem(R.id.action_se9).setVisible(false);}else menu.findItem(R.id.action_se9).setVisible(true);
+            if(!se10){menu.findItem(R.id.action_se10).setVisible(false);}else menu.findItem(R.id.action_se10).setVisible(true);
+
+
+            adapterRecyclerMisMaterias.setListUserMateria(listUMLoad);
+            menu.findItem(R.id.action_industrial_fr_mm).setChecked(true);
+
+        }else if(pensumValidator==4){
+            for(int i=0;i<listUserMateria.size();i++){
+                if(listUserMateria.get(i).getModulo().equals("ingCiv")){
+                    listUMLoad.add(listUserMateria.get(i));
+                }
+            }
+
+            for(int i=0;i<listUMLoad.size();i++){
+                if(listUMLoad.get(i).getSemestre().equals("1")){se1=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("2")){se2=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("3")){se3=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("4")){se4=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("5")){se5=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("6")){se6=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("7")){se7=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("8")){se8=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("9")){se9=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("10")){se10=true;}
+            }
+            if(!se1){menu.findItem(R.id.action_se1).setVisible(false);}else menu.findItem(R.id.action_se1).setVisible(true);
+            if(!se2){menu.findItem(R.id.action_se2).setVisible(false);}else menu.findItem(R.id.action_se2).setVisible(true);
+            if(!se3){menu.findItem(R.id.action_se3).setVisible(false);}else menu.findItem(R.id.action_se3).setVisible(true);
+            if(!se4){menu.findItem(R.id.action_se4).setVisible(false);}else menu.findItem(R.id.action_se4).setVisible(true);
+            if(!se5){menu.findItem(R.id.action_se5).setVisible(false);}else menu.findItem(R.id.action_se5).setVisible(true);
+            if(!se6){menu.findItem(R.id.action_se6).setVisible(false);}else menu.findItem(R.id.action_se6).setVisible(true);
+            if(!se7){menu.findItem(R.id.action_se7).setVisible(false);}else menu.findItem(R.id.action_se7).setVisible(true);
+            if(!se8){menu.findItem(R.id.action_se8).setVisible(false);}else menu.findItem(R.id.action_se8).setVisible(true);
+            if(!se9){menu.findItem(R.id.action_se9).setVisible(false);}else menu.findItem(R.id.action_se9).setVisible(true);
+            if(!se10){menu.findItem(R.id.action_se10).setVisible(false);}else menu.findItem(R.id.action_se10).setVisible(true);
+
+
+            adapterRecyclerMisMaterias.setListUserMateria(listUMLoad);
+            menu.findItem(R.id.action_civil_fr_mm).setChecked(true);
+
+        }else if(pensumValidator==5){
+            for(int i=0;i<listUserMateria.size();i++){
+                if(listUserMateria.get(i).getModulo().equals("arq")){
+                    listUMLoad.add(listUserMateria.get(i));
+                }
+            }
+
+            for(int i=0;i<listUMLoad.size();i++){
+                if(listUMLoad.get(i).getSemestre().equals("1")){se1=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("2")){se2=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("3")){se3=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("4")){se4=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("5")){se5=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("6")){se6=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("7")){se7=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("8")){se8=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("9")){se9=true;}
+                else if(listUMLoad.get(i).getSemestre().equals("10")){se10=true;}
+            }
+            if(!se1){menu.findItem(R.id.action_se1).setVisible(false);}else menu.findItem(R.id.action_se1).setVisible(true);
+            if(!se2){menu.findItem(R.id.action_se2).setVisible(false);}else menu.findItem(R.id.action_se2).setVisible(true);
+            if(!se3){menu.findItem(R.id.action_se3).setVisible(false);}else menu.findItem(R.id.action_se3).setVisible(true);
+            if(!se4){menu.findItem(R.id.action_se4).setVisible(false);}else menu.findItem(R.id.action_se4).setVisible(true);
+            if(!se5){menu.findItem(R.id.action_se5).setVisible(false);}else menu.findItem(R.id.action_se5).setVisible(true);
+            if(!se6){menu.findItem(R.id.action_se6).setVisible(false);}else menu.findItem(R.id.action_se6).setVisible(true);
+            if(!se7){menu.findItem(R.id.action_se7).setVisible(false);}else menu.findItem(R.id.action_se7).setVisible(true);
+            if(!se8){menu.findItem(R.id.action_se8).setVisible(false);}else menu.findItem(R.id.action_se8).setVisible(true);
+            if(!se9){menu.findItem(R.id.action_se9).setVisible(false);}else menu.findItem(R.id.action_se9).setVisible(true);
+            if(!se10){menu.findItem(R.id.action_se10).setVisible(false);}else menu.findItem(R.id.action_se10).setVisible(true);
+
+
+            adapterRecyclerMisMaterias.setListUserMateria(listUMLoad);
+            menu.findItem(R.id.action_arq_fr_mm).setChecked(true);
+
+        }
+
+        menu.findItem(R.id.action_seAll).setChecked(true);
 
         super.onPrepareOptionsMenu(menu);
     }
@@ -223,6 +382,21 @@ public class FragmentBaseMisMaterias extends Fragment {
             case R.id.action_telecom_fr_mm:{
                 item.setChecked(!item.isChecked());
                 pensumValidator=2;
+                getActivity().invalidateOptionsMenu();
+            }break;
+            case R.id.action_industrial_fr_mm:{
+                item.setChecked(!item.isChecked());
+                pensumValidator=3;
+                getActivity().invalidateOptionsMenu();
+            }break;
+            case R.id.action_civil_fr_mm:{
+                item.setChecked(!item.isChecked());
+                pensumValidator=4;
+                getActivity().invalidateOptionsMenu();
+            }break;
+            case R.id.action_arq_fr_mm:{
+                item.setChecked(!item.isChecked());
+                pensumValidator=5;
                 getActivity().invalidateOptionsMenu();
             }break;
             case R.id.action_seAll:{
@@ -325,6 +499,18 @@ public class FragmentBaseMisMaterias extends Fragment {
 
         rcListUserMateria.setSoundEffectsEnabled(true);
         rcListUserMateria.setAdapter(adapterRecyclerMisMaterias);
+
+
+        imgEmptyList=(ImageView)rootView.findViewById(R.id.imgEmptyList);
+        textEmptyList=(TextView)rootView.findViewById(R.id.textEmptyList);
+        if(listUserMateria.isEmpty()){
+            imgEmptyList.setVisibility(View.VISIBLE);textEmptyList.setVisibility(View.VISIBLE);
+            imgEmptyList.setImageResource(R.drawable.ic_materia_01);
+            imgEmptyList.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+            textEmptyList.setText("No hay Registro de Materias");
+            textEmptyList.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+        }
+
 
         return rootView; //super.onCreateView(inflater, container, savedInstanceState);
     }

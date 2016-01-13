@@ -3,15 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/bodyRelative"
-    android:clickable="true">
+    android:background="@drawable/row_fr_base_pensum_materia_bg"
+    android:layout_marginBottom="5dp"
+
+    >
 
 
     <TableLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
 
         <TableRow
             android:layout_width="match_parent"
@@ -26,32 +28,76 @@
                 android:visibility="gone"/>
 
             <ImageView
-                android:id="@+id/classImagenAlum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_pensum_01" />
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_pensum_01"
+                android:id="@+id/classImagenAlum" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/classTituAlum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0.87"
-                    android:gravity="left"
-                    android:padding="4dp"
-                    android:text="Ingenieria Sistemas"
-                    android:textSize="22sp"
-                    android:textColor="@color/colorTextPrimary" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Medium Text"
-                    android:id="@+id/classSubTituloAlum"/>
-            </LinearLayout>
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/classTituAlum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.87"
+                        android:gravity="left"
+                        android:padding="4dp"
+                        android:text="Ingenieria Sistemas"
+                        android:textSize="22sp"
+                        android:textColor="@color/colorTextPrimary" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Medium Text"
+                        android:id="@+id/classSubTituloAlum"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="Medium Text"
+                                android:id="@+id/classSeccionAlum"
+                                android:layout_marginRight="40dp" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/imgCheckServer"
+                                android:background="@drawable/tiny_icon_onclic_bg"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_panorama_fish_eye_black_48dp"
+                                android:layout_column="3" />
+                        </TableRow>
+                    </TableLayout>
+                </TableRow>
+            </TableLayout>
 
         </TableRow>
 

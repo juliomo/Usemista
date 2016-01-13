@@ -4,28 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-   <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:orientation="horizontal"
-        android:id="@+id/seccionCeroHead"
-        android:background="@drawable/fragment_base_00_bg">
-        <ImageView
-            android:id="@+id/seccionCeroImageView"
-            android:src="@drawable/ic_mode_edit_white_24dp"
-            android:padding="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Editor HV"
-            android:id="@+id/seccionCeroTitulo"
-            android:textColor="@color/colorWhite"
-            android:padding="5dp" />
-    </LinearLayout>
+
 
 
     <android.support.v4.widget.NestedScrollView
@@ -39,7 +18,7 @@
         android:layout_alignParentBottom="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:visibility="visible"
-        android:layout_below="@+id/seccionCeroHead">
+        android:layout_alignParentTop="true">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -47,7 +26,10 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
+            android:paddingLeft="20dp"
+            android:paddingTop="45dp"
+            android:paddingBottom="5dp"
+            android:background="@drawable/hv_add_01_bg">
 
             <TableRow
                 android:layout_width="match_parent"
@@ -59,7 +41,8 @@
                     android:layout_gravity="center"
                     android:src="@drawable/ic_materia_24dp_01"
                     android:id="@+id/imageViewIconMateria"
-                    android:layout_column="0" />
+                    android:layout_column="0"
+                    android:paddingRight="10dp" />
 
                 <Spinner
                     android:layout_width="fill_parent"
@@ -76,9 +59,6 @@
                     android:id="@+id/textNombMateria"
                     android:layout_column="2" />
             </TableRow>
-
-
-
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -96,7 +76,12 @@
         </TableLayout>
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/hv_add_03_bg">
 
             <TableRow
                 android:layout_width="match_parent"
@@ -107,7 +92,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/imageViewClock"
                     android:src="@drawable/ic_horario_gris_24dp"
-                    android:layout_column="0" />
+                    android:layout_column="0"
+                    android:paddingRight="10dp" />
 
                 <Switch
                     android:layout_width="wrap_content"
@@ -115,7 +101,8 @@
                     android:text="Lun"
                     android:id="@+id/switchLun"
                     android:layout_column="2"
-                    android:checked="false" />
+                    android:checked="false"
+                    android:paddingRight="5dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -124,7 +111,10 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="0:00 AM"
                     android:id="@+id/textViewLunIni"
-                    android:layout_column="3" />
+                    android:layout_column="3"
+                    android:paddingRight="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -133,7 +123,9 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text=" 0:00 AM"
                     android:id="@+id/textViewLunEnd"
-                    android:layout_column="4" />
+                    android:layout_column="4"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp" />
 
 
             </TableRow>
@@ -194,7 +186,8 @@
                     android:text="Mar"
                     android:id="@+id/switchMar"
                     android:layout_column="2"
-                    android:checked="false" />
+                    android:checked="false"
+                    android:paddingRight="5dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -203,7 +196,10 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="0:00 AM"
                     android:id="@+id/textViewMarIni"
-                    android:layout_column="3" />
+                    android:layout_column="3"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -212,7 +208,9 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text=" 0:00 AM"
                     android:id="@+id/textViewMarEnd"
-                    android:layout_column="4" />
+                    android:layout_column="4"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp" />
 
 
             </TableRow>
@@ -273,7 +271,8 @@
                     android:text="Mie"
                     android:id="@+id/switchMie"
                     android:layout_column="2"
-                    android:checked="false" />
+                    android:checked="false"
+                    android:paddingRight="5dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -282,16 +281,21 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="0:00 AM"
                     android:id="@+id/textViewMieIni"
-                    android:layout_column="3" />
+                    android:layout_column="3"
+                    android:paddingRight="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text=" 0:00 Am"
+                    android:text=" 0:00 AM"
                     android:id="@+id/textViewMieEnd"
-                    android:layout_column="4" />
+                    android:layout_column="4"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp" />
 
 
             </TableRow>
@@ -352,7 +356,8 @@
                     android:text="Jue"
                     android:id="@+id/switchJue"
                     android:layout_column="2"
-                    android:checked="false" />
+                    android:checked="false"
+                    android:paddingRight="5dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -361,7 +366,10 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="0:00 AM"
                     android:id="@+id/textViewJueIni"
-                    android:layout_column="3" />
+                    android:layout_column="3"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -370,7 +378,9 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text=" 0:00 AM"
                     android:id="@+id/textViewJueEnd"
-                    android:layout_column="4" />
+                    android:layout_column="4"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp" />
 
 
             </TableRow>
@@ -431,7 +441,8 @@
                     android:text="Vie"
                     android:id="@+id/switchVie"
                     android:layout_column="2"
-                    android:checked="false" />
+                    android:checked="false"
+                    android:paddingRight="5dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -440,7 +451,10 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="0:00 AM"
                     android:id="@+id/textViewVieIni"
-                    android:layout_column="3" />
+                    android:layout_column="3"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -449,7 +463,9 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text=" 0:00 AM"
                     android:id="@+id/textViewVieEnd"
-                    android:layout_column="4" />
+                    android:layout_column="4"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp" />
 
 
             </TableRow>
@@ -500,9 +516,15 @@
                     android:layout_column="4" />
             </TableRow>
         </TableLayout>
+
             <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/hv_add_03_bg">
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -511,7 +533,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_event_busy_black_24dp"
-                        android:id="@+id/imageViewCalendar" />
+                        android:id="@+id/imageViewCalendar"
+                        android:paddingRight="10dp" />
                     <Switch
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -553,10 +576,16 @@
                 </TableRow>
 
             </TableLayout>
+
             <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="80dp">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingLeft="20dp"
+                android:background="@drawable/hv_add_04_bg"
+                android:layout_marginTop="10dp">
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -565,7 +594,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_check_circle_black_36dp"
-                    android:id="@+id/imageViewColorPalette" />
+                    android:id="@+id/imageViewColorPalette"
+                    android:layout_gravity="center"
+                    android:paddingRight="10dp" />
 
                 <Button
                     style="?android:attr/buttonStyleSmall"
@@ -580,6 +611,29 @@
             </TableLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:orientation="horizontal"
+        android:id="@+id/seccionCeroHead"
+        android:background="@drawable/fragment_base_00_bg">
+        <ImageView
+            android:id="@+id/seccionCeroImageView"
+            android:src="@drawable/ic_mode_edit_white_24dp"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Editor HV"
+            android:id="@+id/seccionCeroTitulo"
+            android:textColor="@color/colorWhite"
+            android:padding="5dp" />
+    </LinearLayout>
 
 
 </RelativeLayout>

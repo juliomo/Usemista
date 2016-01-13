@@ -140,7 +140,7 @@ public class NewProfAlumClassDialog extends DialogFragment{
         spinnerMaCod=(Spinner)view.findViewById(R.id.spinnerMaCod);
         spinnerSeccion=(Spinner)view.findViewById(R.id.spinnerMaSec);
 
-        int auxConteo=0; boolean flgSis=false, flgTelc=false;
+        int auxConteo=0; boolean flgSis=false, flgTelc=false, flgInd=false,flgCiv=false, flgArq=false;
         for(int i=0;i<listUserMateria.size();i++){
             if(listUserMateria.get(i).getModulo().equals("ingSis") && !flgSis){
                 catModulo.add("Sistema"); flgSis=true; auxConteo++;
@@ -148,7 +148,16 @@ public class NewProfAlumClassDialog extends DialogFragment{
             else if(listUserMateria.get(i).getModulo().equals("telecom") && !flgTelc){
                 catModulo.add("Telecom"); flgTelc=true; auxConteo++;
             }
-            else if(auxConteo==2 && flgSis && flgTelc){
+            else if(listUserMateria.get(i).getModulo().equals("ingInd") && !flgInd){
+                catModulo.add("Industrial"); flgInd=true; auxConteo++;
+            }
+            else if(listUserMateria.get(i).getModulo().equals("ingCiv") && !flgCiv){
+                catModulo.add("Civil"); flgCiv=true; auxConteo++;
+            }
+            else if(listUserMateria.get(i).getModulo().equals("arq") && !flgArq){
+                catModulo.add("Arquitectura"); flgArq=true; auxConteo++;
+            }
+            else if(auxConteo==5 && flgSis && flgTelc && flgInd && flgCiv && flgArq){
                 i=listUserMateria.size();
             }
         }
@@ -162,10 +171,17 @@ public class NewProfAlumClassDialog extends DialogFragment{
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 posSpinModulo = position;
 
-                if (position == 0) {
+
+                if (catModulo.get(position).equals("Sistema")) {
                     setCurrentListMateria("ingSis");
-                } else if (position == 1) {
+                } else if (catModulo.get(position).equals("Telecom")) {
                     setCurrentListMateria("telecom");
+                }else if (catModulo.get(position).equals("Industrial")) {
+                    setCurrentListMateria("ingInd");
+                }else if (catModulo.get(position).equals("Civil")) {
+                    setCurrentListMateria("ingCiv");
+                }else if (catModulo.get(position).equals("Arquitectura")) {
+                    setCurrentListMateria("arq");
                 }
 
             }
@@ -176,8 +192,41 @@ public class NewProfAlumClassDialog extends DialogFragment{
             }
         });
 
-        if(listUserMateria.get(0).getModulo().equals("ingSis")){ spinnerModulo.setSelection(0);posSpinModulo=0;}
-        else if(listUserMateria.get(0).getModulo().equals("telecom")){ spinnerModulo.setSelection(1);posSpinModulo=1;}
+        if(listUserMateria.get(0).getModulo().equals("ingSis")){
+            for(int i = 0; i<catModulo.size();i++){
+                if(catModulo.get(i).equals("Sistema")){
+                    spinnerModulo.setSelection(i);posSpinModulo=i;
+                }
+            }
+        }
+        else if(listUserMateria.get(0).getModulo().equals("telecom")){
+            for(int i = 0; i<catModulo.size();i++){
+                if(catModulo.get(i).equals("Telecom")){
+                    spinnerModulo.setSelection(i);posSpinModulo=i;
+                }
+            }
+        }
+        else if(listUserMateria.get(0).getModulo().equals("ingInd")){
+            for(int i = 0; i<catModulo.size();i++){
+                if(catModulo.get(i).equals("Industrial")){
+                    spinnerModulo.setSelection(i);posSpinModulo=i;
+                }
+            }
+        }
+        else if(listUserMateria.get(0).getModulo().equals("ingCiv")){
+            for(int i = 0; i<catModulo.size();i++){
+                if(catModulo.get(i).equals("Civil")){
+                    spinnerModulo.setSelection(i);posSpinModulo=i;
+                }
+            }
+        }
+        else if(listUserMateria.get(0).getModulo().equals("arq")){
+            for(int i = 0; i<catModulo.size();i++){
+                if(catModulo.get(i).equals("Arquitectura")){
+                    spinnerModulo.setSelection(i);posSpinModulo=i;
+                }
+            }
+        }
 
         spinAdapMaCod=new ArrayAdapter<>(getContext(),R.layout.support_simple_spinner_dropdown_item, catMaCod);
         spinAdapMaCod.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -259,8 +308,12 @@ public class NewProfAlumClassDialog extends DialogFragment{
 
         String codAcces=editTextCodAcce.getText().toString();
         String maModulo="";
-        if(posSpinModulo==0){ maModulo="ingSis";}
-        else if(posSpinModulo==1){maModulo="telecom";}
+        if(catModulo.get(posSpinModulo).equals("Sistema")){ maModulo="ingSis";}
+        else if(catModulo.get(posSpinModulo).equals("Telecom")){maModulo="telecom";}
+        else if(catModulo.get(posSpinModulo).equals("Industrial")){maModulo="ingInd";}
+        else if(catModulo.get(posSpinModulo).equals("Civil")){maModulo="ingCiv";}
+        else if(catModulo.get(posSpinModulo).equals("Arquitectura")){maModulo="arq";}
+
         String maCod=listUserMaCurrent.get(posSpinMaCod).getCod();
         String maSec=catSeccion.get(posSpinSeccion);
 
@@ -369,8 +422,11 @@ public class NewProfAlumClassDialog extends DialogFragment{
 
         String codAcces=editTextCodAcce.getText().toString();
         String maModulo="";
-        if(posSpinModulo==0){ maModulo="ingSis";}
-        else if(posSpinModulo==1){maModulo="telecom";}
+        if(catModulo.get(posSpinModulo).equals("Sistema")){ maModulo="ingSis";}
+        else if(catModulo.get(posSpinModulo).equals("Telecom")){maModulo="telecom";}
+        else if(catModulo.get(posSpinModulo).equals("Industrial")){maModulo="ingInd";}
+        else if(catModulo.get(posSpinModulo).equals("Civil")){maModulo="ingCiv";}
+        else if(catModulo.get(posSpinModulo).equals("Arquitectura")){maModulo="arq";}
         String maCod=listUserMaCurrent.get(posSpinMaCod).getCod();
         String maSec=catSeccion.get(posSpinSeccion);
         String alc_regist="0";

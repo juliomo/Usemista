@@ -96,10 +96,35 @@ public class FragmentBaseSemestreSelector extends Fragment {
 
 
         View rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
+        String auxTypePensum="", auxTittle="";
+        int auxImgCarrera=0;
 
-        ////////////// Cambio del Fragmento Mediante SELECCION DE PENSUM///////////////////////
-        ///El argumento == 100 indica Pensum de sistema/////////
         if(getArguments().getInt(ARG_NUMERO_SECCION)==100) {
+            auxTypePensum=UrlEndPoint.URL_SIS;
+            auxTittle="Sistema";
+            auxImgCarrera=R.drawable.ic_gear_white_24dp_01;
+        }
+        else if(getArguments().getInt(ARG_NUMERO_SECCION)==200) {
+            auxTypePensum=UrlEndPoint.URL_TELECOM;
+            auxTittle="Telecom";
+            auxImgCarrera=R.drawable.ic_telecom_white_24dp_01;
+        }
+        else if(getArguments().getInt(ARG_NUMERO_SECCION)==300) {
+            auxTypePensum=UrlEndPoint.URL_INDUSTRIAL;
+            auxTittle="Industrial";
+            auxImgCarrera=R.drawable.ic_industrial_01_white_24dp;
+        }
+        else if(getArguments().getInt(ARG_NUMERO_SECCION)==400) {
+            auxTypePensum=UrlEndPoint.URL_CIVIL;
+            auxTittle="Civil";
+            auxImgCarrera=R.drawable.ic_civil_01_white_24dp;
+        }
+        else if(getArguments().getInt(ARG_NUMERO_SECCION)==500) {
+            auxTypePensum=UrlEndPoint.URL_ARQ;
+            auxTittle="Arquitectura";
+            auxImgCarrera=R.drawable.ic_arq_01_white_24dp;
+        }
+
 
             rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
 
@@ -107,14 +132,14 @@ public class FragmentBaseSemestreSelector extends Fragment {
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getActivity().dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_BACK));
+                    getActivity().dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK));
                 }
             });
 
             ImageView imageViewIcon= (ImageView)rootView.findViewById(R.id.seccionCeroImageView);
-            imageViewIcon.setImageResource(R.drawable.ic_gear_white_24dp_01);
+            imageViewIcon.setImageResource(auxImgCarrera);
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
-            textViewTituloFragment.setText("Sistemas");
+            textViewTituloFragment.setText(auxTittle);
 
             recyclerViewListSemestre=(RecyclerView)rootView.findViewById(R.id.recycleView);
             recyclerViewListSemestre.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -127,48 +152,7 @@ public class FragmentBaseSemestreSelector extends Fragment {
             recyclerViewListSemestre.setAdapter(adapterRecyclerSemestre);
 
 
-            textViewVolleyError=(TextView)rootView.findViewById(R.id.textVolleyError);
 
-
-
-            if(savedInstanceState!=null){
-
-                listMateria=savedInstanceState.getParcelableArrayList(STATE_MATERIA);
-                adapterRecyclerSemestre.setListMateria(listMateria);
-
-            }else{
-
-                listMateria= MiAplicativo.getWritableDatabase().getAllMateriaPensumIndividual(UrlEndPoint.URL_SIS);
-                if(listMateria.isEmpty()){
-                    enviarPeticionJson(UrlEndPoint.URL_SIS);}
-            }
-                adapterRecyclerSemestre.setListMateria(listMateria);
-        }
-        ///El argumento == 200 indica Pensum de Telecom/////////
-        if(getArguments().getInt(ARG_NUMERO_SECCION)==200) {
-
-            rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
-
-
-
-            ImageView imageViewIcon= (ImageView)rootView.findViewById(R.id.seccionCeroImageView);
-            imageViewIcon.setImageResource(R.drawable.ic_gear_white_24dp_01);
-            TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
-            textViewTituloFragment.setText("Telecom");
-
-            recyclerViewListSemestre=(RecyclerView)rootView.findViewById(R.id.recycleView);
-            recyclerViewListSemestre.setLayoutManager(new LinearLayoutManager(getContext()));
-            adapterRecyclerSemestre=new AdapterRecyclerSemestre(getContext());
-            adapterRecyclerSemestre.setClickListener(getContext(),clickCallBack);
-
-
-            OffsetDecorationRC offsetDecorationRC=
-                    new OffsetDecorationRC(75,35,getContext().getResources().getDisplayMetrics().density);
-            recyclerViewListSemestre.addItemDecoration(offsetDecorationRC);
-            recyclerViewListSemestre.setAdapter(adapterRecyclerSemestre);
-
-
-            textViewVolleyError=(TextView)rootView.findViewById(R.id.textVolleyError);
 
 
 
@@ -179,12 +163,15 @@ public class FragmentBaseSemestreSelector extends Fragment {
 
             }else{
 
-                listMateria= MiAplicativo.getWritableDatabase().getAllMateriaPensumIndividual(UrlEndPoint.URL_TELECOM);
+                listMateria= MiAplicativo.getWritableDatabase().getAllMateriaPensumIndividual(auxTypePensum);
                 if(listMateria.isEmpty()){
-                    enviarPeticionJson(UrlEndPoint.URL_TELECOM);}
+                    enviarPeticionJson(auxTypePensum);}
             }
-            adapterRecyclerSemestre.setListMateria(listMateria);
-        }
+                adapterRecyclerSemestre.setListMateria(listMateria);
+
+
+
+
 
         return rootView;
     }
@@ -231,7 +218,7 @@ public class FragmentBaseSemestreSelector extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        textViewVolleyError.setVisibility(View.GONE);
+
                         listMateria=parseJsonResponse(response);
                         MiAplicativo.getWritableDatabase().insertMateriaPensumIndividual(listMateria, ma_modulo, true);//IMPORTANTE
                         adapterRecyclerSemestre.setListMateria(listMateria);
@@ -243,25 +230,25 @@ public class FragmentBaseSemestreSelector extends Fragment {
 
                 String auxError="";
                 if (error instanceof TimeoutError || error instanceof NoConnectionError){
-                    textViewVolleyError.setText(R.string.error_timeOut);
+
                     auxError=getString( R.string.error_timeOut);
                 }else if(error instanceof AuthFailureError){
-                    textViewVolleyError.setText(R.string.error_AuthFail);
+
                     auxError=getString( R.string.error_AuthFail);
                 }else if (error instanceof ServerError){
-                    textViewVolleyError.setText(R.string.error_Server);
+
                     auxError=getString( R.string.error_Server);
                 }else if (error instanceof NetworkError){
-                    textViewVolleyError.setText(R.string.error_NetWork);
+
                     auxError=getString( R.string.error_NetWork);
                 }else if (error instanceof ParseError){
-                    textViewVolleyError.setText(R.string.error_Parse);
+
                     auxError=getString( R.string.error_NetWork);
                 }
 
               //  textViewVolleyError.setVisibility(View.VISIBLE);
                 AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                alertDialog.setTitle("Notify Info");
+                alertDialog.setTitle("Error en la Nube");
                 alertDialog.setMessage("Error: " + auxError + "\n\n"
                         + "Reintentar Conexion?");
                 alertDialog.setCancelable(false);

@@ -1,12 +1,15 @@
 package com.usm.jyd.usemista.fragments;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,11 +21,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
+import com.thefinestartist.finestwebview.FinestWebView;
 import com.usm.jyd.usemista.R;
 
 import com.usm.jyd.usemista.adapters.AdapterRecyclerHorarioV;
@@ -32,6 +39,7 @@ import com.usm.jyd.usemista.adapters.AdapterViewPagerMisMaterias;
 import com.usm.jyd.usemista.adapters.AdapterViewPagerSeccionUno;
 import com.usm.jyd.usemista.adapters.SimpleSectionedRecyclerViewAdapter;
 import com.usm.jyd.usemista.aplicativo.MiAplicativo;
+import com.usm.jyd.usemista.dialogs.GuiaUsuario;
 import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.network.VolleySingleton;
 import com.usm.jyd.usemista.objects.HorarioVirtual;
@@ -93,6 +101,11 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     private ArrayList<Materia> listMateria = new ArrayList<>();
 
 
+    //Empty Handle
+    private ImageView imgEmptyList;
+    private TextView textEmptyList;
+
+
 
     /**
      * Use this factory method to create a new instance of
@@ -131,6 +144,17 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(getArguments().getInt(ARG_NUMERO_SECCION)==0) {
+            String auxGuiaUsuario = "";
+            auxGuiaUsuario = MiAplicativo.getWritableDatabase().getUserGuia("menu");
+            if (auxGuiaUsuario.equals("0")) {
+                GuiaUsuario guiaUsuario = new GuiaUsuario();
+                guiaUsuario.setGuiaUsuario("menu");
+                guiaUsuario.show(getChildFragmentManager(),"Dialog");
+            }
+
+        }
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_NUMERO_SECCION);
         }
@@ -140,6 +164,17 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         requestQueue=volleySingleton.getRequestQueue();
 
         if(getArguments().getInt(ARG_NUMERO_SECCION)==12) {
+
+
+
+            String auxGuiaUsuario = "";
+            auxGuiaUsuario = MiAplicativo.getWritableDatabase().getUserGuia("hv");
+            if (auxGuiaUsuario.equals("0")) {
+                GuiaUsuario guiaUsuario = new GuiaUsuario();
+                guiaUsuario.setGuiaUsuario("hv");
+                guiaUsuario.show(getChildFragmentManager(),"Dialog");
+            }
+
           ArrayList<Materia>  listUserMateriaAUX = MiAplicativo.getWritableDatabase().getAllUserMateria();
             for(int i=0;i<listUserMateriaAUX.size();i++){
                 if(listUserMateriaAUX.get(i).getU_materia().equals("1")){
@@ -147,6 +182,8 @@ public class FragmentBase extends android.support.v4.app.Fragment {
                 }
             }
             listHV=MiAplicativo.getWritableDatabase().getAllHorarioVirtual();
+
+
         }
         setHasOptionsMenu(true);
 
@@ -160,22 +197,38 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             menu.findItem(R.id.action_pensum).setVisible(true);
 
             if(!listUserMateria.isEmpty()) {
-                boolean sis = false, telc = false;
+                boolean sis = false, telc = false, ind=false,civ=false,arq=false;
                 for (int i = 0; i < listUserMateria.size(); i++) {
                     if (listUserMateria.get(i).getModulo().equals("ingSis")) {
                         sis = true;
                     } else if (listUserMateria.get(i).getModulo().equals("telecom")) {
                         telc = true;
+                    }else if (listUserMateria.get(i).getModulo().equals("ingInd")) {
+                        ind = true;
+                    }else if (listUserMateria.get(i).getModulo().equals("ingCiv")) {
+                        civ = true;
+                    }else if (listUserMateria.get(i).getModulo().equals("arq")) {
+                        arq = true;
                     }
                 }
 
                 if(!sis){menu.findItem(R.id.action_sis).setVisible(false);}
                 if(!telc){menu.findItem(R.id.action_telc).setVisible(false);}
+                if(!ind){menu.findItem(R.id.action_ind).setVisible(false);}
+                if(!civ){menu.findItem(R.id.action_civ).setVisible(false);}
+                if(!arq){menu.findItem(R.id.action_arq).setVisible(false);}
+
 
                 if (listUserMateria.get(0).getModulo().equals("ingSis")) {
                     menu.findItem(R.id.action_sis).setChecked(true);
                 } else if (listUserMateria.get(0).getModulo().equals("telecom")) {
                     menu.findItem(R.id.action_telc).setChecked(true);
+                } else if (listUserMateria.get(0).getModulo().equals("ingInd")) {
+                    menu.findItem(R.id.action_ind).setChecked(true);
+                } else if (listUserMateria.get(0).getModulo().equals("ingCiv")) {
+                    menu.findItem(R.id.action_civ).setChecked(true);
+                } else if (listUserMateria.get(0).getModulo().equals("arq")) {
+                    menu.findItem(R.id.action_arq).setChecked(true);
                 }
 
             }
@@ -238,7 +291,72 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             adapterRecyclerHorarioV.setListHorarioV(listHVLoad);
 
         }
+        if (id == R.id.action_ind){
+            item.setChecked(!item.isChecked());
+            listUMLoad = new ArrayList<>();
+            listHVLoad = new ArrayList<>();
 
+            for (int i = 0; i < listUserMateria.size(); i++) {
+                if(listUserMateria.get(i).getModulo().equals("ingInd")){
+                    listUMLoad.add(listUserMateria.get(i));
+                }
+            }
+
+            for(int i=0; i<listUMLoad.size();i++){
+                for(int j=0;j<listHV.size();j++){
+                    if(listUMLoad.get(i).getCod().equals(listHV.get(j).getCod())){
+                        listHVLoad.add(listHV.get(j));
+                    }
+                }
+            }
+
+            adapterRecyclerHorarioV.setListHorarioV(listHVLoad);
+
+        }
+        if (id == R.id.action_civ){
+            item.setChecked(!item.isChecked());
+            listUMLoad = new ArrayList<>();
+            listHVLoad = new ArrayList<>();
+
+            for (int i = 0; i < listUserMateria.size(); i++) {
+                if(listUserMateria.get(i).getModulo().equals("ingCiv")){
+                    listUMLoad.add(listUserMateria.get(i));
+                }
+            }
+
+            for(int i=0; i<listUMLoad.size();i++){
+                for(int j=0;j<listHV.size();j++){
+                    if(listUMLoad.get(i).getCod().equals(listHV.get(j).getCod())){
+                        listHVLoad.add(listHV.get(j));
+                    }
+                }
+            }
+
+            adapterRecyclerHorarioV.setListHorarioV(listHVLoad);
+
+        }
+        if (id == R.id.action_arq){
+            item.setChecked(!item.isChecked());
+            listUMLoad = new ArrayList<>();
+            listHVLoad = new ArrayList<>();
+
+            for (int i = 0; i < listUserMateria.size(); i++) {
+                if(listUserMateria.get(i).getModulo().equals("arq")){
+                    listUMLoad.add(listUserMateria.get(i));
+                }
+            }
+
+            for(int i=0; i<listUMLoad.size();i++){
+                for(int j=0;j<listHV.size();j++){
+                    if(listUMLoad.get(i).getCod().equals(listHV.get(j).getCod())){
+                        listHVLoad.add(listHV.get(j));
+                    }
+                }
+            }
+
+            adapterRecyclerHorarioV.setListHorarioV(listHVLoad);
+
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -256,7 +374,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             ImageView imageViewIcon= (ImageView)rootView.findViewById(R.id.seccionCeroImageView);
             imageViewIcon.setImageResource(R.drawable.ic_home_white_24dp);
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
-            textViewTituloFragment.setText("Home");
+            textViewTituloFragment.setText(getContext().getResources().getString(R.string.tittle_fr_base_1));
             rcListMenu=(RecyclerView) rootView.findViewById(R.id.recycleView);
             NavMenuCallPrincipal();
 
@@ -264,10 +382,53 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         }
         ///El argumento == 1 indica TEST/////////
         if(getArguments().getInt(ARG_NUMERO_SECCION)==1) {
-            rootView = inflater.inflate(R.layout.fragment_base_01, container, false);
-            viewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
-            tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
-            NavMenuCallTest();//simple funcion Void para aligerar a la vista
+           final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+
+            rootView = inflater.inflate(R.layout.fragment_base_02, container, false);
+            WebView webView=(WebView)rootView.findViewById(R.id.webView);
+
+            webView.getSettings().setDomStorageEnabled(true);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+            webView.getSettings().setSupportMultipleWindows(true);
+            webView.getSettings().setSupportZoom(true);
+           webView.setVerticalScrollBarEnabled(false);
+            webView.setHorizontalScrollBarEnabled(false);
+
+           // webView.setWebChromeClient(new WebChromeClient());
+
+            webView.setWebViewClient(new WebViewClient(){
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    view.loadUrl(url);
+                    return true;
+                }
+
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    progressDialog.dismiss();
+                }
+
+                @Override
+                public void onPageStarted(WebView view, String url,Bitmap favicon) {
+                    // TODO Auto-generated method stub
+                    super.onPageStarted(view, url, favicon);
+                   progressDialog.setMessage("Loading ...");
+                    progressDialog.setCancelable(false);
+                    progressDialog.setCanceledOnTouchOutside(false);
+                    progressDialog.show();
+                }
+            });
+
+
+            webView.loadUrl("http://www.usm.edu.ve/web");
+
+
+          //  viewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
+          //  tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
+
+           // NavMenuCallTest();//simple funcion Void para aligerar a la vista
         }
         /////////////////////////////////FIN DEL TRAMO NAVIGATION VIEW/////////////////////////
 
@@ -302,11 +463,12 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             //link tab & viewpager object
             tabLayout.setupWithViewPager(viewPager);
 
-            tabLayout.getTabAt(0).setIcon(R.drawable.ic_book_white_24dp);
-            tabLayout.getTabAt(1).setIcon(R.drawable.ic_school_white_24dp);
+            tabLayout.getTabAt(0).setIcon(R.drawable.ic_materia_white_24dp);
+          //  tabLayout.getTabAt(0).setText("Materias");
+            tabLayout.getTabAt(1).setIcon(R.drawable.ic_insert_invitation_white_24dp);
+
            // tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
            // tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-
 
 
             viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -336,8 +498,24 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             }
 
 
+
             rootView = inflater.inflate(R.layout.fragment_base_00, container,false);
 
+
+            imgEmptyList=(ImageView)rootView.findViewById(R.id.imgEmptyList);
+            textEmptyList=(TextView)rootView.findViewById(R.id.textEmptyList);
+            if(listHV.isEmpty()){
+                imgEmptyList.setVisibility(View.VISIBLE);textEmptyList.setVisibility(View.VISIBLE);
+                imgEmptyList.setImageResource(R.drawable.ic_horario_01);
+                imgEmptyList.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+                textEmptyList.setText(getContext().getResources().getString(R.string.hv_emty));
+                textEmptyList.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+            }
+
+
+            ImageView imgIcon=(ImageView)rootView.findViewById(R.id.seccionCeroImageView);
+            imgIcon.setImageResource(R.drawable.ic_horario_gris_24dp);
+            imgIcon.setColorFilter(0xffffffff);
             TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
             textViewTituloFragment.setText("HV");
 
@@ -350,9 +528,9 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             adapterRecyclerHorarioV.setListHorarioV(listHVLoad);
 
             //Agrega Espacio al final del RC
-            OffsetDecorationRC offsetDecorationRC =
+          /*  OffsetDecorationRC offsetDecorationRC =
                     new OffsetDecorationRC(75,35,getContext().getResources().getDisplayMetrics().density);
-            rcListHorarioVirtual.addItemDecoration(offsetDecorationRC);
+            rcListHorarioVirtual.addItemDecoration(offsetDecorationRC);*/
 
             rcListHorarioVirtual.setSoundEffectsEnabled(true);
             rcListHorarioVirtual.setAdapter(adapterRecyclerHorarioV);
@@ -380,6 +558,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     public void NavMenuCallPrincipal(){
         GridLayoutManager manager = new GridLayoutManager(getActivity(),
                 2,GridLayoutManager.VERTICAL,false);
+
         rcListMenu.setLayoutManager(manager);
         adapterRecyclerMenu= new AdapterRecyclerMenu(getContext());
         adapterRecyclerMenu.setClickListener(getContext(), clickCallBack);
@@ -420,7 +599,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
                 new ArrayList<SimpleSectionedRecyclerViewAdapter.Section>();
 
         //Secciones de pensum
-        sections.add(new SimpleSectionedRecyclerViewAdapter.Section(0, "Ingenieria y Arquitectura"));
+        sections.add(new SimpleSectionedRecyclerViewAdapter.Section(0, getContext().getResources().getString(R.string.tittle_pp)));
         // sections.add(new SimpleSectionedRecyclerViewAdapter.Section(5, "Farmacia"));
 
         //Combinamos nuestro adaptador con el Adap seccionador :DDDD  listPensums.setAdapter(lerSeccionCero);
@@ -490,6 +669,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
             }
 
         }
+
     }
 
     //CLass DECORADOR PARA LINEAR RC ESPACIO AL FINAL

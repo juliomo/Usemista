@@ -34,15 +34,19 @@ tools:context="com.usm.jyd.usemista.acts.ActApertura">
                <TextView
                    android:id="@+id/textEST"
                    android:gravity="center"
+                   android:padding="5dp"
+                   android:textSize="18sp"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:text="Estudiante"/>
+                   android:text="@string/text_launch_alumn"/>
                <TextView
                    android:id="@+id/textPROF"
+                   android:textSize="18sp"
+                   android:padding="5dp"
                    android:gravity="center"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:text="Profesor"/>
+                   android:text="@string/text_launch_prof"/>
            </TableRow>
 
            <TableRow android:gravity="center" >

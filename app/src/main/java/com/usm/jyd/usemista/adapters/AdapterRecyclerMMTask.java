@@ -1,19 +1,25 @@
 package com.usm.jyd.usemista.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.usm.jyd.usemista.R;
+import com.usm.jyd.usemista.acts.ActBase;
 import com.usm.jyd.usemista.aplicativo.MiAplicativo;
 import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.fragments.FragmentBaseMMTask;
@@ -41,6 +47,8 @@ public class AdapterRecyclerMMTask extends RecyclerView.Adapter<AdapterRecyclerM
     private Context context;
     private ClickCallBack clickCallBack;
     private FragmentBaseMMTask fragmentBaseMMTask;
+
+    private boolean onBindCheckCmplt;
 
 
 
@@ -128,6 +136,16 @@ public class AdapterRecyclerMMTask extends RecyclerView.Adapter<AdapterRecyclerM
         notifyItemChanged(position);
     }
 
+    public void setCmplt(int position, String estado, int nota){
+        MiAplicativo.getWritableDatabase()
+                .updateCmpltUserTask(estado, nota,
+                        listUserTask.get(position).getId());
+
+        listUserTask.get(position).setCmplt(estado);
+        listUserTask.get(position).setNota(nota);
+        notifyItemChanged(position);
+       // notifyDataSetChanged();
+    }
 
     @Override
     public RMMTViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -143,6 +161,21 @@ public class AdapterRecyclerMMTask extends RecyclerView.Adapter<AdapterRecyclerM
             validatorVHListMateriaUpdate=false;
             holder.setListUserMateriaUpdate(listUserMateria);
         }
+        holder.icMtNor.setColorFilter(ContextCompat.getColor(context,R.color.ut_examen_color));
+        holder.icMtEdit.setColorFilter(ContextCompat.getColor(context,R.color.ut_examen_color));
+        holder.icTypeActNor.setColorFilter(ContextCompat.getColor(context,R.color.ut_examen_color));
+        holder.icTypeActEdit.setColorFilter(ContextCompat.getColor(context,R.color.ut_examen_color));
+        holder.icSalonNor.setColorFilter(ContextCompat.getColor(context,R.color.ut_examen_color));
+        holder.icSalonEd.setColorFilter(ContextCompat.getColor(context,R.color.ut_examen_color));
+        holder.icDayTimeNor.setColorFilter(ContextCompat.getColor(context,R.color.ut_examen_color));
+        holder.icClock.setColorFilter(ContextCompat.getColor(context,R.color.ut_examen_color));
+        holder.icComplete.setColorFilter(ContextCompat.getColor(context,R.color.ut_examen_color));
+
+   /*     holder.icActSave.setColorFilter(ContextCompat.getColor(context,R.color.ut_examen_color));
+        holder.icActEdit.setColorFilter(ContextCompat.getColor(context,R.color.ut_examen_color));
+        holder.icActDelete.setColorFilter(ContextCompat.getColor(context,R.color.ut_examen_color));*/
+
+
 
         if(listState.get(position)==2){
             holder.icActSave.setVisibility(View.GONE);
@@ -165,6 +198,11 @@ public class AdapterRecyclerMMTask extends RecyclerView.Adapter<AdapterRecyclerM
             holder.icComplete.setVisibility(View.VISIBLE);
             holder.checkBoxcmplt.setVisibility(View.VISIBLE);holder.textNota.setVisibility(View.VISIBLE);
 
+            //Background
+            holder.textClockIni.setBackgroundColor(ContextCompat.getColor(context, R.color.coloGrisClaro));
+            holder.textClockIni.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
+            holder.textDayTime.setBackgroundColor(ContextCompat.getColor(context, R.color.coloGrisClaro));
+            holder.textDayTime.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
 
             //Contenido
             UserTask currentTask;
@@ -177,6 +215,7 @@ public class AdapterRecyclerMMTask extends RecyclerView.Adapter<AdapterRecyclerM
             holder.textClockIni.setText(currentTask.getHrIniToText());
             holder.textClockEnd.setText(currentTask.getHrEndToText());
 
+            onBindCheckCmplt=true;
             if(currentTask.getCmplt().equals("0")){
                 holder.checkBoxcmplt.setChecked(false);
                 holder.textNota.setText("  Nota");
@@ -185,6 +224,7 @@ public class AdapterRecyclerMMTask extends RecyclerView.Adapter<AdapterRecyclerM
                 holder.checkBoxcmplt.setChecked(true);
                 holder.textNota.setText("  Nota: "+currentTask.getNota());
             }
+            onBindCheckCmplt=false;
 
 
 
@@ -209,6 +249,13 @@ public class AdapterRecyclerMMTask extends RecyclerView.Adapter<AdapterRecyclerM
             holder.icComplete.setVisibility(View.GONE);
             holder.checkBoxcmplt.setVisibility(View.GONE);
             holder.textNota.setVisibility(View.GONE);
+
+
+            //Background
+            holder.textClockIni.setBackgroundResource(R.drawable.ut_row_clock);
+            holder.textClockIni.setTextColor(ContextCompat.getColor(context, R.color.colorWhite));
+            holder.textDayTime.setBackgroundResource(R.drawable.ut_row_clock);
+            holder.textDayTime.setTextColor(ContextCompat.getColor(context, R.color.colorWhite));
 
             //Contenido
             UserTask currentTask;
@@ -258,6 +305,12 @@ public class AdapterRecyclerMMTask extends RecyclerView.Adapter<AdapterRecyclerM
             holder.icComplete.setVisibility(View.GONE);
             holder.checkBoxcmplt.setVisibility(View.GONE);holder.textNota.setVisibility(View.GONE);
 
+
+            //Background
+            holder.textClockIni.setBackgroundResource(R.drawable.ut_row_clock);
+            holder.textClockIni.setTextColor(ContextCompat.getColor(context, R.color.colorWhite));
+            holder.textDayTime.setBackgroundResource(R.drawable.ut_row_clock);
+            holder.textDayTime.setTextColor(ContextCompat.getColor(context, R.color.colorWhite));
 
             //Contenido
             UserTask currentTask;
@@ -358,6 +411,8 @@ public class AdapterRecyclerMMTask extends RecyclerView.Adapter<AdapterRecyclerM
 
                 }
             });
+
+
         }
 
 
@@ -475,6 +530,80 @@ public class AdapterRecyclerMMTask extends RecyclerView.Adapter<AdapterRecyclerM
             checkBoxcmplt=(CheckBox)itemView.findViewById(R.id.checkBoxCmplt);
             textNota=(TextView)itemView.findViewById(R.id.textNota);
 
+            checkBoxcmplt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(!onBindCheckCmplt) {
+                        if (isChecked) {
+
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+                            LayoutInflater inflater;
+                            TextView textNomb, textCIoProfCod;
+                            final EditText editTextNomb, editTextCIoProfCod;
+                            ImageView imgCurrentType;
+
+                            inflater = ((ActBase) context).getLayoutInflater();
+                            View view = inflater.inflate(R.layout.dialog_user_regi, null);
+
+                            textNomb = (TextView) view.findViewById(R.id.textNomb);
+                            textCIoProfCod = (TextView) view.findViewById(R.id.textCIoProfCod);
+                            editTextNomb = (EditText) view.findViewById(R.id.editTextNomb);
+                            editTextCIoProfCod = (EditText) view.findViewById(R.id.editTextCIoProfCod);
+                            imgCurrentType = (ImageView) view.findViewById(R.id.imgCurrentType);
+
+                            textNomb.setVisibility(View.GONE);
+                            editTextNomb.setVisibility(View.GONE);
+
+
+                            imgCurrentType.setImageResource(R.drawable.ic_estudiante_launch);
+                            textCIoProfCod.setText("Nota");
+                            editTextCIoProfCod.setInputType(InputType.TYPE_CLASS_NUMBER);
+                            editTextCIoProfCod.setText("");
+
+
+                            imgCurrentType.setColorFilter(ContextCompat.getColor(context, R.color.colorPrimary));
+
+                            builder.setView(view)
+                                    .setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            String auxNtSTR = "";
+                                            int auxNota = 0;
+                                            auxNtSTR = editTextCIoProfCod.getText().toString();
+
+                                            if (!auxNtSTR.equals(""))
+                                                auxNota = Integer.parseInt(auxNtSTR);
+
+                                            if (auxNota > 20)
+                                                auxNota = 20;
+
+
+                                            setCmplt(getAdapterPosition(), "1", auxNota);
+
+
+                                        }
+                                    })
+                                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            setCmplt(getAdapterPosition(), "0", 0);
+                                        }
+                                    });
+
+                            builder.show();
+                        } else {
+                            setCmplt(getAdapterPosition(), "0", 0);
+
+                        }
+                    }
+                }
+            });
+
 
         }
 
@@ -507,12 +636,26 @@ public class AdapterRecyclerMMTask extends RecyclerView.Adapter<AdapterRecyclerM
 
             }else if(v==v.findViewById(R.id.actionDelete)){
 
-                if(listState.get(getAdapterPosition())==1){
-                        int uIdUserTask = listUserTask.get(getAdapterPosition()).getId();
-                        MiAplicativo.getWritableDatabase().deleteSigleUserMateriaTask(uIdUserTask);
-                        fragmentBaseMMTask.updateMainListOnLoad();
-                }
-                itemDeleteHasSet(getAdapterPosition());
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Borrar User Task");
+                builder.setMessage("Seguro que desea eliminar este Task?");
+                builder.setPositiveButton("Borrar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(listState.get(getAdapterPosition())==1){
+                            int uIdUserTask = listUserTask.get(getAdapterPosition()).getId();
+                            MiAplicativo.getWritableDatabase().deleteSigleUserMateriaTask(uIdUserTask);
+                            fragmentBaseMMTask.updateMainListOnLoad();
+                        }
+                        itemDeleteHasSet(getAdapterPosition());
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).show();
+
             }
 
             if(v==v.findViewById(R.id.textDayTime)){

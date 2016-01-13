@@ -20,6 +20,7 @@ import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.aplicativo.MiAplicativo;
+import com.usm.jyd.usemista.dialogs.GuiaUsuario;
 import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.objects.HVWeek;
@@ -62,6 +63,14 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String auxGuiaUsuario = "";
+        auxGuiaUsuario = MiAplicativo.getWritableDatabase().getUserGuia("cal");
+        if (auxGuiaUsuario.equals("0")) {
+            GuiaUsuario guiaUsuario = new GuiaUsuario();
+            guiaUsuario.setGuiaUsuario("cal");
+            guiaUsuario.show(getChildFragmentManager(),"Dialog");
+        }
+
         setHasOptionsMenu(true);
 
         listHV= MiAplicativo.getWritableDatabase().getAllHorarioVirtual();
@@ -181,9 +190,9 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
 
             @Override
             public String interpretTime(int hour) {
-               // return hour > 11 ? (hour>12?hour-12:hour)  + " PM" : (hour == 0 ? "0 AM" : hour + " AM");
+                 return hour > 11 ? (hour>12?hour-12:hour)  + " PM" : (hour == 0 ? "0 AM" : hour + " AM");
 
-                return hour > 11 ? hour-12  + " AM" : (hour == 0 ? "12 PM" : hour + " PM");
+               // return hour > 11 ? hour-12  + " AM" : (hour == 0 ? "12 PM" : hour + " PM");
 
             }
         });
@@ -243,20 +252,7 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
             hrEnd.set(Calendar.HOUR_OF_DAY, auxEnd.get(Calendar.HOUR_OF_DAY));
             hrEnd.set(Calendar.MINUTE, auxEnd.get(Calendar.MINUTE));
 
-            if(hrIni.get(Calendar.HOUR_OF_DAY)>11){
-                int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
-                int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
 
-                hrIni.set(Calendar.HOUR_OF_DAY, hrAux-12);
-                hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2-12);
-            }
-            else if(hrIni.get(Calendar.HOUR_OF_DAY)<12){
-                int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
-                int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
-
-                hrIni.set(Calendar.HOUR_OF_DAY, hrAux+12);
-                hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2+12);
-            }
 
             if(newMonth==hrIni.get(Calendar.MONTH)) {
                 event = new WeekViewEvent(1,  (listUT.get(i).getMtName().length()>=11
@@ -318,20 +314,7 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
                                         hrEnd.set(Calendar.HOUR_OF_DAY, auxEnd.get(Calendar.HOUR_OF_DAY));
                                         hrEnd.set(Calendar.MINUTE, auxEnd.get(Calendar.MINUTE));
 
-                                        if(hrIni.get(Calendar.HOUR_OF_DAY)>11){
-                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
-                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
 
-                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux-12);
-                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2-12);
-                                        }
-                                        else if(hrIni.get(Calendar.HOUR_OF_DAY)<12){
-                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
-                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
-
-                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux+12);
-                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2+12);
-                                        }
 
                                         boolean paseHV=true;
                                         for(int m=0; m<listUT.size();m++) {
@@ -396,20 +379,6 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
                                         hrEnd.set(Calendar.MINUTE, auxEnd.get(Calendar.MINUTE));
 
 
-                                        if(hrIni.get(Calendar.HOUR_OF_DAY)>11){
-                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
-                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
-
-                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux-12);
-                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2-12);
-                                        }
-                                        else if(hrIni.get(Calendar.HOUR_OF_DAY)<12){
-                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
-                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
-
-                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux+12);
-                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2+12);
-                                        }
 
                                         boolean paseHV=true;
                                         for(int m=0; m<listUT.size();m++) {
@@ -472,21 +441,6 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
                                         hrEnd.set(Calendar.MINUTE, auxEnd.get(Calendar.MINUTE));
 
 
-                                        if(hrIni.get(Calendar.HOUR_OF_DAY)>11){
-                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
-                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
-
-                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux-12);
-                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2-12);
-                                        }
-                                        else if(hrIni.get(Calendar.HOUR_OF_DAY)<12){
-                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
-                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
-
-                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux+12);
-                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2+12);
-                                        }
-
                                         boolean paseHV=true;
                                         for(int m=0; m<listUT.size();m++) {
                                             Calendar auxDayTime = Calendar.getInstance();
@@ -548,20 +502,6 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
                                         hrEnd.set(Calendar.HOUR_OF_DAY, auxEnd.get(Calendar.HOUR_OF_DAY));
                                         hrEnd.set(Calendar.MINUTE, auxEnd.get(Calendar.MINUTE));
 
-                                        if(hrIni.get(Calendar.HOUR_OF_DAY)>11){
-                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
-                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
-
-                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux-12);
-                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2-12);
-                                        }
-                                        else if(hrIni.get(Calendar.HOUR_OF_DAY)<12){
-                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
-                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
-
-                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux+12);
-                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2+12);
-                                        }
 
                                         boolean paseHV=true;
                                         for(int m=0; m<listUT.size();m++) {
@@ -624,21 +564,6 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
                                         hrEnd.set(Calendar.HOUR_OF_DAY, auxEnd.get(Calendar.HOUR_OF_DAY));
                                         hrEnd.set(Calendar.MINUTE, auxEnd.get(Calendar.MINUTE));
 
-
-                                        if(hrIni.get(Calendar.HOUR_OF_DAY)>11){
-                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
-                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
-
-                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux-12);
-                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2-12);
-                                        }
-                                        else if(hrIni.get(Calendar.HOUR_OF_DAY)<12){
-                                            int hrAux=hrIni.get(Calendar.HOUR_OF_DAY);
-                                            int hrAux2=hrEnd.get(Calendar.HOUR_OF_DAY);
-
-                                            hrIni.set(Calendar.HOUR_OF_DAY, hrAux+12);
-                                            hrEnd.set(Calendar.HOUR_OF_DAY, hrAux2+12);
-                                        }
 
 
                                         boolean paseHV=true;

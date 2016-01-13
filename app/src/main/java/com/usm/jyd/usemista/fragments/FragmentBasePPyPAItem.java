@@ -1,13 +1,21 @@
 package com.usm.jyd.usemista.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
@@ -23,6 +31,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerProfProfItem;
 import com.usm.jyd.usemista.aplicativo.MiAplicativo;
+import com.usm.jyd.usemista.dialogs.GuiaUsuario;
 import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.network.Key;
@@ -57,7 +66,12 @@ public class FragmentBasePPyPAItem extends Fragment {
     private RecyclerView rcListAlumInClass;
     private AdapterRecyclerProfProfItem adapterRecyclerProfProfItem;
     private ArrayList<ProfAlum> listAlumInClass;
+    private ArrayList<ProfAlum> listAlumInClassFilter;
     private Boolean flagEdition=false;
+
+    //Empty Handle
+    private ImageView imgEmptyList;
+    private TextView textEmptyList;
 
     public static FragmentBasePPyPAItem newInstance( String profCod, String accesCod) {
         FragmentBasePPyPAItem fragment = new FragmentBasePPyPAItem();
@@ -77,11 +91,54 @@ public class FragmentBasePPyPAItem extends Fragment {
             accesCod = getArguments().getString(ARG_ACCESCOD);
         }
 
+        listAlumInClass=new ArrayList<>();
+        listAlumInClassFilter=new ArrayList<>();
         volleySingleton= VolleySingleton.getInstance();
         requestQueue=volleySingleton.getRequestQueue();
 
         userRegistro= MiAplicativo.getWritableDatabase().getUserRegistro();
+        setHasOptionsMenu(true);
 
+        String auxGuiaUsuario = "";
+        auxGuiaUsuario = MiAplicativo.getWritableDatabase().getUserGuia("prof2");
+        if (auxGuiaUsuario.equals("0")) {
+            GuiaUsuario guiaUsuario = new GuiaUsuario();
+            guiaUsuario.setGuiaUsuario("prof2");
+            guiaUsuario.show(getChildFragmentManager(),"Dialog");
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.act_base_fr_prof_prof_item_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_filter_aprobados).setChecked(true);
+
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id==R.id.action_update_list){
+            getAlumInClassInBackEnd(true);
+            getActivity().invalidateOptionsMenu();
+        }
+        else if(id==R.id.action_filter_aprobados){
+            item.setChecked(!item.isChecked());
+
+            getAlumInClassInBackEnd(true);
+
+        }else if(id==R.id.action_filter_esperando) {
+            item.setChecked(!item.isChecked());
+            getAlumInClassInBackEnd(false);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -92,6 +149,12 @@ public class FragmentBasePPyPAItem extends Fragment {
 
         }
         if(userRegistro.getStatus().equals("2")) {
+
+            ImageView imgIcon=(ImageView)rootView.findViewById(R.id.seccionCeroImageView);
+            imgIcon.setImageResource(R.drawable.ic_horario_gris_24dp);
+            imgIcon.setColorFilter(0xffffffff);
+            TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
+            textViewTituloFragment.setText("Estudiantes");
 
             rcListAlumInClass =(RecyclerView) rootView.findViewById(R.id.recycleView);
             rcListAlumInClass.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -105,7 +168,17 @@ public class FragmentBasePPyPAItem extends Fragment {
             rcListAlumInClass.setSoundEffectsEnabled(true);
             rcListAlumInClass.setAdapter(adapterRecyclerProfProfItem);
 
-            getAlumInClassInBackEnd();
+            imgEmptyList=(ImageView)rootView.findViewById(R.id.imgEmptyList);
+            textEmptyList=(TextView)rootView.findViewById(R.id.textEmptyList);
+            if(listAlumInClass.isEmpty()){
+                imgEmptyList.setVisibility(View.VISIBLE);textEmptyList.setVisibility(View.VISIBLE);
+                imgEmptyList.setImageResource(R.drawable.ic_materia_01);
+                imgEmptyList.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+                textEmptyList.setText("No hay Registro de Alumnos");
+                textEmptyList.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+            }
+
+            getAlumInClassInBackEnd(true);
         }
 
 
@@ -114,7 +187,7 @@ public class FragmentBasePPyPAItem extends Fragment {
         return rootView;  //super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    public void getAlumInClassInBackEnd() {
+    public void getAlumInClassInBackEnd(final boolean flagEstado) {
 
         final Context context=getContext();
         String url = "http://usmpemsun.esy.es/fr_prof_alum";
@@ -149,7 +222,6 @@ public class FragmentBasePPyPAItem extends Fragment {
 
 
                     if(estado.equals("1")){
-                        L.t(context, "Esta Validando en el Server");
 
 
                         listAlumInClass =new ArrayList<>();
@@ -206,6 +278,7 @@ public class FragmentBasePPyPAItem extends Fragment {
                             }
 
                             ProfAlum profAlum=new ProfAlum();
+                            profAlum.setId(alc_id);
                             profAlum.setProCodHash(alc_pro_cod);
                             profAlum.setCodAcces(alc_acces_cod);
                             profAlum.setMa_mod(alc_ma_modulo);
@@ -221,11 +294,37 @@ public class FragmentBasePPyPAItem extends Fragment {
 
 
                         }
-                        L.t(context,"ProCod: "+listAlumInClass.get(0).getProCodHash());
-                        //  L.t(context,"List Size: "+listProfClass.size());
-                        adapterRecyclerProfProfItem.setListAlumInClass(listAlumInClass);
 
 
+                        listAlumInClassFilter=new ArrayList<>();
+                        if(flagEstado){
+                            for(int i=0;i<listAlumInClass.size();i++){
+                                if(listAlumInClass.get(i).getRegist().equals("1")){
+                                    listAlumInClassFilter.add(listAlumInClass.get(i));
+                                }
+                            }
+                        }else{
+                            for(int i=0;i<listAlumInClass.size();i++){
+                                if(listAlumInClass.get(i).getRegist().equals("0")){
+                                    listAlumInClassFilter.add(listAlumInClass.get(i));
+                                }
+                            }
+                        }
+
+                        adapterRecyclerProfProfItem.setListAlumInClass(listAlumInClassFilter);
+                        if(listAlumInClassFilter.isEmpty()){
+                            imgEmptyList.setVisibility(View.VISIBLE);textEmptyList.setVisibility(View.VISIBLE);
+                            imgEmptyList.setImageResource(R.drawable.ic_profesor_01);
+                            imgEmptyList.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+                            if(flagEstado)
+                            textEmptyList.setText("No hay Alumnos Comprobados");
+                            else
+                                textEmptyList.setText("No hay Alumnos en Espera");
+                            textEmptyList.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+                        }
+                        else{
+                            imgEmptyList.setVisibility(View.GONE);textEmptyList.setVisibility(View.GONE);
+                        }
 
                     }else if(estado.equals("2")){
                         L.t(context,"No Hay  Registro");
@@ -240,25 +339,43 @@ public class FragmentBasePPyPAItem extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                L.t(context,"Volley Error");
+                String auxMsj="";
 
                 error.printStackTrace();
                 if (error instanceof TimeoutError || error instanceof NoConnectionError){
-
-
+                    auxMsj="Fuera de Conexion \nFuera de Tiempo";
                 }else if(error instanceof AuthFailureError){
-
-
+                    auxMsj="Fallo de Ruta" ;
                 }else if (error instanceof ServerError){
-
-
+                    auxMsj="Fallo en el Servidor";
                 }else if (error instanceof NetworkError){
-
-
+                    auxMsj="Problemas de Conexion";
                 }else if (error instanceof ParseError){
-
-
+                    auxMsj="Problemas Internos";
                 }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Error en la Nube")
+                        .setPositiveButton("Reintentar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getAlumInClassInBackEnd(flagEstado);
+                            }
+                        })
+                        .setNegativeButton("Canlear", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setMessage("\n\nCode Error: " + auxMsj)
+                        .show();
+
+                imgEmptyList.setVisibility(View.VISIBLE);textEmptyList.setVisibility(View.VISIBLE);
+                imgEmptyList.setImageResource(R.drawable.ic_profesor_01);
+                imgEmptyList.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+                textEmptyList.setText(auxMsj);
+                textEmptyList.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
             }
         });
         requestQueue.add(request);

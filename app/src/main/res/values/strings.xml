@@ -4,12 +4,17 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">close</string>
 
+    <!-- TODO: VARIABLES NAV MENU-->
+
     <string name="hello_world">Hello world!</string>
-    <string name="navigation_item_1">Home</string>
-    <string name="navigation_item_2">Test Tum</string>
+    <string name="navigation_item_1">Inicio</string>
+    <string name="navigation_item_2">USM Web</string>
     <string name="navigation_item_3">Item 3</string>
     <string name="navigation_item_4">Item 4</string>
     <string name="navigation_item_5">Item 5</string>
+
+    <string name="comparte_item_1">Transmite</string>
+    <string name="comparte_item_2">Envia</string>
 
     <string name="title_activity_second">Second</string>
     <string name="text_second_activity">Hi Its Second Activity Here</string>
@@ -28,6 +33,96 @@
     <string name="error_Parse">Perdida de Datos</string>
     <string name="action_person">Act Per</string>
     <string name="action_search">search</string>
+
+    <!-- TODO: VARIABLES ACT LAUNCH -->
+    <string name="text_launch_prof">Profesor</string>
+    <string name="text_launch_alumn">Estudiante</string>
+
+    <string name="prof_invalid">Codigo Invalido</string>
+    <string name="volley_error_time">FUERA DE CONEXION o FIN DE TIEMPO</string>
+    <string name="volley_error_time1">FUERA DE CONEXION o</string>
+    <string name="volley_error_time2">FIN DE TIEMPO</string>
+    <string name="volley_error_aut">FALLO DE RUTAAA</string>
+    <string name="volley_error_serv">ERROR CON EL SERVER</string>
+    <string name="volley_error_net">ERROR EN LA RED</string>
+    <string name="volley_error_par">ERROR DE PARSEO</string>
+
+    <!-- TODO: VARIABLES ACT BASE: MAIN-->
+    <string name="user_edit_ced">Cedula</string>
+    <string name="user_edit_codProf">Cod Profesor</string>
+    <string name="user_edit_check1">Cambio Realizado</string>
+    <string name="user_edit_check2">Codigo Invalido</string>
+
+    <!-- TODO: VARIABLES ACT BASE: MAIN FR TOOLBAR CHANGER-->
+    <string name="tittle_toolbar_1">Usemista</string>
+    <string name="tittle_toolbar_2">Web Principal</string>
+
+    <string name="tittle_toolbar_10">Pensum</string>
+    <string name="tittle_toolbar_11">Mis Materias</string>
+    <string name="tittle_toolbar_12">Horario</string>
+    <string name="tittle_toolbar_12_1">Agregar</string>
+    <string name="tittle_toolbar_13">Notificaciones</string>
+    <string name="tittle_toolbar_14">Calendario</string>
+    <string name="tittle_toolbar_15_1">Clases por Tutores</string>
+    <string name="tittle_toolbar_15_2">Clases</string>
+
+    <string name="tittle_toolbar_100">Sistema</string>
+    <string name="tittle_toolbar_200">Telecom</string>
+    <string name="tittle_toolbar_300">Industrial</string>
+    <string name="tittle_toolbar_400">Civil</string>
+    <string name="tittle_toolbar_500">Arquitectura</string>
+
+    <string name="fab_text_1">De Vuela a Inicio</string>
+    <string name="fab_text_2">Menu de Agregado</string>
+
+    <string name="msj_sin_materias">Sin registro de Materias</string>
+    <string name="msj_inactivo">Funcion Inactiva</string>
+    <string name="msj_para_clase">Mensaje para la Clase</string>
+    <string name="msj_para_clase_fallo">Fallo de Envio o No hay Alumnos Registrados</string>
+    <string name="msj_para_clase_enviado">Mensaje Enviado</string>
+
+    <string name="error_de_conexion">Problemas de Conexion</string>
+    <string name="cod_error">Error: </string>
+
+    <!-- TODO: VARIABLES ACT BASE:  FR BASE MENU-->
+    <string name="tittle_menu_1">Pensum y Programa</string>
+    <string name="tittle_menu_2">Mis Materias</string>
+    <string name="tittle_menu_3">Horario Virtual</string>
+    <string name="tittle_menu_4">Notify</string>
+    <string name="tittle_menu_5">Tu Calendario</string>
+    <string name="tittle_menu_6">Tutores</string>
+    <string name="tittle_menu_6_2">Tutor</string>
+
+    <string name="tittle_fr_base_1">Inicio</string>
+
+    <!-- TODO: VARIABLES ACT BASE:  FRS CAMPOS VACIOS-->
+
+    <string name="hv_emty">No hay Registro HV aun</string>
+
+
+
+    <!-- TODO: VARIABLES ACT BASE:  Pensums Titulo y Content-->
+
+    <string name="tittle_pp">Ingenieria y Arquitectura</string>
+
+    <string name="tittle_pp_sis">Ingenieria Sistema</string>
+    <string name="tittle_pp_telc">Ingenieria Telecom</string>
+    <string name="tittle_pp_ind">Ingenieria Industrial</string>
+    <string name="tittle_pp_civ">Ingenieria Civil</string>
+    <string name="tittle_pp_arq">Arquitectura</string>
+
+    <string name="tittle_con_sis">Formacion profesional para prestar servicios como ingeniero de sistemas de información, sistemas de control y ciencias gerenciales, haciendo énfasis en el uso de tecnologías y técnicas de los sistemas.</string>
+    <string name="tittle_con_telc">Especialista preparado para prestar servicios con suficiencia y capacidad en electrónica analógica y digital, líneas de trasmisión y señalización, antenas, redes, trasmisión por cable e inalámbrica, tecnología celular, protocolos de comunicación, controles de transmisión, redes móviles e inalámbricas y, en general, en sistemas de trasmisión de voz, video y datos.</string>
+    <string name="tittle_con_ind">Su formacion toma el estudio de sistemas estructurales y de servicio a fin de utilizar los diversos recursos (mano de obra, capital, equipos, materia prima e información) en forma efectiva para obtener como resultado productos y servicios de óptima calidad.</string>
+    <string name="tittle_con_civ">Su formación se cumplirá principalmente en las áreas de Diseño Estructural, Planificación de Proyectos, Saneamiento Ambiental y Evaluación de Proyectos.</string>
+    <string name="tittle_con_arq">Profesional capaz de prestar sus servicios tanto en el sector institucional como en el de servicios. Poseerá una formación básica que le permita adaptarse a los cambios que ocurran en el plano profesional y en la participación en proyectos interdisciplinarios.</string>
+
+
+
+
+
+
+
 
 
 </resources>

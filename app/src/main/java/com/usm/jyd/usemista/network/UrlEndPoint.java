@@ -8,6 +8,9 @@ public class UrlEndPoint {
     public static final String URL_MODULO="ma_modulo";
     public static final String URL_SIS="ingSis";
     public static final String URL_TELECOM="telecom";
+    public static final String URL_CIVIL="ingCiv";
+    public static final String URL_INDUSTRIAL="ingInd";
+    public static final String URL_ARQ="arq";
 
 
 

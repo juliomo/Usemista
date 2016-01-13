@@ -2,6 +2,7 @@ package com.usm.jyd.usemista.adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.network.Key;
 import com.usm.jyd.usemista.network.VolleySingleton;
+import com.usm.jyd.usemista.objects.Materia;
 import com.usm.jyd.usemista.objects.ProfAlum;
 import com.usm.jyd.usemista.objects.UserRegistro;
 
@@ -82,14 +84,51 @@ public class AdapterRecyclerProfAlum  extends RecyclerView.Adapter<AdapterRecycl
 
     @Override
     public void onBindViewHolder(RPAViewHolder holder, int position) {
+
+        if(position==0){
+            int density= (int)((context.getResources().getDisplayMetrics().density)*35);
+            holder.relativeBody.setPadding(0,density,0,0);
+            //posiblemente un Background particular
+        }
+
         if(flagEdition)
             holder.imageViewDelete.setVisibility(View.VISIBLE);
         else
             holder.imageViewDelete.setVisibility(View.GONE);
 
+        if(listAlumClass.get(position).getMa_mod().equals("ingSis")){
+            holder.imageViewAlumClass.setImageResource(R.drawable.ic_gear_01);
+        }else if(listAlumClass.get(position).getMa_mod().equals("telecom")){
+            holder.imageViewAlumClass.setImageResource(R.drawable.ic_telecom_01);
+        }else if(listAlumClass.get(position).getMa_mod().equals("ingInd")){
+            holder.imageViewAlumClass.setImageResource(R.drawable.ic_industrial_01);
+        }else if(listAlumClass.get(position).getMa_mod().equals("ingCiv")){
+            holder.imageViewAlumClass.setImageResource(R.drawable.ic_civil_01);
+        }else if(listAlumClass.get(position).getMa_mod().equals("arq")){
+            holder.imageViewAlumClass.setImageResource(R.drawable.ic_arq_01);
+        }
 
-        holder.textTituloAlumClass.setText(listAlumClass.get(position).getMa_cod());
-        holder.textSubTituloAlumClass.setText(listAlumClass.get(position).getCodAcces());
+
+
+        if(listAlumClass.get(position).getRegist().equals("1")){
+            holder.imgServerCheck.setColorFilter(ContextCompat.getColor(context, R.color.colorPrimary));
+            holder.imgServerCheck.setImageResource(R.drawable.ic_check_circle_black_36dp);
+        }else {
+            holder.imgServerCheck.setColorFilter(ContextCompat.getColor(context,R.color.colorPrimary));
+            holder.imgServerCheck.setImageResource(R.drawable.ic_panorama_fish_eye_black_36dp);
+        }
+
+
+        Materia currentMT= MiAplicativo.getWritableDatabase().getOneUserMateria(listAlumClass.get(position).getMa_cod());
+        if(currentMT.getTitulo()!=null)
+            holder.textTituloAlumClass.setText(currentMT.getTitulo());
+        else
+            holder.textTituloAlumClass.setText(listAlumClass.get(position).getMa_cod());
+
+        holder.textSubTituloAlumClass.setText("Cod: "+listAlumClass.get(position).getCodAcces());
+        holder.textClassSeccionAlum.setText("Sec: "+listAlumClass.get(position).getMa_sec());
+
+        holder.imageViewDelete.setColorFilter(ContextCompat.getColor(context, R.color.colorPrimary));
     }
 
     @Override
@@ -101,18 +140,21 @@ public class AdapterRecyclerProfAlum  extends RecyclerView.Adapter<AdapterRecycl
     public class RPAViewHolder extends RecyclerView.ViewHolder{
 
         ImageView imageViewAlumClass;
-        ImageView imageViewDelete;
+        ImageView imageViewDelete,imgServerCheck;
         TextView textTituloAlumClass;
-        TextView textSubTituloAlumClass;
+        TextView textSubTituloAlumClass, textClassSeccionAlum;
         RelativeLayout relativeBody;
 
 
         public RPAViewHolder(View itemView) {
             super(itemView);
+            imageViewAlumClass=(ImageView)itemView.findViewById(R.id.classImagenAlum);
             imageViewDelete=(ImageView)itemView.findViewById(R.id.deleteImg);
-            imageViewAlumClass =(ImageView)itemView.findViewById(R.id.classImagenAlum);
+            imgServerCheck=(ImageView)itemView.findViewById(R.id.imgCheckServer);
+
             textTituloAlumClass =(TextView)itemView.findViewById(R.id.classTituAlum);
             textSubTituloAlumClass =(TextView)itemView.findViewById(R.id.classSubTituloAlum);
+            textClassSeccionAlum=(TextView)itemView.findViewById(R.id.classSeccionAlum);
             relativeBody=(RelativeLayout)itemView.findViewById(R.id.bodyRelative);
 
             imageViewDelete.setOnClickListener(new View.OnClickListener() {

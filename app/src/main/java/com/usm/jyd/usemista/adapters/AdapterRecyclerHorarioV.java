@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import com.usm.jyd.usemista.objects.HorarioVirtual;
 import com.usm.jyd.usemista.objects.Materia;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by der_w on 11/6/2015.
@@ -61,23 +63,61 @@ public class AdapterRecyclerHorarioV extends RecyclerView.Adapter<AdapterRecycle
 
     @Override
     public void onBindViewHolder(RHVViewHolder holder, int position) {
+
+        if(position==0){
+            int density= (int)((context.getResources().getDisplayMetrics().density)*35);
+            holder.relativeBody.setPadding(0,density,0,0);
+            holder.relativeBody.setBackgroundResource(R.drawable.hv_row0_bg);
+        }
+
+
         holder.textViewTitulo.setText(listHV.get(position).getTitulo());
-        holder.textViewCalIni.setText(listHV.get(position).getCalIniToText());
-        holder.textViewCalEnd.setText(listHV.get(position).getCalEndToText());
+
+        Calendar calIni=Calendar.getInstance();
+        calIni.setTime(listHV.get(position).getCalIni());
+        Calendar calEnd=Calendar.getInstance();
+        calEnd.setTime(listHV.get(position).getCalEnd());
+
+        holder.imgCal.setColorFilter(listHV.get(position).getColor());
+        holder.imgClock.setColorFilter(listHV.get(position).getColor());
+        holder.linearLayout.setBackgroundColor(listHV.get(position).getColor());
+
+        holder.textViewCalIni.setVisibility(View.GONE);
+        holder.textViewCalEnd.setVisibility(View.GONE);
+
+        if(calIni.get(Calendar.DAY_OF_YEAR)!=calEnd.get(Calendar.DAY_OF_YEAR)){
+            holder.imgCal.setImageResource(R.drawable.ic_event_available_black_24dp);
+            holder.textViewCalIni.setVisibility(View.VISIBLE);
+            holder.textViewCalEnd.setVisibility(View.VISIBLE);
+
+            holder.textViewCalIni.setText(listHV.get(position).getCalIniToText());
+            holder.textViewCalEnd.setText(listHV.get(position).getCalEndToText());
+        }else {
+            holder.imgCal.setImageResource(R.drawable.ic_event_busy_black_24dp);
+        }
+
+        holder.textViewLun.setVisibility(View.GONE);holder.textViewMie.setVisibility(View.GONE);
+        holder.textViewMar.setVisibility(View.GONE);holder.textViewJue.setVisibility(View.GONE);
+        holder.textViewVie.setVisibility(View.GONE);
 
         for(int i=0;i<listHVWeek.size();i++) {
             if (listHV.get(position).getCod().equals(
                     listHVWeek.get(i).getCod()
             )) {
                 if (listHVWeek.get(i).getWeekDay().equals("Lun")) {
+                    holder.textViewLun.setVisibility(View.VISIBLE);
                     holder.textViewLun.setText("Lun "+listHVWeek.get(i).getTimeIniToText()+" a "+listHVWeek.get(i).getTimeEndToText());
                 } else if (listHVWeek.get(i).getWeekDay().equals("Mar")) {
+                    holder.textViewMar.setVisibility(View.VISIBLE);
                     holder.textViewMar.setText("Mar "+listHVWeek.get(i).getTimeIniToText()+" a "+listHVWeek.get(i).getTimeEndToText());
                 } else if (listHVWeek.get(i).getWeekDay().equals("Mie")) {
+                    holder.textViewMie.setVisibility(View.VISIBLE);
                     holder.textViewMie.setText("Mie "+listHVWeek.get(i).getTimeIniToText()+" a "+listHVWeek.get(i).getTimeEndToText());
                 } else if (listHVWeek.get(i).getWeekDay().equals("Jue")) {
+                    holder.textViewJue.setVisibility(View.VISIBLE);
                     holder.textViewJue.setText("Jue "+listHVWeek.get(i).getTimeIniToText()+" a "+listHVWeek.get(i).getTimeEndToText());
                 } else if (listHVWeek.get(i).getWeekDay().equals("Vie")) {
+                    holder.textViewVie.setVisibility(View.VISIBLE);
                     holder.textViewVie.setText("Vie "+listHVWeek.get(i).getTimeIniToText()+" a "+listHVWeek.get(i).getTimeEndToText());
                 }
             }
@@ -116,8 +156,10 @@ public class AdapterRecyclerHorarioV extends RecyclerView.Adapter<AdapterRecycle
         TextView textViewTitulo;
         TextView textViewCalIni;
         TextView textViewCalEnd;
-        ImageView imageViewAdd;
-        ImageView imageViewTest;
+        ImageView imgClock;
+        ImageView imgCal;
+
+        LinearLayout linearLayout;
 
         TextView textViewLun;TextView textViewMar;TextView textViewMie;
         TextView textViewJue;TextView textViewVie;
@@ -128,8 +170,10 @@ public class AdapterRecyclerHorarioV extends RecyclerView.Adapter<AdapterRecycle
             textViewTitulo=(TextView)itemView.findViewById(R.id.textTitulo);
             textViewCalIni=(TextView)itemView.findViewById(R.id.textCalIni);
             textViewCalEnd=(TextView)itemView.findViewById(R.id.textCalEnd);
-            imageViewAdd=(ImageView)itemView.findViewById(R.id.imageviewAdd);
-            imageViewTest=(ImageView)itemView.findViewById(R.id.imgTest);
+            imgClock=(ImageView)itemView.findViewById(R.id.imgClock);
+            imgCal=(ImageView)itemView.findViewById(R.id.imgCal);
+
+            linearLayout=(LinearLayout)itemView.findViewById(R.id.linearColor);
 
             textViewLun=(TextView)itemView.findViewById(R.id.textViewLun);
             textViewMar=(TextView)itemView.findViewById(R.id.textViewMar);

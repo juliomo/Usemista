@@ -36,22 +36,22 @@ public class AdapterRecyclerPensum extends RecyclerView.Adapter<AdapterRecyclerP
 
     public AdapterRecyclerPensum(Context context){
         inflater = LayoutInflater.from(context);
-        list.add("Ingenieria Sistemas");listImage[0]=R.drawable.ic_gear_01;
-        list.add("Ingenieria Telecom");listImage[1]=R.drawable.ic_telecom_01;
-        list.add("Ingenieria Industrial");listImage[2]=R.drawable.ic_industrial_01;
-        list.add("Ingenieria Civil");listImage[3]=R.drawable.ic_civil_01;
-        list.add("Arquitectura");listImage[4]=R.drawable.ic_arq_01;
+        list.add(context.getResources().getString(R.string.tittle_pp_sis));listImage[0]=R.drawable.ic_gear_01;
+        list.add(context.getResources().getString(R.string.tittle_pp_telc));listImage[1]=R.drawable.ic_telecom_01;
+        list.add(context.getResources().getString(R.string.tittle_pp_ind));listImage[2]=R.drawable.ic_industrial_01;
+        list.add(context.getResources().getString(R.string.tittle_pp_civ));listImage[3]=R.drawable.ic_civil_01;
+        list.add(context.getResources().getString(R.string.tittle_pp_arq));listImage[4]=R.drawable.ic_arq_01;
 
-        listPInfo.add("Formacion profesional para prestar servicios como ingeniero de sistemas de información, sistemas de control y ciencias gerenciales, haciendo énfasis en el uso de tecnologías y técnicas de los sistemas.");
-        listPInfo.add("Especialista preparado para prestar servicios con suficiencia y capacidad en electrónica analógica y digital, líneas de trasmisión y señalización, antenas, redes, trasmisión por cable e inalámbrica, tecnología celular, protocolos de comunicación, controles de transmisión, redes móviles e inalámbricas y, en general, en sistemas de trasmisión de voz, video y datos.");
-        listPInfo.add("Su formacion toma el estudio de sistemas estructurales y de servicio a fin de utilizar los diversos recursos (mano de obra, capital, equipos, materia prima e información) en forma efectiva para obtener como resultado productos y servicios de óptima calidad.");
-        listPInfo.add("Su formación se cumplirá principalmente en las áreas de Diseño Estructural, Planificación de Proyectos, Saneamiento Ambiental y Evaluación de Proyectos.");
-        listPInfo.add("Profesional capaz de prestar sus servicios tanto en el sector institucional como en el de servicios. Poseerá una formación básica que le permita adaptarse a los cambios que ocurran en el plano profesional y en la participación en proyectos interdisciplinarios.");
+        listPInfo.add(context.getResources().getString(R.string.tittle_con_sis));
+        listPInfo.add(context.getResources().getString(R.string.tittle_con_telc));
+        listPInfo.add(context.getResources().getString(R.string.tittle_con_ind));
+        listPInfo.add(context.getResources().getString(R.string.tittle_con_civ));
+        listPInfo.add(context.getResources().getString(R.string.tittle_con_arq));
 
         listMenuStatus= MiAplicativo.getWritableDatabase().getAllMenuStatus();
         boolean flag=false;
         if(!listMenuStatus.isEmpty()){flag=true;}
-        L.t(context,"estado de lista: "+flag);
+     //   L.t(context,"estado de lista: "+flag);
 
     }
     public void setClickListener(Context context, ClickCallBack clickCallBack){
@@ -106,8 +106,9 @@ public class AdapterRecyclerPensum extends RecyclerView.Adapter<AdapterRecyclerP
         @Override
         public void onClick(View v) {
             if(v==v.findViewById(R.id.bodyRelative)){
-                L.t(context, "Este es el pensum: " + 100 * getAdapterPosition());
-                if (clickCallBack != null && (getAdapterPosition()==1|| getAdapterPosition()==2)) {
+             //   L.t(context, "Este es el pensum: " + 100 * getAdapterPosition());
+                if (clickCallBack != null && (getAdapterPosition()==1|| getAdapterPosition()==2
+                        ||getAdapterPosition()==3||getAdapterPosition()==4)||getAdapterPosition()==5) {
 
                     ///SETEO DEL MENU ESTATUS ///////
                     if(!listMenuStatus.isEmpty()){

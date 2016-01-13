@@ -3,15 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/bodyRelative"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/row_fr_base_pensum_materia_bg"
     android:clickable="true">
 
 
     <TableLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
 
         <TableRow
             android:layout_width="match_parent"
@@ -26,6 +27,7 @@
 
             <ImageView
                 android:id="@+id/classImagenProf"
+                android:layout_margin="7dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_pensum_01" />
@@ -50,6 +52,12 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Medium Text"
                     android:id="@+id/classSubTituloProf"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Medium Text"
+                    android:id="@+id/classSeccionProf"/>
             </LinearLayout>
 
         </TableRow>

@@ -1,9 +1,12 @@
 package com.usm.jyd.usemista.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +15,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
@@ -26,6 +31,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.usm.jyd.usemista.R;
 import com.usm.jyd.usemista.adapters.AdapterRecyclerProfProf;
+import com.usm.jyd.usemista.aplicativo.MiAplicativo;
+import com.usm.jyd.usemista.dialogs.GuiaUsuario;
 import com.usm.jyd.usemista.events.ClickCallBack;
 import com.usm.jyd.usemista.logs.L;
 import com.usm.jyd.usemista.network.Key;
@@ -56,6 +63,10 @@ public class FragmentBaseProfPorf extends Fragment {
     private ArrayList<ProfAlum> listProfClass;
     private Boolean flagEdition=false;
 
+    //Empty Handle
+    private ImageView imgEmptyList;
+    private TextView textEmptyList;
+
     public static FragmentBaseProfPorf newInstance(String profCod) {
         FragmentBaseProfPorf fragment = new FragmentBaseProfPorf();
         Bundle args = new Bundle();
@@ -70,10 +81,19 @@ public class FragmentBaseProfPorf extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        listProfClass=new ArrayList<>();
         volleySingleton= VolleySingleton.getInstance();
         requestQueue=volleySingleton.getRequestQueue();
 
         setHasOptionsMenu(true);
+
+        String auxGuiaUsuario = "";
+        auxGuiaUsuario = MiAplicativo.getWritableDatabase().getUserGuia("prof1");
+        if (auxGuiaUsuario.equals("0")) {
+            GuiaUsuario guiaUsuario = new GuiaUsuario();
+            guiaUsuario.setGuiaUsuario("prof1");
+            guiaUsuario.show(getChildFragmentManager(),"Dialog");
+        }
     }
 
     @Override
@@ -108,12 +128,21 @@ public class FragmentBaseProfPorf extends Fragment {
             adapterRecyclerProfProf.setEdition(false);
             getActivity().invalidateOptionsMenu();
         }
+        else if(id==R.id.action_update_list){
+            getProfClassInBackEnd(getArguments().getString(ARG_PROF_COD));
+        }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_base_00, container, false);
+
+        ImageView imgIcon=(ImageView)rootView.findViewById(R.id.seccionCeroImageView);
+        imgIcon.setImageResource(R.drawable.ic_horario_gris_24dp);
+        imgIcon.setColorFilter(0xffffffff);
+        TextView textViewTituloFragment = (TextView) rootView.findViewById(R.id.seccionCeroTitulo);
+        textViewTituloFragment.setText("Clases");
 
         rcListProfClass=(RecyclerView) rootView.findViewById(R.id.recycleView);
         rcListProfClass.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -129,10 +158,20 @@ public class FragmentBaseProfPorf extends Fragment {
 
         getProfClassInBackEnd(getArguments().getString(ARG_PROF_COD));
 
+        imgEmptyList=(ImageView)rootView.findViewById(R.id.imgEmptyList);
+        textEmptyList=(TextView)rootView.findViewById(R.id.textEmptyList);
+        if(listProfClass.isEmpty()){
+            imgEmptyList.setVisibility(View.VISIBLE);textEmptyList.setVisibility(View.VISIBLE);
+            imgEmptyList.setImageResource(R.drawable.ic_profesor_01);
+            imgEmptyList.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+            textEmptyList.setText("No Hay Clases Registradas");
+            textEmptyList.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+        }
+
         return rootView;  //super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    public void getProfClassInBackEnd(String prc_pro_cod) {
+    public void getProfClassInBackEnd(final String prc_pro_cod) {
 
         final Context context=getContext();
         String url = "http://usmpemsun.esy.es/fr_prof_alum";
@@ -162,7 +201,7 @@ public class FragmentBaseProfPorf extends Fragment {
 
 
                     if(estado.equals("1")){
-                        L.t(context, "Esta Validando en el Server");
+
 
 
                         listProfClass=new ArrayList<>();
@@ -210,10 +249,19 @@ public class FragmentBaseProfPorf extends Fragment {
 
 
                         }
-                        L.t(context,"ProCod: "+listProfClass.get(0).getProCodHash());
+
                       //  L.t(context,"List Size: "+listProfClass.size());
                         adapterRecyclerProfProf.setlistProfClass(listProfClass);
-
+                        if(listProfClass.isEmpty()){
+                            imgEmptyList.setVisibility(View.VISIBLE);textEmptyList.setVisibility(View.VISIBLE);
+                            imgEmptyList.setImageResource(R.drawable.ic_profesor_01);
+                            imgEmptyList.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+                            textEmptyList.setText("No Hay Clases Registradas");
+                            textEmptyList.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+                        }
+                        else{
+                            imgEmptyList.setVisibility(View.GONE);textEmptyList.setVisibility(View.GONE);
+                        }
 
 
                     }else if(estado.equals("2")){
@@ -230,25 +278,43 @@ public class FragmentBaseProfPorf extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                L.t(context,"Volley Error");
+                String auxMsj="";
 
                 error.printStackTrace();
                 if (error instanceof TimeoutError || error instanceof NoConnectionError){
-
-
+                    auxMsj="Fuera de Conexion \nFuera de Tiempo";
                 }else if(error instanceof AuthFailureError){
-
-
+                    auxMsj="Fallo de Ruta" ;
                 }else if (error instanceof ServerError){
-
-
+                    auxMsj="Fallo en el Servidor";
                 }else if (error instanceof NetworkError){
-
-
+                    auxMsj="Problemas de Conexion";
                 }else if (error instanceof ParseError){
-
-
+                    auxMsj="Problemas Internos";
                 }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Error en la Nube")
+                        .setPositiveButton("Reintentar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getProfClassInBackEnd(prc_pro_cod);
+                            }
+                        })
+                        .setNegativeButton("Canlear", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setMessage("\n\nCode Error: " + auxMsj)
+                        .show();
+
+                imgEmptyList.setVisibility(View.VISIBLE);textEmptyList.setVisibility(View.VISIBLE);
+                imgEmptyList.setImageResource(R.drawable.ic_profesor_01);
+                imgEmptyList.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+                textEmptyList.setText(auxMsj);
+                textEmptyList.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
             }
         });
         requestQueue.add(request);
