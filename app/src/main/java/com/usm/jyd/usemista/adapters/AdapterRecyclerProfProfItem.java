@@ -1,5 +1,6 @@
 package com.usm.jyd.usemista.adapters;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v4.content.ContextCompat;
@@ -46,6 +47,8 @@ import java.util.Map;
  */
 public class AdapterRecyclerProfProfItem extends RecyclerView.Adapter<AdapterRecyclerProfProfItem.RPPIViewHolder> {
 
+    private ProgressDialog progressDialog ;
+
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
 
@@ -60,6 +63,7 @@ public class AdapterRecyclerProfProfItem extends RecyclerView.Adapter<AdapterRec
         inflater = LayoutInflater.from(context);
         this.context=context;
         flagEdition=false;
+        progressDialog = new ProgressDialog(context);
 
     }
 
@@ -159,6 +163,11 @@ public class AdapterRecyclerProfProfItem extends RecyclerView.Adapter<AdapterRec
         }
         public void updateAlumInClassStatusToBackend( final String regi, String id) {
 
+            progressDialog.setMessage("Cargando ...");
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
+
             volleySingleton= VolleySingleton.getInstance();
             requestQueue=volleySingleton.getRequestQueue();
 
@@ -182,6 +191,7 @@ public class AdapterRecyclerProfProfItem extends RecyclerView.Adapter<AdapterRec
                 @Override
                 public void onResponse(JSONObject response) {
                     try{
+                        progressDialog.dismiss();
                         String estado="NA";
                         if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
                                 !response.isNull(Key.EndPointMateria.KEY_ESTADO)){
@@ -212,6 +222,7 @@ public class AdapterRecyclerProfProfItem extends RecyclerView.Adapter<AdapterRec
                 @Override
                 public void onErrorResponse(VolleyError error) {
 
+                    progressDialog.dismiss();
 
                     error.printStackTrace();
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);

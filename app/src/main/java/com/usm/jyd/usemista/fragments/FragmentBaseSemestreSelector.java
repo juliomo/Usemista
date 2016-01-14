@@ -1,5 +1,6 @@
 package com.usm.jyd.usemista.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Rect;
@@ -63,6 +64,8 @@ public class FragmentBaseSemestreSelector extends Fragment {
     private ArrayList<Materia> listMateria = new ArrayList<>();
     private TextView textViewVolleyError;
 
+    private ProgressDialog progressDialog ;
+
     public static FragmentBaseSemestreSelector newInstance(int num_seccion) {
         FragmentBaseSemestreSelector fragment = new FragmentBaseSemestreSelector();
         Bundle args = new Bundle();
@@ -83,6 +86,7 @@ public class FragmentBaseSemestreSelector extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        progressDialog = new ProgressDialog(getActivity());
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_NUMERO_SECCION);
         }
@@ -211,6 +215,11 @@ public class FragmentBaseSemestreSelector extends Fragment {
     ///Llamados Pensum////
     public void enviarPeticionJson(final String ma_modulo){
 
+        progressDialog.setMessage("Cargando ...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
                 UrlEndPoint.URL_PENSUM+UrlEndPoint.URL_QUESTION+
                         UrlEndPoint.URL_MODULO+"="+ma_modulo
@@ -228,6 +237,8 @@ public class FragmentBaseSemestreSelector extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
 
+
+                progressDialog.dismiss();
                 String auxError="";
                 if (error instanceof TimeoutError || error instanceof NoConnectionError){
 
@@ -283,6 +294,7 @@ public class FragmentBaseSemestreSelector extends Fragment {
 
         if(response==null || response.length()>0){
             try{
+                progressDialog.dismiss();
                 String estado="NA";
                 if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
                         !response.isNull(Key.EndPointMateria.KEY_ESTADO)){

@@ -106,6 +106,9 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     private TextView textEmptyList;
 
 
+    private ProgressDialog progressDialog ;
+
+
 
     /**
      * Use this factory method to create a new instance of
@@ -144,6 +147,8 @@ public class FragmentBase extends android.support.v4.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        progressDialog = new ProgressDialog(getActivity());
 
         if(getArguments().getInt(ARG_NUMERO_SECCION)==0) {
             String auxGuiaUsuario = "";
@@ -382,7 +387,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
         }
         ///El argumento == 1 indica TEST/////////
         if(getArguments().getInt(ARG_NUMERO_SECCION)==1) {
-           final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+
 
             rootView = inflater.inflate(R.layout.fragment_base_02, container, false);
             WebView webView=(WebView)rootView.findViewById(R.id.webView);
@@ -414,7 +419,7 @@ public class FragmentBase extends android.support.v4.app.Fragment {
                 public void onPageStarted(WebView view, String url,Bitmap favicon) {
                     // TODO Auto-generated method stub
                     super.onPageStarted(view, url, favicon);
-                   progressDialog.setMessage("Loading ...");
+                   progressDialog.setMessage("Cargando ...");
                     progressDialog.setCancelable(false);
                     progressDialog.setCanceledOnTouchOutside(false);
                     progressDialog.show();

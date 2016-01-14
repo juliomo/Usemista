@@ -1,5 +1,6 @@
 package com.usm.jyd.usemista.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -67,6 +68,8 @@ public class FragmentBaseProfPorf extends Fragment {
     private ImageView imgEmptyList;
     private TextView textEmptyList;
 
+    private ProgressDialog progressDialog ;
+
     public static FragmentBaseProfPorf newInstance(String profCod) {
         FragmentBaseProfPorf fragment = new FragmentBaseProfPorf();
         Bundle args = new Bundle();
@@ -80,6 +83,8 @@ public class FragmentBaseProfPorf extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        progressDialog = new ProgressDialog(getActivity());
 
         listProfClass=new ArrayList<>();
         volleySingleton= VolleySingleton.getInstance();
@@ -173,6 +178,11 @@ public class FragmentBaseProfPorf extends Fragment {
 
     public void getProfClassInBackEnd(final String prc_pro_cod) {
 
+        progressDialog.setMessage("Cargando ...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
         final Context context=getContext();
         String url = "http://usmpemsun.esy.es/fr_prof_alum";
 
@@ -185,6 +195,7 @@ public class FragmentBaseProfPorf extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 try{
+                    progressDialog.dismiss();
                     String estado="NA";
                     if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
                             !response.isNull(Key.EndPointMateria.KEY_ESTADO)){
@@ -278,6 +289,7 @@ public class FragmentBaseProfPorf extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
 
+                progressDialog.dismiss();
                 String auxMsj="";
 
                 error.printStackTrace();

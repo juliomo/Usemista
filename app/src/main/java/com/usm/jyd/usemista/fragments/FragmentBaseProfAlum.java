@@ -1,5 +1,6 @@
 package com.usm.jyd.usemista.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -68,6 +69,8 @@ public class FragmentBaseProfAlum extends Fragment {
     private ImageView imgEmptyList;
     private TextView textEmptyList;
 
+    private ProgressDialog progressDialog ;
+
 
     public static FragmentBaseProfAlum newInstance() {
         FragmentBaseProfAlum fragment = new FragmentBaseProfAlum();
@@ -78,6 +81,9 @@ public class FragmentBaseProfAlum extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        progressDialog = new ProgressDialog(getActivity());
+
         listAlumClass=new ArrayList<>();
         volleySingleton= VolleySingleton.getInstance();
         requestQueue=volleySingleton.getRequestQueue();
@@ -172,6 +178,10 @@ public class FragmentBaseProfAlum extends Fragment {
     }
 
     public void getAlumClassInBackEnd(final String cedula) {
+        progressDialog.setMessage("Cargando ...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
 
         final Context context=getContext();
         String url = "http://usmpemsun.esy.es/fr_prof_alum";
@@ -185,6 +195,7 @@ public class FragmentBaseProfAlum extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 try{
+                    progressDialog.dismiss();
                     String estado="NA";
                     if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
                             !response.isNull(Key.EndPointMateria.KEY_ESTADO)){
@@ -306,6 +317,7 @@ public class FragmentBaseProfAlum extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
 
+                progressDialog.dismiss();
                 String auxMsj="";
 
                 error.printStackTrace();

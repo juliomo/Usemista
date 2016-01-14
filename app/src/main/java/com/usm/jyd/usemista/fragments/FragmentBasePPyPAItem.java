@@ -1,5 +1,6 @@
 package com.usm.jyd.usemista.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -73,6 +74,8 @@ public class FragmentBasePPyPAItem extends Fragment {
     private ImageView imgEmptyList;
     private TextView textEmptyList;
 
+    private ProgressDialog progressDialog ;
+
     public static FragmentBasePPyPAItem newInstance( String profCod, String accesCod) {
         FragmentBasePPyPAItem fragment = new FragmentBasePPyPAItem();
         Bundle args = new Bundle();
@@ -86,6 +89,9 @@ public class FragmentBasePPyPAItem extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        progressDialog = new ProgressDialog(getActivity());
+
         if (getArguments() != null) {
             profCod = getArguments().getString(ARG_PROFCOD);
             accesCod = getArguments().getString(ARG_ACCESCOD);
@@ -189,6 +195,11 @@ public class FragmentBasePPyPAItem extends Fragment {
 
     public void getAlumInClassInBackEnd(final boolean flagEstado) {
 
+        progressDialog.setMessage("Cargando ...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
         final Context context=getContext();
         String url = "http://usmpemsun.esy.es/fr_prof_alum";
 
@@ -202,6 +213,7 @@ public class FragmentBasePPyPAItem extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 try{
+                    progressDialog.dismiss();
                     String estado="NA";
                     if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
                             !response.isNull(Key.EndPointMateria.KEY_ESTADO)){
@@ -339,6 +351,7 @@ public class FragmentBasePPyPAItem extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
 
+                progressDialog.dismiss();
                 String auxMsj="";
 
                 error.printStackTrace();

@@ -242,6 +242,7 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
             Calendar hrIni = (Calendar)auxDayTime.clone();
             Calendar auxIni= Calendar.getInstance();
             auxIni.setTime(listUT.get(i).getHrIni());
+
             hrIni.set(Calendar.HOUR_OF_DAY, auxIni.get(Calendar.HOUR_OF_DAY));
             hrIni.set(Calendar.MINUTE, auxIni.get(Calendar.MINUTE));
 
@@ -254,8 +255,8 @@ public class FragmentBaseCalendar extends Fragment implements WeekView.MonthChan
 
 
 
-            if(newMonth==hrIni.get(Calendar.MONTH)) {
-                event = new WeekViewEvent(1,  (listUT.get(i).getMtName().length()>=11
+            if((newMonth-1)==auxDayTime.get(Calendar.MONTH)) {
+                event = new WeekViewEvent(3,  (listUT.get(i).getMtName().length()>=11
                             ?listUT.get(i).getMtName().substring(0,11)
                             :listUT.get(i).getMtName())
                         +"\n"+listUT.get(i).getType()

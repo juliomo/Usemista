@@ -1,5 +1,6 @@
 package com.usm.jyd.usemista.acts;
 
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -141,6 +142,10 @@ public class ActBase extends AppCompatActivity
     int varViewChanger=0;
     private ImageView imgViewChanger;
 
+
+    private ProgressDialog progressDialog ;
+
+
     private void jobClasesEventos(){
         ArrayList<HorarioVirtual> listHorario=MiAplicativo.getWritableDatabase().getAllHorarioVirtual();
         ArrayList<UserTask> listEventos=MiAplicativo.getWritableDatabase().getAllUserTask();
@@ -166,7 +171,7 @@ public class ActBase extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_base);
-
+        progressDialog = new ProgressDialog(this);
         jobClasesEventos();
 
         userRegistro=MiAplicativo.getWritableDatabase().getUserRegistro();
@@ -320,6 +325,11 @@ public class ActBase extends AppCompatActivity
     }
     private void sendRegistrationProfCodToBackend(String profCod,final String status,final String nomb) {
 
+        progressDialog.setMessage("Cargando ...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
         final Context context=this;
         String url = "http://usmpemsun.esy.es/register";
 
@@ -331,6 +341,7 @@ public class ActBase extends AppCompatActivity
             @Override
             public void onResponse(JSONObject response) {
                 try{
+                    progressDialog.dismiss();
                     String estado="NA";
                     if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
                             !response.isNull(Key.EndPointMateria.KEY_ESTADO)){
@@ -353,6 +364,7 @@ public class ActBase extends AppCompatActivity
                     }
 
 
+
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
@@ -362,6 +374,7 @@ public class ActBase extends AppCompatActivity
             @Override
             public void onErrorResponse(VolleyError error) {
 
+                progressDialog.dismiss();
                 String auxMsj="";
 
                 error.printStackTrace();
@@ -624,6 +637,11 @@ public class ActBase extends AppCompatActivity
 
     public void sendProfCodCheckToBackend(final String profCod) {
 
+        progressDialog.setMessage("Cargando ...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
         final Context context=this;
         String url = "http://usmpemsun.esy.es/register";
 
@@ -635,6 +653,7 @@ public class ActBase extends AppCompatActivity
             @Override
             public void onResponse(JSONObject response) {
                 try{
+                    progressDialog.dismiss();
                     String estado="NA";
                     if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
                             !response.isNull(Key.EndPointMateria.KEY_ESTADO)){
@@ -690,7 +709,7 @@ public class ActBase extends AppCompatActivity
             @Override
             public void onErrorResponse(VolleyError error) {
 
-
+                progressDialog.dismiss();
                 String auxMsj="";
 
                 error.printStackTrace();
@@ -1033,6 +1052,11 @@ public class ActBase extends AppCompatActivity
 
     public void sendMSJToBackend(final String profCod, final String accesCod,ProfAlum profAlum, final String MSJ) {
 
+        progressDialog.setMessage("Cargando ...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
         final Context context=this;
         String url = "http://usmpemsun.esy.es/fr_prof_alum";
 
@@ -1053,6 +1077,7 @@ public class ActBase extends AppCompatActivity
             @Override
             public void onResponse(JSONObject response) {
                 try{
+                    progressDialog.dismiss();
                     String estado="NA";
                     if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
                             !response.isNull(Key.EndPointMateria.KEY_ESTADO)){
@@ -1078,6 +1103,7 @@ public class ActBase extends AppCompatActivity
             @Override
             public void onErrorResponse(VolleyError error) {
 
+                progressDialog.dismiss();
                 String auxMsj="";
 
                 error.printStackTrace();
