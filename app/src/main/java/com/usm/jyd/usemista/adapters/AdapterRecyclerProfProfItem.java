@@ -47,7 +47,7 @@ import java.util.Map;
  */
 public class AdapterRecyclerProfProfItem extends RecyclerView.Adapter<AdapterRecyclerProfProfItem.RPPIViewHolder> {
 
-    private ProgressDialog progressDialog ;
+    private ProgressDialog progressDialog ;private int persistenTry=0;
 
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
@@ -161,9 +161,9 @@ public class AdapterRecyclerProfProfItem extends RecyclerView.Adapter<AdapterRec
             });
 
         }
-        public void updateAlumInClassStatusToBackend( final String regi, String id) {
+        public void updateAlumInClassStatusToBackend( final String regi, final String id) {
 
-            progressDialog.setMessage("Cargando ...");
+            progressDialog.setMessage("Cargando ...try: "+persistenTry);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
@@ -191,7 +191,7 @@ public class AdapterRecyclerProfProfItem extends RecyclerView.Adapter<AdapterRec
                 @Override
                 public void onResponse(JSONObject response) {
                     try{
-                        progressDialog.dismiss();
+                        progressDialog.dismiss(); persistenTry=0;
                         String estado="NA";
                         if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
                                 !response.isNull(Key.EndPointMateria.KEY_ESTADO)){
@@ -223,41 +223,42 @@ public class AdapterRecyclerProfProfItem extends RecyclerView.Adapter<AdapterRec
                 public void onErrorResponse(VolleyError error) {
 
                     progressDialog.dismiss();
+                    persistenTry++;
+                    String auxMsj="";
+                    if(persistenTry>=5) {
+                        persistenTry = 0;
 
-                    error.printStackTrace();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("Problemas ");
-                    builder.setMessage(error + "");
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+
+                        if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                            auxMsj = "Fuera de Conexion \nFuera de Tiempo";
+                        } else if (error instanceof AuthFailureError) {
+                            auxMsj = "Fallo de Ruta";
+                        } else if (error instanceof ServerError) {
+                            auxMsj = "Fallo en el Servidor";
+                        } else if (error instanceof NetworkError) {
+                            auxMsj = "Problemas de Conexion";
+                        } else if (error instanceof ParseError) {
+                            auxMsj = "Problemas Internos";
                         }
-                    })
-                            .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            });
-                    builder.show();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("Error en la Nube")
+                                .setPositiveButton("Reintentar", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        updateAlumInClassStatusToBackend(   regi,  id);
+                                    }
+                                })
+                                .setNegativeButton("Canlear", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
 
-                    if (error instanceof TimeoutError || error instanceof NoConnectionError){
-                        L.t(context, "Error: time Out or No Conect");
-
-                    }else if(error instanceof AuthFailureError){
-                        L.t(context, "Auth Fail");
-
-                    }else if (error instanceof ServerError) {
-                        L.t(context, "Server Error");
-
-                    }else if (error instanceof NetworkError){
-                        L.t(context, "Network Fail");
-
-                    }else if (error instanceof ParseError){
-                        L.t(context, "Problemas de Parseo: " + error);
-
-
-                    }
+                                    }
+                                })
+                                .setMessage("\n\nCode Error: " + auxMsj)
+                                .show();
+                    }else
+                        updateAlumInClassStatusToBackend(   regi,  id);
                 }
             });
             requestQueue.add(request);

@@ -75,6 +75,7 @@ public class FragmentBasePPyPAItem extends Fragment {
     private TextView textEmptyList;
 
     private ProgressDialog progressDialog ;
+    private int persistenTry=0;
 
     public static FragmentBasePPyPAItem newInstance( String profCod, String accesCod) {
         FragmentBasePPyPAItem fragment = new FragmentBasePPyPAItem();
@@ -195,7 +196,7 @@ public class FragmentBasePPyPAItem extends Fragment {
 
     public void getAlumInClassInBackEnd(final boolean flagEstado) {
 
-        progressDialog.setMessage("Cargando ...");
+        progressDialog.setMessage("Cargando ...try: "+persistenTry);
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
@@ -213,7 +214,7 @@ public class FragmentBasePPyPAItem extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 try{
-                    progressDialog.dismiss();
+                    progressDialog.dismiss();persistenTry=0;
                     String estado="NA";
                     if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
                             !response.isNull(Key.EndPointMateria.KEY_ESTADO)){
@@ -354,41 +355,47 @@ public class FragmentBasePPyPAItem extends Fragment {
                 progressDialog.dismiss();
                 String auxMsj="";
 
-                error.printStackTrace();
-                if (error instanceof TimeoutError || error instanceof NoConnectionError){
-                    auxMsj="Fuera de Conexion \nFuera de Tiempo";
-                }else if(error instanceof AuthFailureError){
-                    auxMsj="Fallo de Ruta" ;
-                }else if (error instanceof ServerError){
-                    auxMsj="Fallo en el Servidor";
-                }else if (error instanceof NetworkError){
-                    auxMsj="Problemas de Conexion";
-                }else if (error instanceof ParseError){
-                    auxMsj="Problemas Internos";
-                }
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Error en la Nube")
-                        .setPositiveButton("Reintentar", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                getAlumInClassInBackEnd(flagEstado);
-                            }
-                        })
-                        .setNegativeButton("Canlear", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-                        .setMessage("\n\nCode Error: " + auxMsj)
-                        .show();
-
                 imgEmptyList.setVisibility(View.VISIBLE);textEmptyList.setVisibility(View.VISIBLE);
                 imgEmptyList.setImageResource(R.drawable.ic_profesor_01);
                 imgEmptyList.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
                 textEmptyList.setText(auxMsj);
                 textEmptyList.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextSecondary));
+
+                if(persistenTry>=5) {
+                    persistenTry = 0;
+
+
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                        auxMsj = "Fuera de Conexion \nFuera de Tiempo";
+                    } else if (error instanceof AuthFailureError) {
+                        auxMsj = "Fallo de Ruta";
+                    } else if (error instanceof ServerError) {
+                        auxMsj = "Fallo en el Servidor";
+                    } else if (error instanceof NetworkError) {
+                        auxMsj = "Problemas de Conexion";
+                    } else if (error instanceof ParseError) {
+                        auxMsj = "Problemas Internos";
+                    }
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Error en la Nube")
+                            .setPositiveButton("Reintentar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    getAlumInClassInBackEnd(flagEstado);
+                                }
+                            })
+                            .setNegativeButton("Canlear", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .setMessage("\n\nCode Error: " + auxMsj)
+                            .show();
+                }else
+                    getAlumInClassInBackEnd(flagEstado);
+
             }
         });
         requestQueue.add(request);

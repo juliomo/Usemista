@@ -144,6 +144,7 @@ public class ActBase extends AppCompatActivity
 
 
     private ProgressDialog progressDialog ;
+    private int persistenTry=0;
 
 
     private void jobClasesEventos(){
@@ -203,11 +204,11 @@ public class ActBase extends AppCompatActivity
         t.scheduleAtFixedRate(new TimerTask() {
                                   @Override
                                   public void run() {
-                                      if(varViewChanger==0){
-                                          varViewChanger=1;
+                                      if (varViewChanger == 0) {
+                                          varViewChanger = 1;
                                           imgViewChanger.setImageResource(R.drawable.main_view_lg1);
-                                      }else{
-                                          varViewChanger=0;
+                                      } else {
+                                          varViewChanger = 0;
                                           imgViewChanger.setImageResource(R.drawable.main_view_lg4);
                                       }
 
@@ -323,7 +324,7 @@ public class ActBase extends AppCompatActivity
                 });
         builder.show();
     }
-    private void sendRegistrationProfCodToBackend(String profCod,final String status,final String nomb) {
+    private void sendRegistrationProfCodToBackend(final String profCod,final String status,final String nomb) {
 
         progressDialog.setMessage("Cargando ...");
         progressDialog.setCancelable(false);
@@ -342,6 +343,7 @@ public class ActBase extends AppCompatActivity
             public void onResponse(JSONObject response) {
                 try{
                     progressDialog.dismiss();
+                    persistenTry=0;
                     String estado="NA";
                     if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
                             !response.isNull(Key.EndPointMateria.KEY_ESTADO)){
@@ -375,25 +377,31 @@ public class ActBase extends AppCompatActivity
             public void onErrorResponse(VolleyError error) {
 
                 progressDialog.dismiss();
+                persistenTry++;
                 String auxMsj="";
 
-                error.printStackTrace();
-                if (error instanceof TimeoutError || error instanceof NoConnectionError){
-                    auxMsj="Fuera de Conexion \nFuera de Tiempo";
-                }else if(error instanceof AuthFailureError){
-                    auxMsj="Fallo de Ruta" ;
-                }else if (error instanceof ServerError){
-                    auxMsj="Fallo en el Servidor";
-                }else if (error instanceof NetworkError){
-                    auxMsj="Problemas de Conexion";
-                }else if (error instanceof ParseError){
-                    auxMsj="Problemas Internos";
-                }
+                if(persistenTry>=5) {
+                    persistenTry = 0;
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Error en la Nube")
-                        .setMessage("\n\nCode Error: "+auxMsj)
-                        .show();
+                    error.printStackTrace();
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                        auxMsj = "Fuera de Conexion \nFuera de Tiempo";
+                    } else if (error instanceof AuthFailureError) {
+                        auxMsj = "Fallo de Ruta";
+                    } else if (error instanceof ServerError) {
+                        auxMsj = "Fallo en el Servidor";
+                    } else if (error instanceof NetworkError) {
+                        auxMsj = "Problemas de Conexion";
+                    } else if (error instanceof ParseError) {
+                        auxMsj = "Problemas Internos";
+                    }
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Error en la Nube")
+                            .setMessage("\n\nCode Error: " + auxMsj)
+                            .show();
+                }else
+                    sendRegistrationProfCodToBackend( profCod,  status,  nomb);
             }
         });
         requestQueue.add(request);
@@ -637,7 +645,7 @@ public class ActBase extends AppCompatActivity
 
     public void sendProfCodCheckToBackend(final String profCod) {
 
-        progressDialog.setMessage("Cargando ...");
+        progressDialog.setMessage("Cargando ...try: "+persistenTry);
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
@@ -654,6 +662,7 @@ public class ActBase extends AppCompatActivity
             public void onResponse(JSONObject response) {
                 try{
                     progressDialog.dismiss();
+                    persistenTry=0;
                     String estado="NA";
                     if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
                             !response.isNull(Key.EndPointMateria.KEY_ESTADO)){
@@ -710,26 +719,32 @@ public class ActBase extends AppCompatActivity
             public void onErrorResponse(VolleyError error) {
 
                 progressDialog.dismiss();
+                persistenTry++;
                 String auxMsj="";
 
-                error.printStackTrace();
-                if (error instanceof TimeoutError || error instanceof NoConnectionError){
-                    auxMsj=getResources().getString(R.string.volley_error_time1)+"\n"
-                        +getResources().getString(R.string.volley_error_time2);
-                }else if(error instanceof AuthFailureError){
-                    auxMsj=getResources().getString(R.string.volley_error_aut) ;
-                }else if (error instanceof ServerError){
-                    auxMsj=getResources().getString(R.string.volley_error_serv);
-                }else if (error instanceof NetworkError){
-                    auxMsj=getResources().getString(R.string.volley_error_net);
-                }else if (error instanceof ParseError){
-                    auxMsj=getResources().getString(R.string.volley_error_par);
-                }
+                if(persistenTry>=5) {
+                    persistenTry=0;
+                    error.printStackTrace();
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                        auxMsj = getResources().getString(R.string.volley_error_time1) + "\n"
+                                + getResources().getString(R.string.volley_error_time2);
+                    } else if (error instanceof AuthFailureError) {
+                        auxMsj = getResources().getString(R.string.volley_error_aut);
+                    } else if (error instanceof ServerError) {
+                        auxMsj = getResources().getString(R.string.volley_error_serv);
+                    } else if (error instanceof NetworkError) {
+                        auxMsj = getResources().getString(R.string.volley_error_net);
+                    } else if (error instanceof ParseError) {
+                        auxMsj = getResources().getString(R.string.volley_error_par);
+                    }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle(getResources().getString(R.string.error_de_conexion))
-                        .setMessage( "\n\n"+getResources().getString(R.string.cod_error)+auxMsj)
-                        .show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle(getResources().getString(R.string.error_de_conexion)+" "+persistenTry)
+                            .setMessage("\n\n" + getResources().getString(R.string.cod_error) + auxMsj)
+                            .show();
+                }
+                else
+                    sendProfCodCheckToBackend(profCod);
             }
         });
         requestQueue.add(request);

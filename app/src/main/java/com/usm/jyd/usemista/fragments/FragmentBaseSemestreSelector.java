@@ -65,6 +65,7 @@ public class FragmentBaseSemestreSelector extends Fragment {
     private TextView textViewVolleyError;
 
     private ProgressDialog progressDialog ;
+    private int persistenTry=0;
 
     public static FragmentBaseSemestreSelector newInstance(int num_seccion) {
         FragmentBaseSemestreSelector fragment = new FragmentBaseSemestreSelector();
@@ -239,43 +240,51 @@ public class FragmentBaseSemestreSelector extends Fragment {
 
 
                 progressDialog.dismiss();
+                persistenTry++;
                 String auxError="";
-                if (error instanceof TimeoutError || error instanceof NoConnectionError){
 
-                    auxError=getString( R.string.error_timeOut);
-                }else if(error instanceof AuthFailureError){
+                if(persistenTry>=5) {
+                    persistenTry = 0;
 
-                    auxError=getString( R.string.error_AuthFail);
-                }else if (error instanceof ServerError){
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
 
-                    auxError=getString( R.string.error_Server);
-                }else if (error instanceof NetworkError){
+                        auxError = getString(R.string.error_timeOut);
+                    } else if (error instanceof AuthFailureError) {
 
-                    auxError=getString( R.string.error_NetWork);
-                }else if (error instanceof ParseError){
+                        auxError = getString(R.string.error_AuthFail);
+                    } else if (error instanceof ServerError) {
 
-                    auxError=getString( R.string.error_NetWork);
-                }
+                        auxError = getString(R.string.error_Server);
+                    } else if (error instanceof NetworkError) {
 
-              //  textViewVolleyError.setVisibility(View.VISIBLE);
-                AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                alertDialog.setTitle("Error en la Nube");
-                alertDialog.setMessage("Error: " + auxError + "\n\n"
-                        + "Reintentar Conexion?");
-                alertDialog.setCancelable(false);
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                        auxError = getString(R.string.error_NetWork);
+                    } else if (error instanceof ParseError) {
 
+                        auxError = getString(R.string.error_NetWork);
                     }
-                });
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
 
-                        enviarPeticionJson(ma_modulo);
-                    }
-                });  alertDialog.show();
+                    //  textViewVolleyError.setVisibility(View.VISIBLE);
+                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                    alertDialog.setTitle("Error en la Nube");
+                    alertDialog.setMessage("Error: " + auxError + "\n\n"
+                            + "Reintentar Conexion?");
+                    alertDialog.setCancelable(false);
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            enviarPeticionJson(ma_modulo);
+                        }
+                    });
+                    alertDialog.show();
+                }else
+                    enviarPeticionJson(ma_modulo);
 
 
             }
@@ -295,6 +304,7 @@ public class FragmentBaseSemestreSelector extends Fragment {
         if(response==null || response.length()>0){
             try{
                 progressDialog.dismiss();
+                persistenTry=0;
                 String estado="NA";
                 if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
                         !response.isNull(Key.EndPointMateria.KEY_ESTADO)){

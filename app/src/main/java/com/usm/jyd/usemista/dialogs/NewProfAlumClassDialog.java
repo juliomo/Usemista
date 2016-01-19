@@ -1,6 +1,7 @@
 package com.usm.jyd.usemista.dialogs;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -52,6 +53,9 @@ public class NewProfAlumClassDialog extends DialogFragment{
 
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
+
+    private ProgressDialog progressDialog ;
+    private int persistenTry=0;
 
     LayoutInflater inflater;
 
@@ -110,7 +114,7 @@ public class NewProfAlumClassDialog extends DialogFragment{
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-
+        progressDialog = new ProgressDialog(getActivity());
 
         userRegistro=MiAplicativo.getWritableDatabase().getUserRegistro();
         listUserMateria= MiAplicativo.getWritableDatabase().getAllUserMateria();
@@ -283,7 +287,19 @@ public class NewProfAlumClassDialog extends DialogFragment{
                         if (userRegistro.getStatus().equals("1")) {
                             insertAlumClassToBackend();
                         } else if (userRegistro.getStatus().equals("2")) {
-                            insertProfClassToBackend();
+                           //INICIO
+                            String codAcces=editTextCodAcce.getText().toString();
+                            String maModulo="";
+                            if(catModulo.get(posSpinModulo).equals("Sistema")){ maModulo="ingSis";}
+                            else if(catModulo.get(posSpinModulo).equals("Telecom")){maModulo="telecom";}
+                            else if(catModulo.get(posSpinModulo).equals("Industrial")){maModulo="ingInd";}
+                            else if(catModulo.get(posSpinModulo).equals("Civil")){maModulo="ingCiv";}
+                            else if(catModulo.get(posSpinModulo).equals("Arquitectura")){maModulo="arq";}
+
+                            String maCod=listUserMaCurrent.get(posSpinMaCod).getCod();
+                            String maSec=catSeccion.get(posSpinSeccion);
+                            //FIN + ENVIO
+                            insertProfClassToBackend(codAcces,maModulo,maCod,maSec);
                         }
                     }
                 })
@@ -298,7 +314,7 @@ public class NewProfAlumClassDialog extends DialogFragment{
         return builder.create();
     }
 
-    public void insertProfClassToBackend() {
+    public void insertProfClassToBackend(final String codAcces,final String maModulo, final String maCod, final String maSec) {
 
         volleySingleton=VolleySingleton.getInstance();
         requestQueue=volleySingleton.getRequestQueue();
@@ -306,16 +322,6 @@ public class NewProfAlumClassDialog extends DialogFragment{
         final Context context=getContext();
         String url = "http://usmpemsun.esy.es/fr_prof_alum";
 
-        String codAcces=editTextCodAcce.getText().toString();
-        String maModulo="";
-        if(catModulo.get(posSpinModulo).equals("Sistema")){ maModulo="ingSis";}
-        else if(catModulo.get(posSpinModulo).equals("Telecom")){maModulo="telecom";}
-        else if(catModulo.get(posSpinModulo).equals("Industrial")){maModulo="ingInd";}
-        else if(catModulo.get(posSpinModulo).equals("Civil")){maModulo="ingCiv";}
-        else if(catModulo.get(posSpinModulo).equals("Arquitectura")){maModulo="arq";}
-
-        String maCod=listUserMaCurrent.get(posSpinMaCod).getCod();
-        String maSec=catSeccion.get(posSpinSeccion);
 
         Map<String, String> map = new HashMap<>();
         map.put("inProfCls", "1");
@@ -338,6 +344,10 @@ public class NewProfAlumClassDialog extends DialogFragment{
             e.printStackTrace();
         }
 
+        progressDialog.setMessage("Cargando ...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
 
 
         JsonObjectRequest request= new JsonObjectRequest(Request.Method.POST,
@@ -345,6 +355,7 @@ public class NewProfAlumClassDialog extends DialogFragment{
             @Override
             public void onResponse(JSONObject response) {
                 try{
+                    progressDialog.dismiss();
                     String estado="NA";
                     if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
                             !response.isNull(Key.EndPointMateria.KEY_ESTADO)){
@@ -375,39 +386,46 @@ public class NewProfAlumClassDialog extends DialogFragment{
             public void onErrorResponse(VolleyError error) {
 
 
-                error.printStackTrace();
-                if (error instanceof TimeoutError || error instanceof NoConnectionError){
-                    L.t(context, "Error: time Out or No Conect");
+                progressDialog.dismiss();
 
-                }else if(error instanceof AuthFailureError){
-                    L.t(context, "Auth Fail");
 
-                }else if (error instanceof ServerError) {
-                    L.t(context, "Server Error");
+                    String auxError="";
 
-                }else if (error instanceof NetworkError){
-                    L.t(context, "Network Fail");
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
 
-                }else if (error instanceof ParseError){
-                    L.t(context, "Problemas de Parseo: " + error);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("Problemas de Parseo");
-                    builder.setMessage(error + "");
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            })
-                            .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                        auxError = getString(R.string.error_timeOut);
+                    } else if (error instanceof AuthFailureError) {
 
-                                }
-                            });
-                    builder.show();
+                        auxError = getString(R.string.error_AuthFail);
+                    } else if (error instanceof ServerError) {
+
+                        auxError = getString(R.string.error_Server);
+                    } else if (error instanceof NetworkError) {
+
+                        auxError = getString(R.string.error_NetWork);
+                    } else if (error instanceof ParseError) {
+
+                        auxError = getString(R.string.error_NetWork);
+                    }
+
+                    //  textViewVolleyError.setVisibility(View.VISIBLE);
+                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                    alertDialog.setTitle("Error en la Nube");
+                    alertDialog.setMessage("Error: " + auxError + "\n\n"
+                            + "Verifique su Conexion");
+                    alertDialog.setCancelable(false);
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+
+                        }
+                    });
+                    alertDialog.show();
+
 
                 }
-            }
+
         });
         requestQueue.add(request);
     }
@@ -443,7 +461,10 @@ public class NewProfAlumClassDialog extends DialogFragment{
         map.put("alc_regist", alc_regist);
         map.put("alc_regiDV",  userRegistro.getNotiGCM());
 
-
+        progressDialog.setMessage("Cargando ...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
 
 
         JsonObjectRequest request= new JsonObjectRequest(Request.Method.POST,
@@ -451,6 +472,7 @@ public class NewProfAlumClassDialog extends DialogFragment{
             @Override
             public void onResponse(JSONObject response) {
                 try{
+                    progressDialog.dismiss();
                     String estado="NA";
                     if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
                             !response.isNull(Key.EndPointMateria.KEY_ESTADO)){
@@ -480,38 +502,42 @@ public class NewProfAlumClassDialog extends DialogFragment{
             public void onErrorResponse(VolleyError error) {
 
 
-                error.printStackTrace();
-                if (error instanceof TimeoutError || error instanceof NoConnectionError){
-                    L.t(context, "Error: time Out or No Conect");
+                progressDialog.dismiss();
 
-                }else if(error instanceof AuthFailureError){
-                    L.t(context, "Auth Fail");
 
-                }else if (error instanceof ServerError) {
-                    L.t(context, "Server Error");
+                String auxError="";
 
-                }else if (error instanceof NetworkError){
-                    L.t(context, "Network Fail");
+                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
 
-                }else if (error instanceof ParseError){
-                    L.t(context, "Problemas de Parseo: " + error);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("Problemas de Parseo");
-                    builder.setMessage(error + "");
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    })
-                            .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                    auxError = getString(R.string.error_timeOut);
+                } else if (error instanceof AuthFailureError) {
 
-                                }
-                            });
-                    builder.show();
+                    auxError = getString(R.string.error_AuthFail);
+                } else if (error instanceof ServerError) {
 
+                    auxError = getString(R.string.error_Server);
+                } else if (error instanceof NetworkError) {
+
+                    auxError = getString(R.string.error_NetWork);
+                } else if (error instanceof ParseError) {
+
+                    auxError = getString(R.string.error_NetWork);
                 }
+
+                //  textViewVolleyError.setVisibility(View.VISIBLE);
+                AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                alertDialog.setTitle("Error en la Nube");
+                alertDialog.setMessage("Error: " + auxError + "\n\n"
+                        + "Verifique su Conexion");
+                alertDialog.setCancelable(false);
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+                    }
+                });
+                alertDialog.show();
             }
         });
         requestQueue.add(request);

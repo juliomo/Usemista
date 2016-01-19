@@ -70,6 +70,7 @@ public class FragmentBaseProfAlum extends Fragment {
     private TextView textEmptyList;
 
     private ProgressDialog progressDialog ;
+    private int persistenTry=0;
 
 
     public static FragmentBaseProfAlum newInstance() {
@@ -178,7 +179,7 @@ public class FragmentBaseProfAlum extends Fragment {
     }
 
     public void getAlumClassInBackEnd(final String cedula) {
-        progressDialog.setMessage("Cargando ...");
+        progressDialog.setMessage("Cargando ...try: "+persistenTry);
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
@@ -196,6 +197,7 @@ public class FragmentBaseProfAlum extends Fragment {
             public void onResponse(JSONObject response) {
                 try{
                     progressDialog.dismiss();
+                    persistenTry=0;
                     String estado="NA";
                     if(response.has(Key.EndPointMateria.KEY_ESTADO)&&
                             !response.isNull(Key.EndPointMateria.KEY_ESTADO)){
@@ -318,37 +320,44 @@ public class FragmentBaseProfAlum extends Fragment {
             public void onErrorResponse(VolleyError error) {
 
                 progressDialog.dismiss();
+                persistenTry++;
+
                 String auxMsj="";
+                if(persistenTry>=5) {
+                    persistenTry = 0;
 
-                error.printStackTrace();
-                if (error instanceof TimeoutError || error instanceof NoConnectionError){
-                    auxMsj="Fuera de Conexion \nFuera de Tiempo";
-                }else if(error instanceof AuthFailureError){
-                    auxMsj="Fallo de Ruta" ;
-                }else if (error instanceof ServerError){
-                    auxMsj="Fallo en el Servidor";
-                }else if (error instanceof NetworkError){
-                    auxMsj="Problemas de Conexion";
-                }else if (error instanceof ParseError){
-                    auxMsj="Problemas Internos";
-                }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Error en la Nube")
-                        .setPositiveButton("Reintentar", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                getAlumClassInBackEnd(cedula);
-                            }
-                        })
-                        .setNegativeButton("Canlear", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                    error.printStackTrace();
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                        auxMsj = "Fuera de Conexion \nFuera de Tiempo";
+                    } else if (error instanceof AuthFailureError) {
+                        auxMsj = "Fallo de Ruta";
+                    } else if (error instanceof ServerError) {
+                        auxMsj = "Fallo en el Servidor";
+                    } else if (error instanceof NetworkError) {
+                        auxMsj = "Problemas de Conexion";
+                    } else if (error instanceof ParseError) {
+                        auxMsj = "Problemas Internos";
+                    }
 
-                            }
-                        })
-                        .setMessage("\n\nCode Error: " + auxMsj)
-                        .show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Error en la Nube")
+                            .setPositiveButton("Reintentar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    getAlumClassInBackEnd(cedula);
+                                }
+                            })
+                            .setNegativeButton("Canlear", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .setMessage("\n\nCode Error: " + auxMsj)
+                            .show();
+                }else
+                   getAlumClassInBackEnd(cedula);
 
                 imgEmptyList.setVisibility(View.VISIBLE);textEmptyList.setVisibility(View.VISIBLE);
                 imgEmptyList.setImageResource(R.drawable.ic_profesor_01);
