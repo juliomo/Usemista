@@ -22,6 +22,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -286,6 +287,7 @@ public class ActBase extends AppCompatActivity
             textCIoProfCod.setText(getResources().getString(R.string.user_edit_codProf));
             editTextNomb.setText(userRegistro.getNomb());
             editTextCIoProfCod.setText("");
+            editTextCIoProfCod.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         }
 
 
@@ -622,6 +624,7 @@ public class ActBase extends AppCompatActivity
         imgCurrentType.setImageResource(R.drawable.ic_profesor_launch);
         textCIoProfCod.setText(getResources().getString(R.string.user_edit_codProf));
         editTextCIoProfCod.setText("");
+        editTextCIoProfCod.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
 
         imgCurrentType.setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary));
@@ -950,6 +953,8 @@ public class ActBase extends AppCompatActivity
     public void onHVCalendarSelected(int HVposition) {
 
         this.HVposition=HVposition;
+        Calendar minDT = Calendar.getInstance();
+        Calendar maxDT= Calendar.getInstance();
         Calendar now = Calendar.getInstance();
         DatePickerDialog dpd = DatePickerDialog.newInstance(
                 ActBase.this,
@@ -958,6 +963,24 @@ public class ActBase extends AppCompatActivity
                 now.get(Calendar.DAY_OF_MONTH)
         );
 
+        now.get(Calendar.DAY_OF_YEAR); //245 Septiembre   91 april
+
+        if (now.get(Calendar.DAY_OF_YEAR)>=91 && now.get(Calendar.DAY_OF_YEAR)<=245){
+            minDT.set(Calendar.DAY_OF_YEAR,91);maxDT.set(Calendar.DAY_OF_YEAR,245);
+
+        }else if(now.get(Calendar.DAY_OF_YEAR)>245){
+            minDT.set(Calendar.DAY_OF_YEAR,245);
+            maxDT.set(Calendar.YEAR,(now.get(Calendar.YEAR)+1));
+            maxDT.set(Calendar.DAY_OF_YEAR,91);
+
+        }else if( now.get(Calendar.DAY_OF_YEAR)<91){
+            maxDT.set(Calendar.DAY_OF_YEAR,91);
+            minDT.set(Calendar.YEAR,(now.get(Calendar.YEAR)-1));
+            minDT.set(Calendar.DAY_OF_YEAR,245);
+
+        }
+
+        dpd.setMinDate(minDT);dpd.setMaxDate(maxDT);
        // dpd.setMinDate(now);
         dpd.show(getFragmentManager(), "Datepickerdialog");
 
@@ -1045,6 +1068,9 @@ public class ActBase extends AppCompatActivity
         imgCurrentType.setImageResource(R.drawable.ic_profesor_launch);
         textCIoProfCod.setText(getResources().getString(R.string.msj_para_clase));
         editTextCIoProfCod.setText("");
+        editTextCIoProfCod.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE );
+        editTextCIoProfCod.setFilters(new InputFilter[] { new InputFilter.LengthFilter(170) });
+
 
 
         imgCurrentType.setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary));

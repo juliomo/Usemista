@@ -55,11 +55,10 @@
                     android:id="@+id/textCIoProfCod" />
 
                 <EditText
-                    android:layout_width="wrap_content"
+                    android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:selectAllOnFocus="true"
-                    android:ems="10"
                     android:id="@+id/editTextCIoProfCod"
                     android:text="Cedula" />
 

@@ -57,6 +57,7 @@ public class UserRegiDialog extends DialogFragment {
             imgCurrentType.setImageResource(R.drawable.ic_profesor_launch);
             textCIoProfCod.setText("Codigo de Profesor");
             editTextCIoProfCod.setText("Codigo");
+            editTextCIoProfCod.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         }
 
         imgCurrentType.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary));

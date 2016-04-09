@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -559,8 +560,10 @@ public class AdapterRecyclerMMTask extends RecyclerView.Adapter<AdapterRecyclerM
 
                             imgCurrentType.setImageResource(R.drawable.ic_estudiante_launch);
                             textCIoProfCod.setText("Nota");
+
                             editTextCIoProfCod.setInputType(InputType.TYPE_CLASS_NUMBER);
                             editTextCIoProfCod.setText("");
+                            editTextCIoProfCod.setFilters(new InputFilter[] { new InputFilter.LengthFilter(2) });
 
 
                             imgCurrentType.setColorFilter(ContextCompat.getColor(context, R.color.colorPrimary));

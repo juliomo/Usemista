@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -523,6 +524,7 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
         imageViewIconClock=(ImageView)rootView.findViewById(R.id.imageViewClock);
         imageViewIconCal=(ImageView)rootView.findViewById(R.id.imageViewCalendar);
         editTextTitulo=(EditText)rootView.findViewById(R.id.editTextTitulo);
+        editTextTitulo.setFilters(new InputFilter[] { new InputFilter.LengthFilter(40) });
 
         final TextView textViewNombMateria=(TextView)rootView.findViewById(R.id.textNombMateria);
 
@@ -576,7 +578,9 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
         final TextView textViewLunMod=(TextView)rootView.findViewById(R.id.textViewLunModulo);
         final TextView textViewLunSa=(TextView)rootView.findViewById(R.id.textViewLunSalon);
          editTextLunMod=(EditText)rootView.findViewById(R.id.editTextLunModulo);
+         editTextLunMod.setFilters(new InputFilter[] { new InputFilter.LengthFilter(3) });
          editTextLunSa=(EditText)rootView.findViewById(R.id.editTextLunSalon);
+        editTextLunSa.setFilters(new InputFilter[] { new InputFilter.LengthFilter(3) });
 
          switchMar = (Switch)rootView.findViewById(R.id.switchMar);
         textViewMarIni=(TextView)rootView.findViewById(R.id.textViewMarIni);
@@ -584,7 +588,9 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
         final TextView textViewMarMod=(TextView)rootView.findViewById(R.id.textViewMarModulo);
         final TextView textViewMarSa=(TextView)rootView.findViewById(R.id.textViewMarSalon);
          editTextMarMod=(EditText)rootView.findViewById(R.id.editTextMarModulo);
+        editTextMarMod.setFilters(new InputFilter[] { new InputFilter.LengthFilter(3) });
          editTextMarSa=(EditText)rootView.findViewById(R.id.editTextMarSalon);
+        editTextMarSa.setFilters(new InputFilter[] { new InputFilter.LengthFilter(3) });
 
          switchMie = (Switch)rootView.findViewById(R.id.switchMie);
          textViewMieIni=(TextView)rootView.findViewById(R.id.textViewMieIni);
@@ -592,7 +598,9 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
         final TextView textViewMieMod=(TextView)rootView.findViewById(R.id.textViewMieModulo);
         final TextView textViewMieSa=(TextView)rootView.findViewById(R.id.textViewMieSalon);
          editTextMieMod=(EditText)rootView.findViewById(R.id.editTextMieModulo);
+        editTextMieMod.setFilters(new InputFilter[] { new InputFilter.LengthFilter(3) });
         editTextMieSa=(EditText)rootView.findViewById(R.id.editTextMieSalon);
+        editTextMieSa.setFilters(new InputFilter[] { new InputFilter.LengthFilter(3) });
 
          switchJue = (Switch)rootView.findViewById(R.id.switchJue);
          textViewJueIni=(TextView)rootView.findViewById(R.id.textViewJueIni);
@@ -600,7 +608,9 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
         final TextView textViewJueMod=(TextView)rootView.findViewById(R.id.textViewJueModulo);
         final TextView textViewJueSa=(TextView)rootView.findViewById(R.id.textViewJueSalon);
          editTextJueMod=(EditText)rootView.findViewById(R.id.editTextJueModulo);
+        editTextJueMod.setFilters(new InputFilter[] { new InputFilter.LengthFilter(3) });
          editTextJueSa=(EditText)rootView.findViewById(R.id.editTextJueSalon);
+        editTextJueSa.setFilters(new InputFilter[] { new InputFilter.LengthFilter(3) });
 
          switchVie = (Switch)rootView.findViewById(R.id.switchVie);
         textViewVieIni=(TextView)rootView.findViewById(R.id.textViewVieIni);
@@ -608,7 +618,9 @@ public class FragmentBaseHVAdd extends Fragment implements View.OnClickListener,
         final TextView textViewVieMod=(TextView)rootView.findViewById(R.id.textViewVieModulo);
         final TextView textViewVieSa=(TextView)rootView.findViewById(R.id.textViewVieSalon);
          editTextVieMod=(EditText)rootView.findViewById(R.id.editTextVieModulo);
+        editTextVieMod.setFilters(new InputFilter[] { new InputFilter.LengthFilter(3) });
         editTextVieSa=(EditText)rootView.findViewById(R.id.editTextVieSalon);
+        editTextVieSa.setFilters(new InputFilter[] { new InputFilter.LengthFilter(3) });
 
 
 
