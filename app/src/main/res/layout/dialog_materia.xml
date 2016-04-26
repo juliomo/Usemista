@@ -31,12 +31,29 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Objetivo:
+            <LinearLayout
+                android:background="@drawable/curver_fill_01"
+android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
 
-        "/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_point_materia"
+                    android:id="@+id/imageView5" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|left"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Objetivo:        "/>
+
+            </LinearLayout>
+
+
     <TextView
         android:id="@+id/textObjetivo"
         android:layout_width="match_parent"
@@ -45,12 +62,25 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Objetivo"/>
 
+        <LinearLayout
+            android:background="@drawable/curver_fill_01"
+            android:gravity="center"
+
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_point_materia"
+                android:id="@+id/imageView6" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Contenido:
-
-        "/>
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Contenido:        "/>
+            </LinearLayout>
     <TextView
         android:id="@+id/textContenido"
         android:layout_width="match_parent"

@@ -271,6 +271,8 @@ public class ActBase extends AppCompatActivity
         textNomb=(TextView)view.findViewById(R.id.textNomb);
         textCIoProfCod =(TextView)view.findViewById(R.id.textCIoProfCod);
         editTextNomb=(EditText)view.findViewById(R.id.editTextNomb);
+        editTextNomb.setFilters(new InputFilter[] { new InputFilter.LengthFilter(30) });
+        editTextNomb.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
         editTextCIoProfCod =(EditText)view.findViewById(R.id.editTextCIoProfCod);
         imgCurrentType=(ImageView)view.findViewById(R.id.imgCurrentType);
 
@@ -298,8 +300,11 @@ public class ActBase extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (estado.equals("1")) {
+
+                            String auxNomb="";
+                            auxNomb=editTextNomb.getText().toString();
                             MiAplicativo.getWritableDatabase()
-                                    .updateUserRegistroAlumno("1", editTextNomb.getText().toString(),
+                                    .updateUserRegistroAlumno("1", auxNomb,
                                             editTextCIoProfCod.getText().toString());
 
                             NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_drawer);
@@ -614,6 +619,8 @@ public class ActBase extends AppCompatActivity
         textNomb=(TextView)view.findViewById(R.id.textNomb);
         textCIoProfCod =(TextView)view.findViewById(R.id.textCIoProfCod);
         editTextNomb=(EditText)view.findViewById(R.id.editTextNomb);
+        editTextNomb.setFilters(new InputFilter[] { new InputFilter.LengthFilter(30) });
+        editTextNomb.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
         editTextCIoProfCod =(EditText)view.findViewById(R.id.editTextCIoProfCod);
         imgCurrentType=(ImageView)view.findViewById(R.id.imgCurrentType);
 

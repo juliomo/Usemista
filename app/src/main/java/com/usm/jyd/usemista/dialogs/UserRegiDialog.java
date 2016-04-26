@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,8 @@ public class UserRegiDialog extends DialogFragment {
         textNomb=(TextView)view.findViewById(R.id.textNomb);
         textCIoProfCod =(TextView)view.findViewById(R.id.textCIoProfCod);
         editTextNomb=(EditText)view.findViewById(R.id.editTextNomb);
+        editTextNomb.setFilters(new InputFilter[] { new InputFilter.LengthFilter(30) });
+        editTextNomb.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
         editTextCIoProfCod =(EditText)view.findViewById(R.id.editTextCIoProfCod);
         imgCurrentType=(ImageView)view.findViewById(R.id.imgCurrentType);
 

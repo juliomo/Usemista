@@ -46,6 +46,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -58,7 +59,7 @@ public class ActApertura extends AppCompatActivity implements CCBackUserRegi {
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
 
-    private int validadorProfCod=0;
+    private int validadorProfCod,validadorEstudiante;
 
 
     //VARIABLES EMPLEADAS PARA Push notifications
@@ -81,6 +82,8 @@ public class ActApertura extends AppCompatActivity implements CCBackUserRegi {
 
         volleySingleton=VolleySingleton.getInstance();
         requestQueue=volleySingleton.getRequestQueue();
+        validadorProfCod=0;
+        validadorEstudiante=0;
 
 
         ImageView imgEST=(ImageView)findViewById(R.id.imageViewEST);
@@ -110,6 +113,16 @@ public class ActApertura extends AppCompatActivity implements CCBackUserRegi {
                 userRegistro.getNotiGCM().equals("noAsig")     ){
 
             MiAplicativo.getWritableDatabase().updateUserRegistroGCM(getRegistrationId(getApplicationContext()));
+        }
+
+        if(userRegistro.getStatus().equals("3")){
+            Calendar blockDate =Calendar.getInstance();Calendar now = Calendar.getInstance();
+            blockDate.setTime(userRegistro.getDayTime());
+            if(now.get(Calendar.DAY_OF_YEAR)> blockDate.get(Calendar.DAY_OF_YEAR)){
+                MiAplicativo.getWritableDatabase().updateUserRegistroFail("0",now.getTime());
+                userRegistro=MiAplicativo.getWritableDatabase().getUserRegistro();
+            }else
+                L.t(this, "Ingreso Bloqueado \nIntente mas Tarde");
         }
 
         if(userRegistro.getStatus().equals("0")){
@@ -148,14 +161,60 @@ public class ActApertura extends AppCompatActivity implements CCBackUserRegi {
     @Override
     public void onUserRegiComplete(String status, String nomb, String cIorProfCod) {
 
-        if(status.equals("1")) {
-            MiAplicativo.getWritableDatabase().updateUserRegistroAlumno(status, nomb, cIorProfCod);
-            goToActBase(700);
-        }
+        Calendar now = Calendar.getInstance();
+        Calendar blockDate =Calendar.getInstance();
+        UserRegistro userRegistro =MiAplicativo.getWritableDatabase().getUserRegistro();
 
-        else if(status.equals("2")){
-            sendRegistrationProfCodToBackend(cIorProfCod, status, nomb);
 
+        if(!userRegistro.getStatus().equals("3")) {
+
+            if (status.equals("1")) {
+                boolean pase = true;
+
+                if (nomb.equals("") || nomb.length() <= 3) {
+                    pase = false;
+                }
+                if (cIorProfCod.equals("") || cIorProfCod.equals("Cedula") || cIorProfCod.length() <= 5) {
+                    pase = false;
+                }
+
+                if (pase) {
+                    MiAplicativo.getWritableDatabase().updateUserRegistroAlumno(status, nomb, cIorProfCod);
+                    goToActBase(700);
+                } else {
+                    L.t(this, "Datos invalidos");
+                    validadorEstudiante++;
+                    L.t(this, 6-validadorEstudiante+" Intentos restantes");
+                    if(validadorEstudiante>=6){
+                        MiAplicativo.getWritableDatabase().updateUserRegistroFail("3",now.getTime());
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
+                    }
+                }
+            }
+
+
+            if(status.equals("2")){
+                boolean pase=true;
+
+                if(nomb.equals("")||nomb.length()<=3){  pase=false;  }
+
+                if(pase && validadorProfCod<3) {
+                    sendRegistrationProfCodToBackend(cIorProfCod, status, nomb);
+                }else{
+                    L.t(this,"Verifique sus Datos");
+                    if(validadorProfCod>=3){
+                        MiAplicativo.getWritableDatabase().updateUserRegistroFail("3",now.getTime());
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
+                    }
+                }
+            }
+
+        }else{
+            L.t(this, "Ingreso Bloqueado");
         }
 
 
@@ -182,6 +241,7 @@ public class ActApertura extends AppCompatActivity implements CCBackUserRegi {
 
     private void sendRegistrationProfCodToBackend(String profCod,final String status,final String nomb) {
 
+        final Context context = getApplicationContext();
 
         String url = "http://usmpemsun.esy.es/register";
 
@@ -205,6 +265,7 @@ public class ActApertura extends AppCompatActivity implements CCBackUserRegi {
                         }else if(estado.equals("2")){
                             muestraMSJ2(getResources().getString( R.string.prof_invalid));
                             validadorProfCod++;
+                            L.t(context, 3-validadorProfCod+" Intentos restantes");
                         }
 
 

@@ -202,7 +202,7 @@ public class DBPensum {
         mDatabase.setTransactionSuccessful();
         mDatabase.endTransaction();
     }
-    public void updateUserRegistroFailProf(String status, Date dayTime){
+    public void updateUserRegistroFail(String status, Date dayTime){
         String sql = "UPDATE " + PensumHelper.TABLE_USER_REGISTRO + " SET " +
                 PensumHelper.COLUMN_UR_STATUS+    " = ?," +
                 PensumHelper.COLUMN_UR_DAYTIME+   " = ?;";

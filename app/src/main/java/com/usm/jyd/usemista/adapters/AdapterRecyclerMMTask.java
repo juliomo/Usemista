@@ -471,6 +471,7 @@ public class AdapterRecyclerMMTask extends RecyclerView.Adapter<AdapterRecyclerM
             textTypeAct=(TextView)itemView.findViewById(R.id.textTypeAct);
             spinnerTypeAct=(Spinner)itemView.findViewById(R.id.spinnerTypeAct);
             editTextNumAct=(EditText)itemView.findViewById(R.id.editTextNumAct);
+            editTextNumAct.setFilters(new InputFilter[] { new InputFilter.LengthFilter(1) });
             editTextNumAct.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
@@ -506,6 +507,7 @@ public class AdapterRecyclerMMTask extends RecyclerView.Adapter<AdapterRecyclerM
             icSalonEd=(ImageView)itemView.findViewById(R.id.icSalonEdit);
             textSalon=(TextView)itemView.findViewById(R.id.textSalon);
             editTextSalon=(EditText)itemView.findViewById(R.id.editTextSalon);
+            editTextSalon.setFilters(new InputFilter[] { new InputFilter.LengthFilter(3) });
             editTextSalon.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
